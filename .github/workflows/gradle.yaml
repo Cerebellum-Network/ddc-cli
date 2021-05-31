@@ -59,31 +59,3 @@ jobs:
         with:
           name: ddc-cli-mac-amd64
           path: mac-amd64
-
-  buildOnWindows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@master
-      - uses: ilammy/msvc-dev-cmd@v1.5.0
-      - uses: microsoft/setup-msbuild@v1
-      - uses: ayltai/setup-graalvm@v1
-        with:
-          java-version: 11
-          graalvm-version: 20.3.0
-          native-image: true
-      - name: Cache build .gradle dir
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle
-            .gradle
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
-      - name: Gradle Build
-        run: ./gradlew.bat build
-      - name: Upload artifacts
-        run: mkdir windows && cp build/ddc-cli-*-runner.exe windows/ddc-cli.exe
-      - uses: actions/upload-artifact@v2
-        with:
-          name: ddc-cli-windows.exe
-          path: windows

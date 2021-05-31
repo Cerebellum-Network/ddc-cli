@@ -11,7 +11,7 @@ To build native executable:
 
 ## Installing the CLI
 
-
+Download a binary file from [releases](https://github.com/Cerebellum-Network/ddc-cli/releases).
 
 ## Commands
 
