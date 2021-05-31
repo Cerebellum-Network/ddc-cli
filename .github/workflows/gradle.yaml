@@ -28,7 +28,7 @@ jobs:
       - name: Gradle Build
         run: ./gradlew build
       - name: Upload artifacts
-        run: mkdir linux-amd64 && cp build/ddc-cli-*-runner linux-amd64
+        run: mkdir linux-amd64 && cp build/ddc-cli-*-runner linux-amd64/ddc-cli
       - uses: actions/upload-artifact@v2
         with:
           name: ddc-cli-linux-amd64
@@ -54,7 +54,7 @@ jobs:
       - name: Gradle Build
         run: ./gradlew build
       - name: Upload artifacts
-        run: mkdir mac-amd64 && cp build/ddc-cli-*-runner mac-amd64
+        run: mkdir mac-amd64 && cp build/ddc-cli-*-runner mac-amd64/ddc-cli
       - uses: actions/upload-artifact@v2
         with:
           name: ddc-cli-mac-amd64
@@ -65,6 +65,8 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@master
+      - uses: ilammy/msvc-dev-cmd@v1.5.0
+      - uses: microsoft/setup-msbuild@v1
       - uses: ayltai/setup-graalvm@v1
         with:
           java-version: 11
@@ -80,7 +82,7 @@ jobs:
       - name: Gradle Build
         run: ./gradlew.bat build
       - name: Upload artifacts
-        run: mkdir windows && cp build/ddc-cli-*-runner.exe windows
+        run: mkdir windows && cp build/ddc-cli-*-runner.exe windows/ddc-cli.exe
       - uses: actions/upload-artifact@v2
         with:
           name: ddc-cli-windows.exe
