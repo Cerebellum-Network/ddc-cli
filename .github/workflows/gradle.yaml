@@ -1,0 +1,104 @@
+name: CI-gradle-build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  buildOnLinux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@master
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 11
+          graalvm-version: 20.3.0
+          native-image: true
+      - name: Cache build .gradle dir
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle
+            .gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
+      - name: Gradle Build
+        run: ./gradlew build -Dquarkus.package.type=native
+      - name: Run UPX
+        uses: crazy-max/ghaction-upx@v1.3.3
+        with:
+          version: latest
+          file: build/ddc-cli-*
+          args: '-7'
+      - name: Upload artifacts
+        run: mkdir linux-amd64 && cp build/ddc-cli-* linux-amd64
+      - uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: linux-amd64
+
+  buildOnMac:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@master
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 11
+          graalvm-version: 20.3.0
+          native-image: true
+      - name: Cache build .gradle dir
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle
+            .gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
+      - name: Gradle Build
+        run: ./gradlew build -Dquarkus.package.type=native
+      - name: Run UPX
+        uses: svenstaro/upx-action@v2
+        with:
+          file: build/ddc-cli-*
+          args: '-7'
+      - name: Upload artifacts
+        run: mkdir mac-amd64 && cp build/ddc-cli-* mac-amd64
+      - uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: mac-amd64
+
+  buildOnWindows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@master
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 11
+          graalvm-version: 20.3.0
+          native-image: true
+      - name: Cache build .gradle dir
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle
+            .gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
+      - name: Gradle Build
+        run: ./gradlew build -Dquarkus.package.type=native
+      - name: Run UPX
+        uses: crazy-max/ghaction-upx@v1.3.3
+        with:
+          version: latest
+          file: build/ddc-cli-1.0.0-runner.exe
+          args: '-7'
+      - name: Upload artifacts
+        run: mkdir windows && cp build/ddc-cli-* windows
+      - uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: windows

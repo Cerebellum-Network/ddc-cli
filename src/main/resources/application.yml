@@ -1,0 +1,8 @@
+quarkus:
+  log:
+    level: ERROR
+  banner:
+    enabled: false
+  native:
+    additional-build-args:
+      - '-H:EnableURLProtocols=http,https'
