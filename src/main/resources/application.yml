@@ -8,3 +8,4 @@ quarkus:
   native:
     additional-build-args:
       - '-H:EnableURLProtocols=http,https'
+      - '-H:-CheckToolchain'
