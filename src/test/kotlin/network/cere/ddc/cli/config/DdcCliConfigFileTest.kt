@@ -4,9 +4,12 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.OS
 import java.io.File
 import kotlin.streams.asSequence
 
+@DisabledOnOs(value = [OS.WINDOWS])
 internal class DdcCliConfigFileTest {
     companion object {
         private const val DDC_CLI_CONFIG_FILE_PATH = ".ddc/test-cli-config"

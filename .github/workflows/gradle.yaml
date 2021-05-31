@@ -31,7 +31,7 @@ jobs:
         run: mkdir linux-amd64 && cp build/ddc-cli-*-runner linux-amd64
       - uses: actions/upload-artifact@v2
         with:
-          name: package
+          name: ddc-cli-linux-amd64
           path: linux-amd64
 
   buildOnMac:
@@ -57,7 +57,7 @@ jobs:
         run: mkdir mac-amd64 && cp build/ddc-cli-*-runner mac-amd64
       - uses: actions/upload-artifact@v2
         with:
-          name: package
+          name: ddc-cli-mac-amd64
           path: mac-amd64
 
   buildOnWindows:
@@ -83,5 +83,5 @@ jobs:
         run: mkdir windows && cp build/ddc-cli-*-runner.exe windows
       - uses: actions/upload-artifact@v2
         with:
-          name: package
+          name: ddc-cli-windows.exe
           path: windows
