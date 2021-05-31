@@ -27,12 +27,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
       - name: Gradle Build
         run: ./gradlew build -Dquarkus.package.type=native
-      - name: Run UPX
-        uses: crazy-max/ghaction-upx@v1.3.3
-        with:
-          version: latest
-          file: ./build/ddc-cli-*
-          args: '-7'
       - name: Upload artifacts
         run: mkdir linux-amd64 && cp build/ddc-cli-* linux-amd64
       - uses: actions/upload-artifact@v2
@@ -59,11 +53,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
       - name: Gradle Build
         run: ./gradlew build -Dquarkus.package.type=native
-      - name: Run UPX
-        uses: svenstaro/upx-action@v2
-        with:
-          file: ./build/ddc-cli-*
-          args: '-7'
       - name: Upload artifacts
         run: mkdir mac-amd64 && cp build/ddc-cli-* mac-amd64
       - uses: actions/upload-artifact@v2
@@ -89,13 +78,7 @@ jobs:
             .gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
       - name: Gradle Build
-        run: gradlew.bat build -Dquarkus.package.type=native
-      - name: Run UPX
-        uses: crazy-max/ghaction-upx@v1.3.3
-        with:
-          version: latest
-          file: build/ddc-cli-*
-          args: '-7'
+        run: ./gradlew.bat build -Dquarkus.package.type=native
       - name: Upload artifacts
         run: mkdir windows && cp build/ddc-cli-* windows
       - uses: actions/upload-artifact@v2
