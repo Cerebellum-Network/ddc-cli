@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.4.20"
-    kotlin("plugin.allopen") version "1.4.20"
+    kotlin("jvm") version "1.4.32"
+    kotlin("plugin.allopen") version "1.4.32"
     id("io.quarkus") version "2.0.0.Alpha3"
 }
 
@@ -11,7 +11,6 @@ repositories {
     maven { url = uri("https://jitpack.io") }
 }
 
-val vertxVersion = "4.0.3"
 dependencies {
     implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.0.0.Alpha3"))
     implementation("io.quarkus:quarkus-config-yaml")
