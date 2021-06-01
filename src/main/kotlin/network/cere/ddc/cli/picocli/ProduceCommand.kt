@@ -34,6 +34,13 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     @CommandLine.Option(names = ["-d", "--data"], required = true, description = ["Data to be stored in DDC"])
     lateinit var data: String
 
+    @CommandLine.Option(
+        names = ["--profile"],
+        defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
+        description = ["Configuration profile to use)"]
+    )
+    var profile: String? = null
+
     override fun run() {
         val producerConfig = readProducerConfig()
         val ddcProducer = DdcProducer(producerConfig)
@@ -53,7 +60,7 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     }
 
     private fun readProducerConfig(): ProducerConfig {
-        val configOptions = ddcCliConfigFile.read()
+        val configOptions = ddcCliConfigFile.read(profile)
 
         val appPubKey = configOptions[DdcCliConfigFile.APP_PUB_KEY_CONFIG]
         if (appPubKey == null || appPubKey.isEmpty()) {

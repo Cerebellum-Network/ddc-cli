@@ -8,6 +8,7 @@ import io.vertx.mutiny.core.Vertx
 import io.vertx.mutiny.ext.web.client.WebClient
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODES_CONFIG
+import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.DEFAULT_PROFILE
 import picocli.CommandLine
 
 @CommandLine.Command(name = "create-app")
@@ -39,6 +40,13 @@ class CreateAppCommand(
         description = ["Id of the application tier)"]
     )
     var tierId: String? = null
+
+    @CommandLine.Option(
+        names = ["--profile"],
+        defaultValue = DEFAULT_PROFILE,
+        description = ["Configuration profile to use)"]
+    )
+    var profile: String? = null
 
     private val client = WebClient.create(vertx)
 
@@ -72,7 +80,7 @@ class CreateAppCommand(
     }
 
     private fun readBootstrapNodes(): List<String> {
-        val configOptions = ddcCliConfigFile.read()
+        val configOptions = ddcCliConfigFile.read(profile)
 
         val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
         if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {

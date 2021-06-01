@@ -46,6 +46,13 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     )
     var fields: List<String> = listOf()
 
+    @CommandLine.Option(
+        names = ["--profile"],
+        defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
+        description = ["Configuration profile to use)"]
+    )
+    var profile: String? = null
+
     override fun run() {
         val consumerConfig = readConsumerConfig()
         val ddcConsumer = DdcConsumer(consumerConfig)
@@ -63,7 +70,7 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     }
 
     private fun readConsumerConfig(): ConsumerConfig {
-        val configOptions = ddcCliConfigFile.read()
+        val configOptions = ddcCliConfigFile.read(profile)
 
         val appPubKey = configOptions[APP_PUB_KEY_CONFIG]
         if (appPubKey == null || appPubKey.isEmpty()) {

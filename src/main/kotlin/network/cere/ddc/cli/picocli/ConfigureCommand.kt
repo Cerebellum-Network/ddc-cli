@@ -34,6 +34,13 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
     )
     var partitionPollIntervalMs: String? = null
 
+    @CommandLine.Option(
+        names = ["--profile"],
+        defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
+        description = ["Configuration profile to use)"]
+    )
+    var profile: String? = null
+
     override fun run() {
         val configOptions = mutableMapOf<String, String>()
 
@@ -43,7 +50,7 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
         partitionPollIntervalMs?.let { configOptions.put(PARTITION_POLL_INTERVAL_MS_CONFIG, it) }
 
         if (configOptions.isNotEmpty()) {
-            ddcCliConfigFile.write(configOptions)
+            ddcCliConfigFile.write(configOptions, profile)
         }
     }
 }
