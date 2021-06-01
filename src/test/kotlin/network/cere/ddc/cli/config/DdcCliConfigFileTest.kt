@@ -11,15 +11,13 @@ import kotlin.streams.asSequence
 
 @DisabledOnOs(value = [OS.WINDOWS])
 internal class DdcCliConfigFileTest {
-    companion object {
-        private const val DDC_CLI_CONFIG_FILE_PATH = ".ddc/test-cli-config"
-    }
+    private val ddcCliConfigFilePath = System.getProperty("user.home") + "/.ddc/test-cli-config"
 
-    private val testSubject = DdcCliConfigFile(DDC_CLI_CONFIG_FILE_PATH)
+    private val testSubject = DdcCliConfigFile(ddcCliConfigFilePath)
 
     @BeforeEach
     fun cleanUp() {
-        val ddcCliConfigFile = File(DDC_CLI_CONFIG_FILE_PATH)
+        val ddcCliConfigFile = File(ddcCliConfigFilePath)
         ddcCliConfigFile.delete()
     }
 
@@ -37,7 +35,7 @@ internal class DdcCliConfigFileTest {
     @Test
     fun `Returns valid config options when config file exists`() {
         //given
-        val ddcCliConfigFile = File(DDC_CLI_CONFIG_FILE_PATH)
+        val ddcCliConfigFile = File(ddcCliConfigFilePath)
         ddcCliConfigFile.parentFile.mkdirs()
         ddcCliConfigFile.createNewFile()
         ddcCliConfigFile.writeText(
@@ -73,7 +71,7 @@ internal class DdcCliConfigFileTest {
         testSubject.write(configOptions)
 
         //then
-        val ddcCliConfigFile = File(DDC_CLI_CONFIG_FILE_PATH)
+        val ddcCliConfigFile = File(ddcCliConfigFilePath)
         val config = ddcCliConfigFile.bufferedReader().lines().asSequence().joinToString("\n")
 
         assertEquals(
@@ -83,7 +81,7 @@ internal class DdcCliConfigFileTest {
 
     @Test
     fun `Merges config options when file exists`() {
-        val ddcCliConfigFile = File(DDC_CLI_CONFIG_FILE_PATH)
+        val ddcCliConfigFile = File(ddcCliConfigFilePath)
         ddcCliConfigFile.parentFile.mkdirs()
         ddcCliConfigFile.createNewFile()
         ddcCliConfigFile.writeText(

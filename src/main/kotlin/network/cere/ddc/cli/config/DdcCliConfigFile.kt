@@ -5,18 +5,18 @@ import javax.enterprise.context.ApplicationScoped
 import kotlin.streams.asSequence
 
 @ApplicationScoped
-class DdcCliConfigFile(private val ddcCliConfigFilePath: String = DDC_CLI_CONFIG_FILE_PATH) {
+class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
     companion object {
         const val APP_PUB_KEY_CONFIG = "appPubKey"
         const val APP_PRIV_KEY_CONFIG = "appPrivKey"
         const val BOOTSTRAP_NODES_CONFIG = "bootstrapNodes"
         const val PARTITION_POLL_INTERVAL_MS_CONFIG = "partitionPollIntervalMs"
-
-        private const val DDC_CLI_CONFIG_FILE_PATH = ".ddc/test-cli-config"
     }
 
+    private val defaultDdcCliConfigFilePath = System.getProperty("user.home") + "/.ddc/cli-config"
+
     fun read(): Map<String, String> {
-        val ddcCliConfigFile = File(ddcCliConfigFilePath)
+        val ddcCliConfigFile = File(ddcCliConfigFilePath ?: defaultDdcCliConfigFilePath)
         return if (ddcCliConfigFile.exists()) {
             ddcCliConfigFile.bufferedReader().lines().asSequence()
                 .filter { it.isNotEmpty() }
@@ -35,7 +35,7 @@ class DdcCliConfigFile(private val ddcCliConfigFilePath: String = DDC_CLI_CONFIG
         val updatedConfigOptions = existingConfigOptions.toMutableMap()
         updatedConfigOptions.putAll(configOptions)
 
-        val ddcCliConfigFile = File(ddcCliConfigFilePath)
+        val ddcCliConfigFile = File(ddcCliConfigFilePath ?: defaultDdcCliConfigFilePath)
 
         updatedConfigOptions
             .map { option -> option.key + "=" + option.value }
