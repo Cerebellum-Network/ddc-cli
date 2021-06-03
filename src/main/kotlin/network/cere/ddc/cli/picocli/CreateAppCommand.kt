@@ -56,7 +56,7 @@ class CreateAppCommand(
             appPubKey = Hex.encode(appKeyPair.publicKey)
             appPrivKey = Hex.encode(appKeyPair.privateKey)
         }
-        val signer = Ed25519Sign(Hex.decode(appPrivKey))
+        val signer = Ed25519Sign(Hex.decode(appPrivKey!!.removePrefix("0x")).sliceArray(0 until 32))
 
         val createAppReq = mapOf(
             "appPubKey" to appPubKey,

@@ -1,7 +1,9 @@
 package network.cere.ddc.cli.picocli
 
+import io.vertx.core.VertxOptions
+import io.vertx.core.file.FileSystemOptions
+import io.vertx.mutiny.core.Vertx
 import network.cere.ddc.cli.config.DdcCliConfigFile
-import network.cere.ddc.client.consumer.ConsumerConfig
 import network.cere.ddc.client.producer.DdcProducer
 import network.cere.ddc.client.producer.Piece
 import network.cere.ddc.client.producer.ProducerConfig
@@ -43,7 +45,14 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
 
     override fun run() {
         val producerConfig = readProducerConfig()
-        val ddcProducer = DdcProducer(producerConfig)
+        val ddcProducer = DdcProducer(
+            producerConfig,
+            Vertx.vertx(
+                VertxOptions().setFileSystemOptions(
+                    FileSystemOptions().setClassPathResolvingEnabled(false)
+                )
+            ),
+        )
 
         val res = ddcProducer.send(
             Piece(

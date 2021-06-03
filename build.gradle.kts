@@ -28,7 +28,7 @@ dependencies {
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-web-client:2.5.1")
 
     // DDC
-    implementation("com.github.cerebellum-network:ddc-client-kotlin:1.0.0-RC9")
+    implementation("com.github.cerebellum-network:ddc-client-kotlin:1.0.0-RC11")
 
     // JSON
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

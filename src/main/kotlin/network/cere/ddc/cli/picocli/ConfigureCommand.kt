@@ -46,7 +46,12 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
 
         appPubKey?.let { configOptions.put(APP_PUB_KEY_CONFIG, it) }
         appPrivKey?.let { configOptions.put(APP_PRIV_KEY_CONFIG, it) }
-        bootstrapNodes?.let { configOptions.put(BOOTSTRAP_NODES_CONFIG, it.joinToString()) }
+        bootstrapNodes?.let { nodes ->
+            configOptions.put(
+                BOOTSTRAP_NODES_CONFIG,
+                nodes.joinToString()
+            )
+        }
         partitionPollIntervalMs?.let { configOptions.put(PARTITION_POLL_INTERVAL_MS_CONFIG, it) }
 
         if (configOptions.isNotEmpty()) {
