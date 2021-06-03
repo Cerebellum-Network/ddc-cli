@@ -1,0 +1,61 @@
+name: CI-gradle-build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  buildOnLinux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@master
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 11
+          graalvm-version: 21.1.0
+          native-image: true
+      - name: Cache build .gradle dir
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle
+            .gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
+      - name: Gradle Build
+        run: ./gradlew build
+      - name: Upload artifacts
+        run: mkdir linux-amd64 && cp build/ddc-cli-*-runner linux-amd64/ddc-cli
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ddc-cli-linux-amd64
+          path: linux-amd64
+
+  buildOnMac:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@master
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 11
+          graalvm-version: 21.1.0
+          native-image: true
+      - name: Cache build .gradle dir
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle
+            .gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
+      - name: Gradle Build
+        run: ./gradlew build
+      - name: Upload artifacts
+        run: mkdir mac-amd64 && cp build/ddc-cli-*-runner mac-amd64/ddc-cli
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ddc-cli-mac-amd64
+          path: mac-amd64
