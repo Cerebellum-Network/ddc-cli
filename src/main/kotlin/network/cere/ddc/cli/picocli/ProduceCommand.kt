@@ -49,7 +49,7 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
             producerConfig,
             Vertx.vertx(
                 VertxOptions().setFileSystemOptions(
-                    FileSystemOptions().setFileCachingEnabled(false)
+                    FileSystemOptions().setClassPathResolvingEnabled(false)
                 )
             ),
         )

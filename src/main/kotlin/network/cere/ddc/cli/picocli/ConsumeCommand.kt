@@ -59,7 +59,7 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
             consumerConfig,
             Vertx.vertx(
                 VertxOptions().setFileSystemOptions(
-                    FileSystemOptions().setFileCachingEnabled(false)
+                    FileSystemOptions().setClassPathResolvingEnabled(false)
                 )
             ),
         )
