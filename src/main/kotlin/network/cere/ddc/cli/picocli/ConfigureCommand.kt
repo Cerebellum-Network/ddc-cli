@@ -49,7 +49,7 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
         bootstrapNodes?.let { nodes ->
             configOptions.put(
                 BOOTSTRAP_NODES_CONFIG,
-                nodes.joinToString { it.removeSuffix("/") }
+                nodes.joinToString()
             )
         }
         partitionPollIntervalMs?.let { configOptions.put(PARTITION_POLL_INTERVAL_MS_CONFIG, it) }
