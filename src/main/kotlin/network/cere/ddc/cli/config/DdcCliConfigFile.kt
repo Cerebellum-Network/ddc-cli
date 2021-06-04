@@ -11,6 +11,8 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         const val APP_PRIV_KEY_CONFIG = "appPrivKey"
         const val BOOTSTRAP_NODES_CONFIG = "bootstrapNodes"
         const val PARTITION_POLL_INTERVAL_MS_CONFIG = "partitionPollIntervalMs"
+        const val MASTER_ENCRYPTION_KEY_CONFIG = "masterEncryptionKey"
+        const val ENCRYPTION_JSON_PATHS_CONFIG = "encryptionJsonPaths"
 
         const val DEFAULT_PROFILE = "default"
     }
@@ -34,6 +36,20 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
             }
             .joinToString("\n")
             .let { ddcCliConfigFile.writeText(it) }
+    }
+
+    fun readEncryptionConfig(configOptions: Map<String, String>): EncryptionConfig {
+        val masterEncryptionKey = configOptions[MASTER_ENCRYPTION_KEY_CONFIG]
+        if (masterEncryptionKey == null || masterEncryptionKey.isEmpty()) {
+            throw RuntimeException("Missing required parameter masterEncryptionKey. Please use 'configure' command.")
+        }
+
+        val encryptionJsonPathsAsString = configOptions[ENCRYPTION_JSON_PATHS_CONFIG]
+        if (encryptionJsonPathsAsString == null || encryptionJsonPathsAsString.isEmpty()) {
+            throw RuntimeException("Missing required parameter encryptionJsonPaths. Please use 'configure' command.")
+        }
+
+        return EncryptionConfig(masterEncryptionKey, encryptionJsonPathsAsString.split(","))
     }
 
     private fun readAllProfiles(): MutableMap<String, MutableMap<String, String>> {

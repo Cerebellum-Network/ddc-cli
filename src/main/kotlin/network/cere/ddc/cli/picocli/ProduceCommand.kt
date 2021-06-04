@@ -7,6 +7,7 @@ import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.client.producer.DdcProducer
 import network.cere.ddc.client.producer.Piece
 import network.cere.ddc.client.producer.ProducerConfig
+import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 import java.time.Instant
 import java.util.*
@@ -37,6 +38,12 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     lateinit var data: String
 
     @CommandLine.Option(
+        names = ["--encrypt"],
+        description = ["Encrypt data"]
+    )
+    var encrypt: Boolean = false
+
+    @CommandLine.Option(
         names = ["--profile"],
         defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
@@ -44,7 +51,8 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     var profile: String? = null
 
     override fun run() {
-        val producerConfig = readProducerConfig()
+        val configOptions = ddcCliConfigFile.read(profile)
+        val producerConfig = readProducerConfig(configOptions)
         val ddcProducer = DdcProducer(
             producerConfig,
             Vertx.vertx(
@@ -53,6 +61,12 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
                 )
             ),
         )
+
+        if (encrypt) {
+            val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)
+            val appMasterEncryptionKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
+            data = appMasterEncryptionKey.encryptWithScopes(data, encryptionConfig.encryptionJsonPaths).encryptedData
+        }
 
         val res = ddcProducer.send(
             Piece(
@@ -68,9 +82,7 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
         println("cid: ${res.cid}")
     }
 
-    private fun readProducerConfig(): ProducerConfig {
-        val configOptions = ddcCliConfigFile.read(profile)
-
+    private fun readProducerConfig(configOptions: Map<String, String>): ProducerConfig {
         val appPubKey = configOptions[DdcCliConfigFile.APP_PUB_KEY_CONFIG]
         if (appPubKey == null || appPubKey.isEmpty()) {
             throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")
