@@ -10,9 +10,9 @@ import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.PARTITION_POLL_INT
 import network.cere.ddc.client.consumer.ConsumerConfig
 import network.cere.ddc.client.consumer.DataQuery
 import network.cere.ddc.client.consumer.DdcConsumer
+import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 import java.time.Instant
-import java.util.*
 
 @CommandLine.Command(name = "consume")
 class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
@@ -47,6 +47,12 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     var fields: List<String> = listOf()
 
     @CommandLine.Option(
+        names = ["--decrypt"],
+        description = ["Decrypt data"]
+    )
+    var decrypt: Boolean = false
+
+    @CommandLine.Option(
         names = ["--profile"],
         defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
@@ -54,7 +60,9 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     var profile: String? = null
 
     override fun run() {
-        val consumerConfig = readConsumerConfig()
+        val configOptions = ddcCliConfigFile.read(profile)
+        val consumerConfig = readConsumerConfig(configOptions)
+
         val ddcConsumer = DdcConsumer(
             consumerConfig,
             Vertx.vertx(
@@ -70,15 +78,46 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
             DataQuery("", "", listOf())
         }
 
-        ddcConsumer.consume(streamId, dataQuery)
-            .subscribe().with({ cr -> println(cr.piece) }, { e -> println(e) })
+        if (decrypt) {
+            consumeDecrypted(configOptions, ddcConsumer, dataQuery)
+        } else {
+            consumeEncrypted(ddcConsumer, dataQuery)
+        }
 
         Thread.sleep(CONSUMING_SESSION_IN_MS)
     }
 
-    private fun readConsumerConfig(): ConsumerConfig {
-        val configOptions = ddcCliConfigFile.read(profile)
+    private fun consumeDecrypted(
+        configOptions: Map<String, String>,
+        ddcConsumer: DdcConsumer,
+        dataQuery: DataQuery
+    ) {
+        val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)
+        val appMasterEncryptionKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
 
+        ddcConsumer.consume(streamId, dataQuery).subscribe().with(
+            { cr ->
+                try {
+                    cr.piece.data =
+                        appMasterEncryptionKey.decryptWithScopes(cr.piece.data!!, encryptionConfig.encryptionJsonPaths)
+                    println(cr.piece)
+                } catch (e: Exception) {
+                    println("Can't decrypt data: " + cr.piece.data)
+                }
+            },
+            { e -> println(e) }
+        )
+    }
+
+    private fun consumeEncrypted(
+        ddcConsumer: DdcConsumer,
+        dataQuery: DataQuery
+    ) {
+        ddcConsumer.consume(streamId, dataQuery)
+            .subscribe().with({ cr -> println(cr.piece) }, { e -> println(e) })
+    }
+
+    private fun readConsumerConfig(configOptions: Map<String, String>): ConsumerConfig {
         val appPubKey = configOptions[APP_PUB_KEY_CONFIG]
         if (appPubKey == null || appPubKey.isEmpty()) {
             throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")

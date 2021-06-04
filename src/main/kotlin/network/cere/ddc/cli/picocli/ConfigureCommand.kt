@@ -4,6 +4,8 @@ import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.APP_PRIV_KEY_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.APP_PUB_KEY_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODES_CONFIG
+import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.ENCRYPTION_JSON_PATHS_CONFIG
+import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.MASTER_ENCRYPTION_KEY_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.PARTITION_POLL_INTERVAL_MS_CONFIG
 import picocli.CommandLine
 
@@ -35,6 +37,18 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
     var partitionPollIntervalMs: String? = null
 
     @CommandLine.Option(
+        names = ["--masterEncryptionKey"],
+        description = ["Master encryption key to use for encryption/decryption"]
+    )
+    var masterEncryptionKey: String? = null
+
+    @CommandLine.Option(
+        names = ["--encryptionJsonPaths"],
+        description = ["Json paths to encrypt/decrypt"]
+    )
+    var encryptionJsonPaths: List<String>? = null
+
+    @CommandLine.Option(
         names = ["--profile"],
         defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
@@ -53,6 +67,8 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
             )
         }
         partitionPollIntervalMs?.let { configOptions.put(PARTITION_POLL_INTERVAL_MS_CONFIG, it) }
+        masterEncryptionKey?.let { configOptions.put(MASTER_ENCRYPTION_KEY_CONFIG, it) }
+        encryptionJsonPaths?.let { it -> configOptions.put(ENCRYPTION_JSON_PATHS_CONFIG, it.joinToString()) }
 
         if (configOptions.isNotEmpty()) {
             ddcCliConfigFile.write(configOptions, profile)

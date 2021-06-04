@@ -22,6 +22,7 @@ dependencies {
 
     // Crypto
     implementation("com.google.crypto.tink:tink:1.5.0")
+    implementation("com.github.cerebellum-network:ddc-encryption-impl-kotlin:1.5.0")
 
     // Smallrye
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:2.5.1")
