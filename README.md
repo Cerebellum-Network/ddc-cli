@@ -56,5 +56,5 @@ ddc-cli consume --stream-id filtered_stream --from 2021-01-01T00:00:00.000Z --to
 To generate random load to DDC:
 
 ```shell script
-ddc-cli generate-load -u 100 -n 30 -i 5 -s 1000
+ddc-cli generate-load -u 100 -n 30 -i pt5s -s 1000
 ```
