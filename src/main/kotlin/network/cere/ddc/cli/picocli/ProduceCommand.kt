@@ -52,7 +52,7 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
 
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
-        val producerConfig = readProducerConfig(configOptions)
+        val producerConfig = ddcCliConfigFile.readProducerConfig(configOptions)
         val ddcProducer = DdcProducer(
             producerConfig,
             Vertx.vertx(
@@ -80,24 +80,5 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
             .await().indefinitely()
 
         println("cid: ${res.cid}")
-    }
-
-    private fun readProducerConfig(configOptions: Map<String, String>): ProducerConfig {
-        val appPubKey = configOptions[DdcCliConfigFile.APP_PUB_KEY_CONFIG]
-        if (appPubKey == null || appPubKey.isEmpty()) {
-            throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")
-        }
-
-        val appPrivKey = configOptions[DdcCliConfigFile.APP_PRIV_KEY_CONFIG]
-        if (appPrivKey == null || appPrivKey.isEmpty()) {
-            throw RuntimeException("Missing required parameter appPrivKey. Please use 'configure' command.")
-        }
-
-        val bootstrapNodesAsString = configOptions[DdcCliConfigFile.BOOTSTRAP_NODES_CONFIG]
-        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
-            throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
-        }
-
-        return ProducerConfig(appPubKey, appPrivKey, bootstrapNodesAsString.split(","))
     }
 }

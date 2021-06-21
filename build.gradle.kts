@@ -34,6 +34,9 @@ dependencies {
     // JSON
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    //Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+
     testImplementation("io.quarkus:quarkus-junit5")
 }
 
