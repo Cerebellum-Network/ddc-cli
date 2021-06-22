@@ -6,6 +6,12 @@ import picocli.CommandLine
 @TopCommand
 @CommandLine.Command(
     mixinStandardHelpOptions = true,
-    subcommands = [CreateAppCommand::class, ConfigureCommand::class, ProduceCommand::class, ConsumeCommand::class]
+    subcommands = [
+        CreateAppCommand::class,
+        ConfigureCommand::class,
+        ProduceCommand::class,
+        ConsumeCommand::class,
+        GenerateLoadCommand::class
+    ]
 )
 class DdcCommand

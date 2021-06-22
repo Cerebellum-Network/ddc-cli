@@ -1,5 +1,6 @@
 package network.cere.ddc.cli.config
 
+import network.cere.ddc.client.producer.ProducerConfig
 import java.io.File
 import javax.enterprise.context.ApplicationScoped
 import kotlin.streams.asSequence
@@ -50,6 +51,25 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         }
 
         return EncryptionConfig(masterEncryptionKey, encryptionJsonPathsAsString.split(","))
+    }
+
+    fun readProducerConfig(configOptions: Map<String, String>): ProducerConfig {
+        val appPubKey = configOptions[APP_PUB_KEY_CONFIG]
+        if (appPubKey == null || appPubKey.isEmpty()) {
+            throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")
+        }
+
+        val appPrivKey = configOptions[APP_PRIV_KEY_CONFIG]
+        if (appPrivKey == null || appPrivKey.isEmpty()) {
+            throw RuntimeException("Missing required parameter appPrivKey. Please use 'configure' command.")
+        }
+
+        val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
+        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
+            throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
+        }
+
+        return ProducerConfig(appPubKey, appPrivKey, bootstrapNodesAsString.split(","))
     }
 
     private fun readAllProfiles(): MutableMap<String, MutableMap<String, String>> {
