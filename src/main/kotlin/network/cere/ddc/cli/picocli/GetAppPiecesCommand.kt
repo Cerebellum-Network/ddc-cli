@@ -10,19 +10,12 @@ import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 import java.time.Instant
 
-@CommandLine.Command(name = "get-user-pieces")
-class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+@CommandLine.Command(name = "get-app-pieces")
+class GetAppPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
 
     companion object {
         private const val CONSUMING_SESSION_IN_MS = 3_600_000L
     }
-
-    @CommandLine.Option(
-        names = ["-u", "--user", "--userPubKey"],
-        required = true,
-        description = ["User public key to specify in data piece"],
-    )
-    lateinit var userPubKey: String
 
     @CommandLine.Option(
         names = ["--from"],
@@ -69,18 +62,17 @@ class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Run
         )
 
         if (decrypt) {
-            getUserPiecesDecrypted(configOptions, ddcConsumer, userPubKey, from, to, fields)
+            getAppPiecesDecrypted(configOptions, ddcConsumer, from, to, fields)
         } else {
-            getUserPiecesEncrypted(ddcConsumer, userPubKey, from, to, fields)
+            getAppPiecesEncrypted(ddcConsumer, from, to, fields)
         }
 
         Thread.sleep(CONSUMING_SESSION_IN_MS)
     }
 
-    private fun getUserPiecesDecrypted(
+    private fun getAppPiecesDecrypted(
         configOptions: Map<String, String>,
         ddcConsumer: Consumer,
-        userPubKey: String,
         from: Instant?,
         to: Instant?,
         fields: List<String> = listOf()
@@ -88,7 +80,7 @@ class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Run
         val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)
         val appMasterEncryptionKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
 
-        ddcConsumer.getUserPieces(userPubKey, from?.toString() ?: "", to?.toString() ?: "", fields).subscribe().with(
+        ddcConsumer.getAppPieces(from?.toString() ?: "", to?.toString() ?: "", fields).subscribe().with(
             { piece ->
                 try {
                     piece.data =
@@ -102,14 +94,13 @@ class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Run
         )
     }
 
-    private fun getUserPiecesEncrypted(
+    private fun getAppPiecesEncrypted(
         ddcConsumer: Consumer,
-        userPubKey: String,
         from: Instant?,
         to: Instant?,
         fields: List<String> = listOf()
     ) {
-        ddcConsumer.getUserPieces(userPubKey, from?.toString() ?: "", to?.toString() ?: "", fields)
+        ddcConsumer.getAppPieces(from?.toString() ?: "", to?.toString() ?: "", fields)
             .subscribe().with({ piece -> println(piece) }, { e -> println(e) })
     }
 }
