@@ -17,10 +17,6 @@ class CreateAppCommand(
     vertx: Vertx
 ) : Runnable {
 
-    private companion object {
-        private const val TIER_ID = "2"
-    }
-
     @CommandLine.Option(
         names = ["--appPubKey"],
         defaultValue = "1",
@@ -33,13 +29,6 @@ class CreateAppCommand(
         description = ["Application private key"]
     )
     var appPrivKey: String? = null
-
-    @CommandLine.Option(
-        names = ["--tierId"],
-        defaultValue = TIER_ID,
-        description = ["Id of the application tier)"]
-    )
-    var tierId: String? = null
 
     @CommandLine.Option(
         names = ["--profile"],
@@ -60,8 +49,7 @@ class CreateAppCommand(
 
         val createAppReq = mapOf(
             "appPubKey" to appPubKey,
-            "tierId" to tierId,
-            "signature" to Hex.encode(signer.sign("$appPubKey$TIER_ID".toByteArray()))
+            "signature" to Hex.encode(signer.sign("$appPubKey".toByteArray()))
         ).let(::JsonObject)
 
 
