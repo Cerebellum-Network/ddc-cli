@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "1.5.10"
     kotlin("plugin.allopen") version "1.5.10"
-    id("io.quarkus") version "2.0.0.Alpha3"
+    id("io.quarkus") version "2.1.0.CR1"
 }
 
 repositories {
@@ -13,7 +13,7 @@ repositories {
 
 val smallryeMutinyVertx = "2.9.0"
 dependencies {
-    implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.0.0.Alpha3"))
+    implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.1.0.CR1"))
     implementation("io.quarkus:quarkus-config-yaml")
     implementation("io.quarkus:quarkus-picocli")
     implementation("io.quarkus:quarkus-kotlin")
