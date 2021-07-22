@@ -11,6 +11,7 @@ repositories {
     maven { url = uri("https://jitpack.io") }
 }
 
+val smallryeMutinyVertx = "2.9.0"
 dependencies {
     implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.0.0.Alpha3"))
     implementation("io.quarkus:quarkus-config-yaml")
@@ -25,8 +26,8 @@ dependencies {
     implementation("com.github.cerebellum-network:ddc-encryption-impl-kotlin:1.5.0")
 
     // Smallrye
-    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:2.5.1")
-    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-web-client:2.5.1")
+    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:$smallryeMutinyVertx")
+    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-web-client:$smallryeMutinyVertx")
 
     // DDC
     implementation("com.github.cerebellum-network:ddc-client-kotlin:1.0.0-RC15")
