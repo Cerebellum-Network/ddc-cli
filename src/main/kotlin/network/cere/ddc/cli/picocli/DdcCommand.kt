@@ -11,6 +11,9 @@ import picocli.CommandLine
         ConfigureCommand::class,
         ProduceCommand::class,
         ConsumeCommand::class,
+        GetAppPiecesCommand::class,
+        GetUserPiecesCommand::class,
+        GetByCidCommand::class,
         GenerateLoadCommand::class
     ]
 )
