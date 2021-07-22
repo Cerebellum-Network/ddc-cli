@@ -4,15 +4,11 @@ import io.vertx.core.VertxOptions
 import io.vertx.core.file.FileSystemOptions
 import io.vertx.mutiny.core.Vertx
 import network.cere.ddc.cli.config.DdcCliConfigFile
-import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.APP_PUB_KEY_CONFIG
-import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODES_CONFIG
-import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.PARTITION_POLL_INTERVAL_MS_CONFIG
-import network.cere.ddc.client.consumer.ConsumerConfig
-import network.cere.ddc.client.consumer.DataQuery
+import network.cere.ddc.client.consumer.Consumer
 import network.cere.ddc.client.consumer.DdcConsumer
+import network.cere.ddc.client.consumer.OffsetReset
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
-import java.time.Instant
 
 @CommandLine.Command(name = "consume")
 class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
@@ -29,16 +25,10 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     lateinit var streamId: String
 
     @CommandLine.Option(
-        names = ["--from"],
-        description = ["Date from in iso 8601 format"]
+        names = ["--offset-reset"],
+        description = ["Configure the start of the data stream. Earliest - from the beginning. Latest - real time (old data isn't consumed). (default - earliest)"]
     )
-    var from: Instant? = null
-
-    @CommandLine.Option(
-        names = ["--to"],
-        description = ["Date to in iso 8601 format"]
-    )
-    var to: Instant? = null
+    var offsetReset: OffsetReset = OffsetReset.EARLIEST
 
     @CommandLine.Option(
         names = ["--fields"],
@@ -61,9 +51,9 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
 
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
-        val consumerConfig = readConsumerConfig(configOptions)
+        val consumerConfig = ddcCliConfigFile.readConsumerConfig(configOptions)
 
-        val ddcConsumer = DdcConsumer(
+        val ddcConsumer: Consumer = DdcConsumer(
             consumerConfig,
             Vertx.vertx(
                 VertxOptions().setFileSystemOptions(
@@ -72,16 +62,10 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
             ),
         )
 
-        val dataQuery = if (from != null && to != null) {
-            DataQuery(from.toString(), to.toString(), fields)
-        } else {
-            DataQuery("", "", listOf())
-        }
-
         if (decrypt) {
-            consumeDecrypted(configOptions, ddcConsumer, dataQuery)
+            consumeDecrypted(configOptions, ddcConsumer, fields, offsetReset)
         } else {
-            consumeEncrypted(ddcConsumer, dataQuery)
+            consumeEncrypted(ddcConsumer, fields, offsetReset)
         }
 
         Thread.sleep(CONSUMING_SESSION_IN_MS)
@@ -89,13 +73,14 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
 
     private fun consumeDecrypted(
         configOptions: Map<String, String>,
-        ddcConsumer: DdcConsumer,
-        dataQuery: DataQuery
+        ddcConsumer: Consumer,
+        fields: List<String>,
+        offsetReset: OffsetReset
     ) {
         val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)
         val appMasterEncryptionKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
 
-        ddcConsumer.consume(streamId, dataQuery).subscribe().with(
+        ddcConsumer.consume(streamId, fields, offsetReset).subscribe().with(
             { cr ->
                 try {
                     cr.piece.data =
@@ -110,30 +95,11 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     }
 
     private fun consumeEncrypted(
-        ddcConsumer: DdcConsumer,
-        dataQuery: DataQuery
+        ddcConsumer: Consumer,
+        fields: List<String>,
+        offsetReset: OffsetReset
     ) {
-        ddcConsumer.consume(streamId, dataQuery)
+        ddcConsumer.consume(streamId, fields, offsetReset)
             .subscribe().with({ cr -> println(cr.piece) }, { e -> println(e) })
-    }
-
-    private fun readConsumerConfig(configOptions: Map<String, String>): ConsumerConfig {
-        val appPubKey = configOptions[APP_PUB_KEY_CONFIG]
-        if (appPubKey == null || appPubKey.isEmpty()) {
-            throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")
-        }
-
-        val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
-        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
-            throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
-        }
-
-        val partitionPollIntervalMsAsString = configOptions[PARTITION_POLL_INTERVAL_MS_CONFIG]
-        if (partitionPollIntervalMsAsString != null && partitionPollIntervalMsAsString.isNotEmpty()) {
-            val partitionPollIntervalMs = partitionPollIntervalMsAsString.toInt()
-            return ConsumerConfig(appPubKey, bootstrapNodesAsString.split(","), partitionPollIntervalMs)
-        }
-
-        return ConsumerConfig(appPubKey, bootstrapNodesAsString.split(","))
     }
 }

@@ -1,5 +1,6 @@
 package network.cere.ddc.cli.config
 
+import network.cere.ddc.client.consumer.ConsumerConfig
 import network.cere.ddc.client.producer.ProducerConfig
 import java.io.File
 import javax.enterprise.context.ApplicationScoped
@@ -70,6 +71,26 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         }
 
         return ProducerConfig(appPubKey, appPrivKey, bootstrapNodesAsString.split(","))
+    }
+
+    fun readConsumerConfig(configOptions: Map<String, String>): ConsumerConfig {
+        val appPubKey = configOptions[APP_PUB_KEY_CONFIG]
+        if (appPubKey == null || appPubKey.isEmpty()) {
+            throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")
+        }
+
+        val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
+        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
+            throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
+        }
+
+        val partitionPollIntervalMsAsString = configOptions[PARTITION_POLL_INTERVAL_MS_CONFIG]
+        if (partitionPollIntervalMsAsString != null && partitionPollIntervalMsAsString.isNotEmpty()) {
+            val partitionPollIntervalMs = partitionPollIntervalMsAsString.toInt()
+            return ConsumerConfig(appPubKey, bootstrapNodesAsString.split(","), partitionPollIntervalMs)
+        }
+
+        return ConsumerConfig(appPubKey, bootstrapNodesAsString.split(","))
     }
 
     private fun readAllProfiles(): MutableMap<String, MutableMap<String, String>> {
