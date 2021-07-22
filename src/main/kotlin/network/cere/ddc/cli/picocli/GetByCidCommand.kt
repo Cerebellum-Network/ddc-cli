@@ -9,7 +9,7 @@ import network.cere.ddc.client.consumer.DdcConsumer
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 
-@CommandLine.Command(name = "consume")
+@CommandLine.Command(name = "get-by-cid")
 class GetByCidCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
 
     @CommandLine.Option(
