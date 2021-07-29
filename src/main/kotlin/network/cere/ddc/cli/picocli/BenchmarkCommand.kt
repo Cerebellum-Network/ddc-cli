@@ -13,6 +13,7 @@ import kotlinx.coroutines.*
 import network.cere.ddc.client.consumer.Consumer
 import network.cere.ddc.client.consumer.DdcConsumer
 import java.lang.Thread.sleep
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 import kotlin.random.Random
@@ -69,6 +70,7 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
         val ddcProducer = DdcProducer(producerConfig, vertx)
         val ddcConsumer: Consumer = DdcConsumer(consumerConfig, vertx)
 
+        val benchmarkIsRunning = AtomicBoolean(true)
         val totalWcu = AtomicInteger(0)
         val totalRcu = AtomicInteger(0)
 
@@ -77,7 +79,7 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
         repeat(users) {
             val userPubKey = UUID.randomUUID().toString()
             val thread: Thread = thread {
-                while (true) {
+                while (benchmarkIsRunning.get()) {
                     val pieceSize = Random.nextInt(sizeMin, sizeMax)
                     val dataSize = pieceSize - APPROXIMATE_PIECE_METADATA_OVERHEAD
                     val data = "0".repeat(dataSize)
@@ -104,28 +106,23 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
         }
 
         sleep(durationInMs)
-        generationThreads.forEach { it.interrupt() }
+        benchmarkIsRunning.set(false)
+        generationThreads.forEach { it.join() }
 
         // consume data
         val consumingStart = System.currentTimeMillis()
-        val data = ddcConsumer.getAppPieces()
-        var bytesTransferred = 0
-        data.subscribe().asStream().forEach { p ->
-            bytesTransferred += getSize(p)
-            if (bytesTransferred > BYTES_PER_RCU) {
-                val rcu = bytesTransferred / BYTES_PER_RCU
-                totalRcu.addAndGet(rcu)
-                bytesTransferred -= rcu * BYTES_PER_RCU
-            }
+        val bytesTransferred = AtomicInteger(0)
+
+        ddcConsumer.getAppPieces().subscribe().asStream().forEach { p ->
+            bytesTransferred.addAndGet(getSize(p))
         }
 
-        if (bytesTransferred > 0) {
-            var rcu = bytesTransferred / BYTES_PER_RCU
-            if (bytesTransferred % BYTES_PER_RCU > 0) {
-                rcu++
-            }
-            totalRcu.addAndGet(rcu)
+        var rcu = bytesTransferred.get() / BYTES_PER_RCU
+        if (bytesTransferred.get() % BYTES_PER_RCU > 0) {
+            rcu++
         }
+        totalRcu.addAndGet(rcu)
+
         val consumingDurationIsMs = System.currentTimeMillis() - consumingStart
 
         // print result
