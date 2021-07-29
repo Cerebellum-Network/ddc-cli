@@ -107,7 +107,6 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
 
         sleep(durationInMs)
         benchmarkIsRunning.set(false)
-        generationThreads.forEach { it.join() }
 
         // consume data
         val consumingStart = System.currentTimeMillis()
