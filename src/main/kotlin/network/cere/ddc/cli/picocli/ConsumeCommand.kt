@@ -1,17 +1,13 @@
 package network.cere.ddc.cli.picocli
 
-import io.vertx.core.VertxOptions
-import io.vertx.core.file.FileSystemOptions
-import io.vertx.mutiny.core.Vertx
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.client.consumer.Consumer
-import network.cere.ddc.client.consumer.DdcConsumer
 import network.cere.ddc.client.consumer.OffsetReset
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 
 @CommandLine.Command(name = "consume")
-class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     companion object {
         private const val CONSUMING_SESSION_IN_MS = 3_600_000L
@@ -42,25 +38,9 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     )
     var decrypt: Boolean = false
 
-    @CommandLine.Option(
-        names = ["--profile"],
-        defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String? = null
-
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
-        val consumerConfig = ddcCliConfigFile.readConsumerConfig(configOptions)
-
-        val ddcConsumer: Consumer = DdcConsumer(
-            consumerConfig,
-            Vertx.vertx(
-                VertxOptions().setFileSystemOptions(
-                    FileSystemOptions().setClassPathResolvingEnabled(false)
-                )
-            ),
-        )
+        val ddcConsumer = buildConsumer(configOptions)
 
         if (decrypt) {
             consumeDecrypted(configOptions, ddcConsumer, fields, offsetReset)
@@ -78,27 +58,19 @@ class ConsumeCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
         offsetReset: OffsetReset
     ) {
         val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)
-        val appMasterEncryptionKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
+        val secretKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
 
         ddcConsumer.consume(streamId, fields, offsetReset).subscribe().with(
             { cr ->
-                try {
-                    cr.piece.data =
-                        appMasterEncryptionKey.decryptWithScopes(cr.piece.data!!, encryptionConfig.encryptionJsonPaths)
-                    println(cr.piece)
-                } catch (e: Exception) {
-                    println("Can't decrypt data: " + cr.piece.data)
-                }
+                runCatching {
+                    cr.piece.data = secretKey.decryptWithScopes(cr.piece.data!!, encryptionConfig.encryptionJsonPaths)
+                }.fold({ println(cr.piece) }, { println("Can't decrypt data: " + cr.piece.data) })
             },
             { e -> println(e) }
         )
     }
 
-    private fun consumeEncrypted(
-        ddcConsumer: Consumer,
-        fields: List<String>,
-        offsetReset: OffsetReset
-    ) {
+    private fun consumeEncrypted(ddcConsumer: Consumer, fields: List<String>, offsetReset: OffsetReset) {
         ddcConsumer.consume(streamId, fields, offsetReset)
             .subscribe().with({ cr -> println(cr.piece) }, { e -> println(e) })
     }

@@ -1,16 +1,11 @@
 package network.cere.ddc.cli.picocli
 
-import io.vertx.core.VertxOptions
-import io.vertx.core.file.FileSystemOptions
-import io.vertx.mutiny.core.Vertx
 import network.cere.ddc.cli.config.DdcCliConfigFile
-import network.cere.ddc.client.consumer.Consumer
-import network.cere.ddc.client.consumer.DdcConsumer
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 
 @CommandLine.Command(name = "get-by-cid")
-class GetByCidCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+class GetByCidCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
         names = ["-u", "--user", "--userPubKey"],
@@ -32,25 +27,9 @@ class GetByCidCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable
     )
     var decrypt: Boolean = false
 
-    @CommandLine.Option(
-        names = ["--profile"],
-        defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String? = null
-
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
-        val consumerConfig = ddcCliConfigFile.readConsumerConfig(configOptions)
-
-        val ddcConsumer: Consumer = DdcConsumer(
-            consumerConfig,
-            Vertx.vertx(
-                VertxOptions().setFileSystemOptions(
-                    FileSystemOptions().setClassPathResolvingEnabled(false)
-                )
-            ),
-        )
+        val ddcConsumer = buildConsumer(configOptions)
 
         val piece = ddcConsumer.getByCid(userPubKey, cid).await().indefinitely()
 

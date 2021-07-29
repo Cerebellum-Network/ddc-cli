@@ -1,19 +1,14 @@
 package network.cere.ddc.cli.picocli
 
-import io.vertx.core.VertxOptions
-import io.vertx.core.file.FileSystemOptions
-import io.vertx.mutiny.core.Vertx
 import network.cere.ddc.cli.config.DdcCliConfigFile
-import network.cere.ddc.client.producer.DdcProducer
 import network.cere.ddc.client.producer.Piece
-import network.cere.ddc.client.producer.ProducerConfig
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 import java.time.Instant
 import java.util.*
 
 @CommandLine.Command(name = "produce")
-class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
         names = ["-i", "--id"],
@@ -43,24 +38,10 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     )
     var encrypt: Boolean = false
 
-    @CommandLine.Option(
-        names = ["--profile"],
-        defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String? = null
-
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
         val producerConfig = ddcCliConfigFile.readProducerConfig(configOptions)
-        val ddcProducer = DdcProducer(
-            producerConfig,
-            Vertx.vertx(
-                VertxOptions().setFileSystemOptions(
-                    FileSystemOptions().setClassPathResolvingEnabled(false)
-                )
-            ),
-        )
+        val ddcProducer = buildProducer(producerConfig)
 
         if (encrypt) {
             val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)
