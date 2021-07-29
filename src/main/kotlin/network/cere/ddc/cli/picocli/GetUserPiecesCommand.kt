@@ -44,13 +44,6 @@ class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abs
     )
     var decrypt: Boolean = false
 
-    @CommandLine.Option(
-        names = ["-p", "--profile"],
-        defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String? = null
-
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
         val ddcConsumer = buildConsumer(configOptions)

@@ -1,17 +1,10 @@
 package network.cere.ddc.cli.picocli
 
-import io.vertx.core.VertxOptions
-import io.vertx.core.file.FileSystemOptions
-import io.vertx.mutiny.core.Vertx
 import network.cere.ddc.cli.config.DdcCliConfigFile
-import network.cere.ddc.client.producer.DdcProducer
 import network.cere.ddc.client.producer.Piece
 import picocli.CommandLine
 import java.time.Instant
 import java.util.*
-import kotlinx.coroutines.*
-import network.cere.ddc.client.consumer.Consumer
-import network.cere.ddc.client.consumer.DdcConsumer
 import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -19,7 +12,7 @@ import kotlin.concurrent.thread
 import kotlin.random.Random
 
 @CommandLine.Command(name = "benchmark")
-class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     companion object {
         const val APPROXIMATE_PIECE_METADATA_OVERHEAD = 500 // metadata + indexes
@@ -52,23 +45,11 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
     )
     var sizeMax: Int = 4 * 1 shl 2 * 10 // 4 MB
 
-    @CommandLine.Option(
-        names = ["-p", "--profile"],
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String = DdcCliConfigFile.DEFAULT_PROFILE
-
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
         val producerConfig = ddcCliConfigFile.readProducerConfig(configOptions)
-        val consumerConfig = ddcCliConfigFile.readConsumerConfig(configOptions)
-        val vertx = Vertx.vertx(
-            VertxOptions().setFileSystemOptions(
-                FileSystemOptions().setClassPathResolvingEnabled(false)
-            )
-        )
-        val ddcProducer = DdcProducer(producerConfig, vertx)
-        val ddcConsumer: Consumer = DdcConsumer(consumerConfig, vertx)
+        val ddcProducer = buildProducer(producerConfig)
+        val ddcConsumer = buildConsumer(configOptions)
 
         val benchmarkIsRunning = AtomicBoolean(true)
         val totalWcu = AtomicInteger(0)
