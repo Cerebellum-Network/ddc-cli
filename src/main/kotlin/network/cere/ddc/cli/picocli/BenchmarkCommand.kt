@@ -22,7 +22,7 @@ import kotlin.random.Random
 class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
 
     companion object {
-        const val APPROXIMATE_PIECE_METADATA_OVERHEAD = 600 // metadata + indexes
+        const val APPROXIMATE_PIECE_METADATA_OVERHEAD = 500 // metadata + indexes
 
         const val BYTES_PER_WCU = 4 * 1 shl 10 // 4 KB
         const val BYTES_PER_RCU = 4 * 1 shl 10 // 4 KB
