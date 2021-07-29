@@ -7,7 +7,7 @@ import java.time.Instant
 import java.util.*
 import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.concurrent.thread
 import kotlin.random.Random
 
@@ -35,15 +35,15 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     @CommandLine.Option(
         names = ["-sMin", "--sizeMin"],
-        description = ["Min piece size to be generated in bytes (default - 4KB)"]
+        description = ["Min piece size to be generated in bytes (default - 4 KB)"]
     )
     var sizeMin: Int = 4 * 1 shl 10 // 4 KB
 
     @CommandLine.Option(
         names = ["-sMax", "--sizeMax"],
-        description = ["Max piece size to be generated in bytes (default - 4MB)"]
+        description = ["Max piece size to be generated in bytes (default - 400 KB)"]
     )
-    var sizeMax: Int = 4 * 1 shl 2 * 10 // 4 MB
+    var sizeMax: Int = 400 * 1 shl 10 // 400 KB
 
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
@@ -52,8 +52,8 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         val ddcConsumer = buildConsumer(configOptions)
 
         val benchmarkIsRunning = AtomicBoolean(true)
-        val totalWcu = AtomicInteger(0)
-        val totalRcu = AtomicInteger(0)
+        val totalWriteRequests = AtomicLong(0)
+        val totalWcu = AtomicLong(0)
 
         // produce data
         val generationThreads = mutableListOf<Thread>()
@@ -80,7 +80,8 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
                     if (pieceSize % BYTES_PER_WCU > 0) {
                         wcu++
                     }
-                    totalWcu.addAndGet(wcu)
+                    totalWriteRequests.incrementAndGet()
+                    totalWcu.addAndGet(wcu.toLong())
                 }
             }
             generationThreads.add(thread)
@@ -90,15 +91,16 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         benchmarkIsRunning.set(false)
 
         // consume data
+        val totalBytesConsumed = AtomicLong(0)
+        val totalRcu = AtomicLong(0)
         val consumingStart = System.currentTimeMillis()
-        val bytesTransferred = AtomicInteger(0)
 
         ddcConsumer.getAppPieces().subscribe().asStream().forEach { p ->
-            bytesTransferred.addAndGet(getSize(p))
+            totalBytesConsumed.addAndGet(getSize(p).toLong())
         }
 
-        var rcu = bytesTransferred.get() / BYTES_PER_RCU
-        if (bytesTransferred.get() % BYTES_PER_RCU > 0) {
+        var rcu = totalBytesConsumed.get() / BYTES_PER_RCU
+        if (totalBytesConsumed.get() % BYTES_PER_RCU > 0) {
             rcu++
         }
         totalRcu.addAndGet(rcu)
@@ -106,9 +108,17 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         val consumingDurationIsMs = System.currentTimeMillis() - consumingStart
 
         // print result
+        println("=".repeat(60))
+        println("Producing")
+        println("Total requests: ${totalWriteRequests.get()}")
         println("Total WCU: ${totalWcu.get()}")
-        println("Total RCU: ${totalRcu.get()}")
+        println("Req/sec: ${totalWriteRequests.get() / (durationInMs / 1000)}")
         println("WCU/sec: ${totalWcu.get() / (durationInMs / 1000)}")
+
+        println("=".repeat(60))
+        println("Consuming")
+        println("Total bytes: ${totalBytesConsumed.get()}")
+        println("Total RCU: ${totalRcu.get()}")
         println("RCU/sec: ${totalRcu.get() / (consumingDurationIsMs / 1000)}")
     }
 
