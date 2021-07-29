@@ -5,7 +5,6 @@ import io.quarkus.runtime.QuarkusApplication
 
 import io.quarkus.runtime.annotations.QuarkusMain
 import picocli.CommandLine.IFactory
-import java.lang.Exception
 
 @QuarkusMain
 @CommandLine.Command(
@@ -23,7 +22,6 @@ import java.lang.Exception
     ]
 )
 class DdcCommand(private val factory: IFactory) : QuarkusApplication {
-    @Throws(Exception::class)
     override fun run(vararg args: String): Int {
         return CommandLine(this, factory).setCaseInsensitiveEnumValuesAllowed(true).execute(*args)
     }

@@ -1,21 +1,16 @@
 package network.cere.ddc.cli.picocli
 
-import io.vertx.core.VertxOptions
-import io.vertx.core.file.FileSystemOptions
-import io.vertx.mutiny.core.Vertx
 import network.cere.ddc.cli.config.DdcCliConfigFile
-import network.cere.ddc.client.producer.DdcProducer
 import network.cere.ddc.client.producer.Piece
 import picocli.CommandLine
 import java.time.Duration
 import java.time.Instant
 import java.util.*
-import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 @CommandLine.Command(name = "generate-load")
-class GenerateLoadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+class GenerateLoadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
         names = ["-u", "--users"],
@@ -41,23 +36,10 @@ class GenerateLoadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runn
     )
     var size: Int = 1000
 
-    @CommandLine.Option(
-        names = ["-p", "--profile"],
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String = DdcCliConfigFile.DEFAULT_PROFILE
-
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
         val producerConfig = ddcCliConfigFile.readProducerConfig(configOptions)
-        val ddcProducer = DdcProducer(
-            producerConfig,
-            Vertx.vertx(
-                VertxOptions().setFileSystemOptions(
-                    FileSystemOptions().setClassPathResolvingEnabled(false)
-                )
-            ),
-        )
+        val ddcProducer = buildProducer(producerConfig)
 
         val generationThreads = mutableListOf<Thread>()
         repeat(users) {

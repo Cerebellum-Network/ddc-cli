@@ -1,17 +1,13 @@
 package network.cere.ddc.cli.picocli
 
-import io.vertx.core.VertxOptions
-import io.vertx.core.file.FileSystemOptions
-import io.vertx.mutiny.core.Vertx
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.client.consumer.Consumer
-import network.cere.ddc.client.consumer.DdcConsumer
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 import java.time.Instant
 
 @CommandLine.Command(name = "get-user-pieces")
-class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     companion object {
         private const val CONSUMING_SESSION_IN_MS = 3_600_000L
@@ -57,16 +53,7 @@ class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Run
 
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
-        val consumerConfig = ddcCliConfigFile.readConsumerConfig(configOptions)
-
-        val ddcConsumer: Consumer = DdcConsumer(
-            consumerConfig,
-            Vertx.vertx(
-                VertxOptions().setFileSystemOptions(
-                    FileSystemOptions().setClassPathResolvingEnabled(false)
-                )
-            ),
-        )
+        val ddcConsumer = buildConsumer(configOptions)
 
         if (decrypt) {
             getUserPiecesDecrypted(configOptions, ddcConsumer, userPubKey, from, to, fields)
@@ -86,17 +73,13 @@ class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Run
         fields: List<String> = listOf()
     ) {
         val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)
-        val appMasterEncryptionKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
+        val secretKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
 
         ddcConsumer.getUserPieces(userPubKey, from?.toString() ?: "", to?.toString() ?: "", fields).subscribe().with(
             { piece ->
-                try {
-                    piece.data =
-                        appMasterEncryptionKey.decryptWithScopes(piece.data!!, encryptionConfig.encryptionJsonPaths)
-                    println(piece)
-                } catch (e: Exception) {
-                    println("Can't decrypt data: " + piece.data)
-                }
+                runCatching {
+                    piece.data = secretKey.decryptWithScopes(piece.data!!, encryptionConfig.encryptionJsonPaths)
+                }.fold({ println(piece) }, { println("Can't decrypt data: " + piece.data) })
             },
             { e -> println(e) }
         )

@@ -15,7 +15,7 @@ import picocli.CommandLine
 class CreateAppCommand(
     private val ddcCliConfigFile: DdcCliConfigFile,
     vertx: Vertx
-) : Runnable {
+) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
         names = ["--appPubKey"],
@@ -29,13 +29,6 @@ class CreateAppCommand(
         description = ["Application private key"]
     )
     var appPrivKey: String? = null
-
-    @CommandLine.Option(
-        names = ["-p", "--profile"],
-        defaultValue = DEFAULT_PROFILE,
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String? = null
 
     private val client = WebClient.create(vertx)
 
@@ -51,7 +44,6 @@ class CreateAppCommand(
             "appPubKey" to appPubKey,
             "signature" to Hex.encode(signer.sign("$appPubKey".toByteArray()))
         ).let(::JsonObject)
-
 
         client.postAbs("${readBootstrapNodes()[0]}/api/rest/apps")
             .sendJsonObject(createAppReq)
@@ -71,11 +63,10 @@ class CreateAppCommand(
         val configOptions = ddcCliConfigFile.read(profile)
 
         val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
-        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
+        if (bootstrapNodesAsString.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
         }
 
         return bootstrapNodesAsString.split(",")
     }
-
 }

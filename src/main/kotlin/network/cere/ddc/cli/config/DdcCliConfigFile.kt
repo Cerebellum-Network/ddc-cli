@@ -75,22 +75,19 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
 
     fun readConsumerConfig(configOptions: Map<String, String>): ConsumerConfig {
         val appPubKey = configOptions[APP_PUB_KEY_CONFIG]
-        if (appPubKey == null || appPubKey.isEmpty()) {
-            throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")
-        }
-
         val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
-        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
-            throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
-        }
-
         val partitionPollIntervalMsAsString = configOptions[PARTITION_POLL_INTERVAL_MS_CONFIG]
-        if (partitionPollIntervalMsAsString != null && partitionPollIntervalMsAsString.isNotEmpty()) {
-            val partitionPollIntervalMs = partitionPollIntervalMsAsString.toInt()
-            return ConsumerConfig(appPubKey, bootstrapNodesAsString.split(","), partitionPollIntervalMs)
+
+        when {
+            appPubKey.isNullOrEmpty() -> throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")
+            bootstrapNodesAsString.isNullOrEmpty() -> throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
+            !partitionPollIntervalMsAsString.isNullOrEmpty() -> {
+                val partitionPollIntervalMs = partitionPollIntervalMsAsString.toInt()
+                return ConsumerConfig(appPubKey, bootstrapNodesAsString.split(","), partitionPollIntervalMs)
+            }
         }
 
-        return ConsumerConfig(appPubKey, bootstrapNodesAsString.split(","))
+        return ConsumerConfig(appPubKey!!, bootstrapNodesAsString!!.split(","))
     }
 
     private fun readAllProfiles(): MutableMap<String, MutableMap<String, String>> {
