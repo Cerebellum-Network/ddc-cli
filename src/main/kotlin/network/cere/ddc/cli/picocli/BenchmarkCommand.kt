@@ -47,15 +47,18 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
+        produce(configOptions)
+        consume(configOptions)
+    }
+
+    private fun produce(configOptions: Map<String, String>) {
         val producerConfig = ddcCliConfigFile.readProducerConfig(configOptions)
         val ddcProducer = buildProducer(producerConfig)
-        val ddcConsumer = buildConsumer(configOptions)
 
         val benchmarkIsRunning = AtomicBoolean(true)
         val totalWriteRequests = AtomicLong(0)
         val totalWcu = AtomicLong(0)
 
-        // produce data
         val generationThreads = mutableListOf<Thread>()
         repeat(users) {
             val userPubKey = UUID.randomUUID().toString()
@@ -90,7 +93,18 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         sleep(durationInMs)
         benchmarkIsRunning.set(false)
 
-        // consume data
+        // print result
+        println("=".repeat(60))
+        println("Producing")
+        println("Total requests: ${totalWriteRequests.get()}")
+        println("Total WCU: ${totalWcu.get()}")
+        println("Req/sec: ${totalWriteRequests.get() / (durationInMs / 1000)}")
+        println("WCU/sec: ${totalWcu.get() / (durationInMs / 1000)}")
+    }
+
+    private fun consume(configOptions: Map<String, String>) {
+        val ddcConsumer = buildConsumer(configOptions)
+
         val totalBytesConsumed = AtomicLong(0)
         val totalRcu = AtomicLong(0)
         val consumingStart = System.currentTimeMillis()
@@ -108,13 +122,6 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         val consumingDurationIsMs = System.currentTimeMillis() - consumingStart
 
         // print result
-        println("=".repeat(60))
-        println("Producing")
-        println("Total requests: ${totalWriteRequests.get()}")
-        println("Total WCU: ${totalWcu.get()}")
-        println("Req/sec: ${totalWriteRequests.get() / (durationInMs / 1000)}")
-        println("WCU/sec: ${totalWcu.get() / (durationInMs / 1000)}")
-
         println("=".repeat(60))
         println("Consuming")
         println("Total bytes: ${totalBytesConsumed.get()}")
