@@ -49,7 +49,7 @@ class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Run
     var decrypt: Boolean = false
 
     @CommandLine.Option(
-        names = ["--profile"],
+        names = ["-p", "--profile"],
         defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
     )

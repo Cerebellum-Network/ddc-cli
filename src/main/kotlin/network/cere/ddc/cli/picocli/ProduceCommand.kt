@@ -44,7 +44,7 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable 
     var encrypt: Boolean = false
 
     @CommandLine.Option(
-        names = ["--profile"],
+        names = ["-p", "--profile"],
         defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
     )

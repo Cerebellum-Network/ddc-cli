@@ -49,7 +49,7 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
     var encryptionJsonPaths: List<String>? = null
 
     @CommandLine.Option(
-        names = ["--profile"],
+        names = ["-p", "--profile"],
         defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
     )

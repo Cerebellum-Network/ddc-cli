@@ -31,7 +31,7 @@ class CreateAppCommand(
     var appPrivKey: String? = null
 
     @CommandLine.Option(
-        names = ["--profile"],
+        names = ["-p", "--profile"],
         defaultValue = DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
     )

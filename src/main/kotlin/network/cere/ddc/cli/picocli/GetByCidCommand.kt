@@ -33,7 +33,7 @@ class GetByCidCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable
     var decrypt: Boolean = false
 
     @CommandLine.Option(
-        names = ["--profile"],
+        names = ["-p", "--profile"],
         defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
     )

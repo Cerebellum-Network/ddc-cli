@@ -11,14 +11,15 @@ import java.lang.Exception
 @CommandLine.Command(
     mixinStandardHelpOptions = true,
     subcommands = [
-        CreateAppCommand::class,
+        BenchmarkCommand::class,
         ConfigureCommand::class,
-        ProduceCommand::class,
         ConsumeCommand::class,
+        CreateAppCommand::class,
+        GenerateLoadCommand::class,
         GetAppPiecesCommand::class,
-        GetUserPiecesCommand::class,
         GetByCidCommand::class,
-        GenerateLoadCommand::class
+        GetUserPiecesCommand::class,
+        ProduceCommand::class,
     ]
 )
 class DdcCommand(private val factory: IFactory) : QuarkusApplication {

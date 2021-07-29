@@ -42,7 +42,7 @@ class GenerateLoadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runn
     var size: Int = 1000
 
     @CommandLine.Option(
-        names = ["--profile"],
+        names = ["-p", "--profile"],
         description = ["Configuration profile to use)"]
     )
     var profile: String = DdcCliConfigFile.DEFAULT_PROFILE
