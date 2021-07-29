@@ -6,6 +6,7 @@ import picocli.CommandLine
 import java.time.Instant
 import java.util.*
 import java.lang.Thread.sleep
+import java.time.Duration
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.concurrent.thread
@@ -29,9 +30,9 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     @CommandLine.Option(
         names = ["-d", "--duration"],
-        description = ["Benchmark data generation duration in milliseconds (default - 1 minute)"]
+        description = ["Benchmark data generation duration in seconds (default - 1 min)"]
     )
-    var durationInMs: Long = 60 * 1000
+    var durationInSec: Long = 60
 
     @CommandLine.Option(
         names = ["-sMin", "--sizeMin"],
@@ -56,7 +57,7 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         val ddcProducer = buildProducer(producerConfig)
 
         val benchmarkIsRunning = AtomicBoolean(true)
-        val totalWriteRequests = AtomicLong(0)
+        val totalRequests = AtomicLong(0)
         val totalWcu = AtomicLong(0)
 
         val generationThreads = mutableListOf<Thread>()
@@ -83,50 +84,50 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
                     if (pieceSize % BYTES_PER_WCU > 0) {
                         wcu++
                     }
-                    totalWriteRequests.incrementAndGet()
+                    totalRequests.incrementAndGet()
                     totalWcu.addAndGet(wcu.toLong())
                 }
             }
             generationThreads.add(thread)
         }
 
-        sleep(durationInMs)
+        sleep(Duration.ofSeconds(durationInSec).toMillis())
         benchmarkIsRunning.set(false)
 
         // print result
         println("=".repeat(60))
         println("Producing")
-        println("Total requests: ${totalWriteRequests.get()}")
+        println("Total requests: ${totalRequests.get()}")
         println("Total WCU: ${totalWcu.get()}")
-        println("Req/sec: ${totalWriteRequests.get() / (durationInMs / 1000)}")
-        println("WCU/sec: ${totalWcu.get() / (durationInMs / 1000)}")
+        println("Req/sec: ${totalRequests.get() / durationInSec}")
+        println("WCU/sec: ${totalWcu.get() / durationInSec}")
     }
 
     private fun consume(configOptions: Map<String, String>) {
         val ddcConsumer = buildConsumer(configOptions)
 
-        val totalBytesConsumed = AtomicLong(0)
+        val totalBytes = AtomicLong(0)
         val totalRcu = AtomicLong(0)
         val consumingStart = System.currentTimeMillis()
 
         ddcConsumer.getAppPieces().subscribe().asStream().forEach { p ->
-            totalBytesConsumed.addAndGet(getSize(p).toLong())
+            totalBytes.addAndGet(getSize(p).toLong())
         }
 
-        var rcu = totalBytesConsumed.get() / BYTES_PER_RCU
-        if (totalBytesConsumed.get() % BYTES_PER_RCU > 0) {
+        var rcu = totalBytes.get() / BYTES_PER_RCU
+        if (totalBytes.get() % BYTES_PER_RCU > 0) {
             rcu++
         }
         totalRcu.addAndGet(rcu)
 
-        val consumingDurationIsMs = System.currentTimeMillis() - consumingStart
+        val durationInSec = (System.currentTimeMillis() - consumingStart) / 1000
 
         // print result
         println("=".repeat(60))
         println("Consuming")
-        println("Total bytes: ${totalBytesConsumed.get()}")
+        println("Total bytes: ${totalBytes.get()}")
         println("Total RCU: ${totalRcu.get()}")
-        println("RCU/sec: ${totalRcu.get() / (consumingDurationIsMs / 1000)}")
+        println("RCU/sec: ${totalRcu.get() / durationInSec}")
     }
 
     private fun getSize(piece: network.cere.ddc.client.consumer.Piece): Int {
