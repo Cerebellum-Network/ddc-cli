@@ -15,11 +15,7 @@ import picocli.CommandLine
 class CreateAppCommand(
     private val ddcCliConfigFile: DdcCliConfigFile,
     vertx: Vertx
-) : Runnable {
-
-    private companion object {
-        private const val TIER_ID = "2"
-    }
+) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
         names = ["--appPubKey"],
@@ -34,20 +30,6 @@ class CreateAppCommand(
     )
     var appPrivKey: String? = null
 
-    @CommandLine.Option(
-        names = ["--tierId"],
-        defaultValue = TIER_ID,
-        description = ["Id of the application tier)"]
-    )
-    var tierId: String? = null
-
-    @CommandLine.Option(
-        names = ["--profile"],
-        defaultValue = DEFAULT_PROFILE,
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String? = null
-
     private val client = WebClient.create(vertx)
 
     override fun run() {
@@ -60,10 +42,8 @@ class CreateAppCommand(
 
         val createAppReq = mapOf(
             "appPubKey" to appPubKey,
-            "tierId" to tierId,
-            "signature" to Hex.encode(signer.sign("$appPubKey$TIER_ID".toByteArray()))
+            "signature" to Hex.encode(signer.sign("$appPubKey".toByteArray()))
         ).let(::JsonObject)
-
 
         client.postAbs("${readBootstrapNodes()[0]}/api/rest/apps")
             .sendJsonObject(createAppReq)
@@ -83,11 +63,10 @@ class CreateAppCommand(
         val configOptions = ddcCliConfigFile.read(profile)
 
         val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
-        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
+        if (bootstrapNodesAsString.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
         }
 
         return bootstrapNodesAsString.split(",")
     }
-
 }

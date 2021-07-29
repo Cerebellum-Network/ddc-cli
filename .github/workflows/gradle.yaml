@@ -33,6 +33,7 @@ jobs:
         with:
           name: ddc-cli-linux-amd64
           path: linux-amd64
+          retention-days: 7
 
   buildOnMac:
     runs-on: macos-latest

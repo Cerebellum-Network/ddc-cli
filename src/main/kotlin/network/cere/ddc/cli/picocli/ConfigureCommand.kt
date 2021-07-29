@@ -10,7 +10,7 @@ import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.PARTITION_POLL_INT
 import picocli.CommandLine
 
 @CommandLine.Command(name = "configure")
-class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
         names = ["--appPubKey"],
@@ -47,13 +47,6 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnabl
         description = ["Json paths to encrypt/decrypt"]
     )
     var encryptionJsonPaths: List<String>? = null
-
-    @CommandLine.Option(
-        names = ["--profile"],
-        defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
-        description = ["Configuration profile to use)"]
-    )
-    var profile: String? = null
 
     override fun run() {
         val configOptions = mutableMapOf<String, String>()

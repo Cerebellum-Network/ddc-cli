@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "1.5.10"
     kotlin("plugin.allopen") version "1.5.10"
-    id("io.quarkus") version "2.0.0.Alpha3"
+    id("io.quarkus") version "2.1.0.CR1"
 }
 
 repositories {
@@ -11,8 +11,9 @@ repositories {
     maven { url = uri("https://jitpack.io") }
 }
 
+val smallryeMutinyVertx = "2.9.0"
 dependencies {
-    implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.0.0.Alpha3"))
+    implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.1.0.CR1"))
     implementation("io.quarkus:quarkus-config-yaml")
     implementation("io.quarkus:quarkus-picocli")
     implementation("io.quarkus:quarkus-kotlin")
@@ -25,11 +26,11 @@ dependencies {
     implementation("com.github.cerebellum-network:ddc-encryption-impl-kotlin:1.5.0")
 
     // Smallrye
-    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:2.5.1")
-    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-web-client:2.5.1")
+    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:$smallryeMutinyVertx")
+    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-web-client:$smallryeMutinyVertx")
 
     // DDC
-    implementation("com.github.cerebellum-network:ddc-client-kotlin:1.0.0-RC13")
+    implementation("com.github.cerebellum-network:ddc-client-kotlin:1.0.0-RC17")
 
     // JSON
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
