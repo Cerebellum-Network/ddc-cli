@@ -58,7 +58,6 @@ To get application pieces from DDC (bootstrapNodes and appPubKey from configurat
 ```shell script
 ddc-cli get-app-pieces --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --fields=field1,field2
 ```
-get-user-pieces -u aceba9c5-617e-4422-9520-c98fe66eb6e2 --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --profile local
 
 ### get-user-pieces
 
@@ -82,4 +81,12 @@ To generate random load to DDC:
 
 ```shell script
 ddc-cli generate-load -u 100 -n 30 -i pt5s -s 1000
+```
+
+### benchmark
+
+To benchmark DDC node (define WCU and RCU parameters):
+
+```shell script
+ddc-cli benchmark
 ```
