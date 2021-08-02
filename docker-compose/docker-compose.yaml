@@ -3,7 +3,7 @@ version: "3"
 services:
   ddc-node-0:
     container_name: 'ddc-node-0'
-    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.25.1-RC1'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.25.1-RC5'
     environment:
       - 'HTTP_PORT=8080'
       - 'REMOTE_HTTP_ADDR=http://localhost:8080'
@@ -21,7 +21,7 @@ services:
       - 'PARTITION_WCU_LIMIT=180000000'
       - 'PARTITION_RCU_LIMIT=450000000'
       - 'TEST_MODE=true'
-      - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":180000000,"rcu":450000000}'
+      - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
     ports:
       - '5000:5000'
       - '8080:8080'
@@ -29,7 +29,7 @@ services:
       - ./node-0-p2p-config.json:/config/p2p.json
   ddc-node-1:
     container_name: 'ddc-node-1'
-    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.25.1-RC1'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.25.1-RC5'
     environment:
       - 'HTTP_PORT=8081'
       - 'REMOTE_HTTP_ADDR=http://localhost:8081'
@@ -47,7 +47,7 @@ services:
       - 'PARTITION_WCU_LIMIT=180000000'
       - 'PARTITION_RCU_LIMIT=450000000'
       - 'TEST_MODE=true'
-      - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":180000000,"rcu":450000000}'
+      - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
     ports:
       - '5001:5001'
       - '8081:8081'
@@ -57,7 +57,7 @@ services:
       - 'ddc-node-0'
   ddc-node-2:
     container_name: 'ddc-node-2'
-    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.25.1-RC1'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.25.1-RC5'
     environment:
       - 'HTTP_PORT=8082'
       - 'REMOTE_HTTP_ADDR=http://localhost:8082'
@@ -75,7 +75,7 @@ services:
       - 'PARTITION_WCU_LIMIT=180000000'
       - 'PARTITION_RCU_LIMIT=450000000'
       - 'TEST_MODE=true'
-      - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":180000000,"rcu":450000000}'
+      - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
     ports:
       - '5002:5002'
       - '8082:8082'
