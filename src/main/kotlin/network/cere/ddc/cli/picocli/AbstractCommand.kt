@@ -14,7 +14,7 @@ import picocli.CommandLine
 abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
 
     @CommandLine.Option(
-        names = ["--profile"],
+        names = ["-p", "--profile"],
         defaultValue = DdcCliConfigFile.DEFAULT_PROFILE,
         description = ["Configuration profile to use)"]
     )

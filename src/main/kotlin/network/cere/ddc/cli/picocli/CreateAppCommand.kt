@@ -8,7 +8,6 @@ import io.vertx.mutiny.core.Vertx
 import io.vertx.mutiny.ext.web.client.WebClient
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODES_CONFIG
-import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.DEFAULT_PROFILE
 import picocli.CommandLine
 
 @CommandLine.Command(name = "create-app")
