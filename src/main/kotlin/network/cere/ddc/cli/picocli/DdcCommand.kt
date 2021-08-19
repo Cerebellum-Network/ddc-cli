@@ -16,7 +16,7 @@ import picocli.CommandLine.IFactory
         CreateAppCommand::class,
         GenerateLoadCommand::class,
         GetAppPiecesCommand::class,
-        GetByCidCommand::class,
+        GetPieceCommand::class,
         GetUserPiecesCommand::class,
         ProduceCommand::class,
     ]
