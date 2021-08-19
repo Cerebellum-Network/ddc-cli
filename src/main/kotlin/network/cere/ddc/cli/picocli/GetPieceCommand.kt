@@ -4,8 +4,8 @@ import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 
-@CommandLine.Command(name = "get-by-cid")
-class GetByCidCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
+@CommandLine.Command(name = "get-piece")
+class GetPieceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
         names = ["-u", "--user", "--userPubKey"],
@@ -31,7 +31,7 @@ class GetByCidCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstract
         val configOptions = ddcCliConfigFile.read(profile)
         val ddcConsumer = buildConsumer(configOptions)
 
-        val piece = ddcConsumer.getByCid(userPubKey, cid).await().indefinitely()
+        val piece = ddcConsumer.getPiece(userPubKey, cid).await().indefinitely()
 
         if (decrypt) {
             val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)

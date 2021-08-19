@@ -1,6 +1,8 @@
 package network.cere.ddc.cli.picocli
 
+import io.vertx.core.json.JsonObject
 import network.cere.ddc.cli.config.DdcCliConfigFile
+import network.cere.ddc.client.api.Metadata
 import network.cere.ddc.client.producer.Piece
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
@@ -32,6 +34,9 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractC
     @CommandLine.Option(names = ["-d", "--data"], required = true, description = ["Data to be stored in DDC"])
     lateinit var data: String
 
+    @CommandLine.Option(names = ["-m", "--metadata"], description = ["Metadata to be stored in DDC"])
+    var metadataAsString: String? = null
+
     @CommandLine.Option(
         names = ["--encrypt"],
         description = ["Encrypt data"]
@@ -55,7 +60,8 @@ class ProduceCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractC
                 appPubKey = producerConfig.appPubKey,
                 userPubKey = userPubKey,
                 timestamp = timestamp ?: Instant.now(),
-                data = data
+                data = data,
+                metadata = metadataAsString?.let { JsonObject(metadataAsString).mapTo(Metadata::class.java) }
             )
         )
             .await().indefinitely()

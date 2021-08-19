@@ -67,9 +67,9 @@ To get user pieces from DDC (bootstrapNodes and appPubKey from configuration are
 ddc-cli get-user-pieces -u aceba9c5-617e-4422-9520-c98fe66eb6e2 --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --fields=field1,field2
 ```
 
-### get-by-cid
+### get-piece
 
-To get piece by cid from DDC (bootstrapNodes and appPubKey from configuration are used):
+To get piece from DDC (bootstrapNodes and appPubKey from configuration are used):
 
 ```shell script
 ddc-cli get-by-cid -u aceba9c5-617e-4422-9520-c98fe66eb6e2 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
