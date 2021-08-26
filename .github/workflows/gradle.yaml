@@ -60,3 +60,17 @@ jobs:
         with:
           name: ddc-cli-mac-amd64
           path: mac-amd64
+
+  buildDockerImage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@master
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Build
+        env:
+          IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
+        run: |
+          docker build -t ddc-cli:$IMAGE_TAG .
