@@ -1,5 +1,5 @@
 ## Stage 1 : build with maven builder image with native capabilities
-FROM quay.io/quarkus/ubi-quarkus-native-image:20.2.0-java11 AS build
+FROM quay.io/quarkus/ubi-quarkus-native-image:21.1.0-java11 AS build
 COPY gradlew /project/gradlew
 COPY gradle /project/gradle
 COPY build.gradle.kts /project/
@@ -8,8 +8,9 @@ COPY gradle.properties /project/
 USER quarkus
 WORKDIR /project
 COPY src /project/src
-RUN ./gradlew -b /project/build.gradle.kts buildNative
-RUN ls
+RUN chmod +x gradlew
+RUN ./gradlew -b /project/build.gradle.kts build
+RUN ls -a
 RUN ls /
 RUN ls /project
 RUN ls /project/src
