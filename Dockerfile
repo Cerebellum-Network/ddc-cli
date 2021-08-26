@@ -10,8 +10,9 @@ WORKDIR /project
 COPY src /project/src
 RUN ./gradlew build
 RUN ls
+RUN ls /
 RUN ls /project
-RUN ls /project/build
+RUN ls /project/src
 
 ## Stage 2 : create the docker final image
 FROM registry.access.redhat.com/ubi8/ubi-minimal
