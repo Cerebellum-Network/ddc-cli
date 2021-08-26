@@ -8,7 +8,7 @@ COPY gradle.properties /project/
 USER quarkus
 WORKDIR /project
 COPY src /project/src
-RUN ./gradlew build
+RUN gradle -b /project/build.gradle.kts buildNative
 RUN ls
 RUN ls /
 RUN ls /project
