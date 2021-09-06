@@ -1,4 +1,4 @@
-name: CI-gradle-build
+name: build-linux-and-macos-executable
 
 on:
   push:
