@@ -3,14 +3,11 @@ version: "3"
 services:
   ddc-node-0:
     container_name: 'ddc-node-0'
-    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.26.0-RC1'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.27.0'
     environment:
       - 'HTTP_PORT=8080'
       - 'REMOTE_HTTP_ADDR=http://localhost:8080'
       - 'P2P_LISTEN_ADDR=/dns4/ddc-node-0/tcp/5000'
-      - 'P2P_BOOTNODES=/dns4/ddc-node-1/tcp/5000/p2p/12D3KooWJ2h8af9sehgTKg6f2yPWYxLryVYbTAzpYQLLFp5GErxu'
-      - 'P2P_WHITELIST=12D3KooWJLuJEmtYf3bakUwe2q1uMcnbCBKRg7GkpG6Ws74Aq6NC,12D3KooWJ2h8af9sehgTKg6f2yPWYxLryVYbTAzpYQLLFp5GErxu,12D3KooWPfi9EtgoZHFnHh1at85mdZJtj7L8n94g6LFk6e8EEk2b,12D3KooWMDTP72eAEpTn34PCP4Pe1eKSMt7PbQGs2TsVYysXeuZf,12D3KooWQgWdrDD5gasMnWAxNhcmtxGm3ucXheNK9uzzw2dt2FhK,12D3KooWBTgBvQHbqRhMyERYr39h6YPK7iZHnVv12oJJhZLjuwBx'
-      - 'TRUSTED_NODES=12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT,12D3KooWJLuJEmtYf3bakUwe2q1uMcnbCBKRg7GkpG6Ws74Aq6NC,12D3KooWJ2h8af9sehgTKg6f2yPWYxLryVYbTAzpYQLLFp5GErxu,12D3KooWPfi9EtgoZHFnHh1at85mdZJtj7L8n94g6LFk6e8EEk2b,12D3KooWMDTP72eAEpTn34PCP4Pe1eKSMt7PbQGs2TsVYysXeuZf,12D3KooWQgWdrDD5gasMnWAxNhcmtxGm3ucXheNK9uzzw2dt2FhK,12D3KooWBTgBvQHbqRhMyERYr39h6YPK7iZHnVv12oJJhZLjuwBx'
       - 'LOG_LEVEL=debug'
       - 'HEARTBEAT_INTERVAL_IN_SECONDS=1'
       - 'UPDATE_NEIGHBORS_INTERVAL_IN_SECONDS=1'
@@ -23,6 +20,7 @@ services:
       - 'PARTITION_RCU_LIMIT=450000000'
       - 'TEST_MODE=true'
       - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
+      - 'DDC_MOCK_ALL_DDC_NODES=${DDC_MOCK_ALL_DDC_NODES}'
     ports:
       - '5000:5000'
       - '8080:8080'
@@ -30,14 +28,11 @@ services:
       - ./node-0-p2p-config.json:/config/p2p.json
   ddc-node-1:
     container_name: 'ddc-node-1'
-    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.26.0-RC1'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.27.0'
     environment:
       - 'HTTP_PORT=8081'
       - 'REMOTE_HTTP_ADDR=http://localhost:8081'
       - 'P2P_LISTEN_ADDR=/dns4/ddc-node-1/tcp/5001'
-      - 'P2P_BOOTNODES=/dns4/ddc-node-0/tcp/5000/p2p/12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT'
-      - 'P2P_WHITELIST=12D3KooWJLuJEmtYf3bakUwe2q1uMcnbCBKRg7GkpG6Ws74Aq6NC,12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT,12D3KooWPfi9EtgoZHFnHh1at85mdZJtj7L8n94g6LFk6e8EEk2b,12D3KooWQgWdrDD5gasMnWAxNhcmtxGm3ucXheNK9uzzw2dt2FhK,12D3KooWBTgBvQHbqRhMyERYr39h6YPK7iZHnVv12oJJhZLjuwBx'
-      - 'TRUSTED_NODES=12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT,12D3KooWJLuJEmtYf3bakUwe2q1uMcnbCBKRg7GkpG6Ws74Aq6NC,12D3KooWJ2h8af9sehgTKg6f2yPWYxLryVYbTAzpYQLLFp5GErxu,12D3KooWPfi9EtgoZHFnHh1at85mdZJtj7L8n94g6LFk6e8EEk2b,12D3KooWMDTP72eAEpTn34PCP4Pe1eKSMt7PbQGs2TsVYysXeuZf,12D3KooWQgWdrDD5gasMnWAxNhcmtxGm3ucXheNK9uzzw2dt2FhK,12D3KooWBTgBvQHbqRhMyERYr39h6YPK7iZHnVv12oJJhZLjuwBx'
       - 'LOG_LEVEL=debug'
       - 'HEARTBEAT_INTERVAL_IN_SECONDS=1'
       - 'UPDATE_NEIGHBORS_INTERVAL_IN_SECONDS=1'
@@ -50,6 +45,7 @@ services:
       - 'PARTITION_RCU_LIMIT=450000000'
       - 'TEST_MODE=true'
       - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
+      - 'DDC_MOCK_ALL_DDC_NODES=${DDC_MOCK_ALL_DDC_NODES}'
     ports:
       - '5001:5001'
       - '8081:8081'
@@ -59,14 +55,11 @@ services:
       - 'ddc-node-0'
   ddc-node-2:
     container_name: 'ddc-node-2'
-    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.26.0-RC1'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:v0.27.0'
     environment:
       - 'HTTP_PORT=8082'
       - 'REMOTE_HTTP_ADDR=http://localhost:8082'
       - 'P2P_LISTEN_ADDR=/dns4/ddc-node-2/tcp/5002'
-      - 'P2P_BOOTNODES=/dns4/ddc-node-0/tcp/5000/p2p/12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT'
-      - 'P2P_WHITELIST=12D3KooWJLuJEmtYf3bakUwe2q1uMcnbCBKRg7GkpG6Ws74Aq6NC,12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT,12D3KooWJ2h8af9sehgTKg6f2yPWYxLryVYbTAzpYQLLFp5GErxu,12D3KooWQgWdrDD5gasMnWAxNhcmtxGm3ucXheNK9uzzw2dt2FhK,12D3KooWBTgBvQHbqRhMyERYr39h6YPK7iZHnVv12oJJhZLjuwBx'
-      - 'TRUSTED_NODES=12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT,12D3KooWJLuJEmtYf3bakUwe2q1uMcnbCBKRg7GkpG6Ws74Aq6NC,12D3KooWJ2h8af9sehgTKg6f2yPWYxLryVYbTAzpYQLLFp5GErxu,12D3KooWPfi9EtgoZHFnHh1at85mdZJtj7L8n94g6LFk6e8EEk2b,12D3KooWMDTP72eAEpTn34PCP4Pe1eKSMt7PbQGs2TsVYysXeuZf,12D3KooWQgWdrDD5gasMnWAxNhcmtxGm3ucXheNK9uzzw2dt2FhK,12D3KooWBTgBvQHbqRhMyERYr39h6YPK7iZHnVv12oJJhZLjuwBx'
       - 'LOG_LEVEL=debug'
       - 'HEARTBEAT_INTERVAL_IN_SECONDS=1'
       - 'UPDATE_NEIGHBORS_INTERVAL_IN_SECONDS=1'
@@ -79,6 +72,7 @@ services:
       - 'PARTITION_RCU_LIMIT=450000000'
       - 'TEST_MODE=true'
       - 'DDC_MOCK_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
+      - 'DDC_MOCK_ALL_DDC_NODES=${DDC_MOCK_ALL_DDC_NODES}'
     ports:
       - '5002:5002'
       - '8082:8082'
