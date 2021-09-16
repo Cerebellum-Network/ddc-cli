@@ -16,6 +16,15 @@ Download a binary file from [releases](https://github.com/Cerebellum-Network/ddc
 
 ## Commands
 
+### configure
+
+You can configure ddc-cli (e.g. bootstrapNodes, appPubKey and appPrivKey for data producing/consuming) using next
+command:
+
+```shell script
+ddc-cli configure --bootstrapNodes http://localhost:8080 --appPubKey APP_PUB_KEY --appPrivKey APP_PRIV_KEY
+```
+
 ### create-app
 
 You can create application in DDC using next command (subscription in SC required):
@@ -26,14 +35,6 @@ ddc-cli create-app --appPubKey APP_PUB_KEY --appPrivKey APP_PRIV_KEY
 
 > **_NOTE:_**  Subscription in SC required (except dev environment where SC is mocked). If appPubkey and appPrivKey are not present - new app will be generated (dev only).
 
-### configure
-
-You can configure ddc-cli (e.g. bootstrapNodes, appPubKey and appPrivKey for data producing/consuming) using next
-command:
-
-```shell script
-ddc-cli configure --bootstrapNodes http://localhost:8080 --appPubKey APP_PUB_KEY --appPrivKey APP_PRIV_KEY
-```
 
 ### produce
 
