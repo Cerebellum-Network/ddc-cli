@@ -48,8 +48,10 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
+        val producingStartTime = Instant.now().toString()
         produce(configOptions)
-        consume(configOptions)
+        val producingEndTime = Instant.now().toString()
+        consume(configOptions, producingStartTime, producingEndTime)
     }
 
     private fun produce(configOptions: Map<String, String>) {
@@ -103,14 +105,14 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         println("WCU/sec: ${totalWcu.get() / durationInSec}")
     }
 
-    private fun consume(configOptions: Map<String, String>) {
+    private fun consume(configOptions: Map<String, String>, startTime: String, endTime: String) {
         val ddcConsumer = buildConsumer(configOptions)
 
         val totalBytes = AtomicLong(0)
         val totalRcu = AtomicLong(0)
         val consumingStart = System.currentTimeMillis()
 
-        ddcConsumer.getAppPieces().subscribe().asStream().forEach { p ->
+        ddcConsumer.getAppPieces(startTime, endTime).subscribe().asStream().forEach { p ->
             totalBytes.addAndGet(getSize(p).toLong())
         }
 
