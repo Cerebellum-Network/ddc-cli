@@ -2,6 +2,7 @@ package network.cere.ddc.cli.picocli
 
 import io.emeraldpay.polkaj.schnorrkel.Schnorrkel
 import io.emeraldpay.polkaj.schnorrkel.SchnorrkelNative
+import org.bouncycastle.util.encoders.Hex
 import picocli.CommandLine
 
 @CommandLine.Command(name = "sign")
@@ -20,7 +21,7 @@ class SignCommand() : AbstractCommand() {
         val keyPair = Schnorrkel.getInstance().generateKeyPairFromSeed(privateKey.toByteArray())
         SchnorrkelNative.getInstance().sign(data.toByteArray(), keyPair)
 
-        println("Public key: " + keyPair.publicKey.toHex())
-        println("Private key: " + keyPair.secretKey.toHex())
+        println("Public key: " + Hex.toHexString(keyPair.publicKey))
+        println("Private key: " + Hex.toHexString(keyPair.secretKey))
     }
 }

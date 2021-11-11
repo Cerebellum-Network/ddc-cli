@@ -4,6 +4,7 @@ import io.emeraldpay.polkaj.schnorrkel.SchnorrkelNative
 import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.cli.picocli.toHex
 import org.bitcoinj.crypto.MnemonicCode
+import org.bouncycastle.util.encoders.Hex
 import picocli.CommandLine
 import java.security.SecureRandom
 
@@ -21,7 +22,7 @@ class GenerateKeysCommand() : AbstractCommand() {
 
         val keyPair = SchnorrkelNative().generateKeyPairFromSeed(secretSeed)
         println("Secret seed: " + secretSeed.toHex())
-        println("Public key: " + keyPair.publicKey.toHex())
-        println("Private key: " + keyPair.secretKey.toHex())
+        println("Public key: " + Hex.toHexString(keyPair.publicKey))
+        println("Private key: " + Hex.toHexString(keyPair.secretKey))
     }
 }
