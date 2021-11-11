@@ -11,7 +11,7 @@ import network.cere.ddc.client.producer.Producer
 import network.cere.ddc.client.producer.ProducerConfig
 import picocli.CommandLine
 
-abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Runnable {
+abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = DdcCliConfigFile()) : Runnable {
 
     @CommandLine.Option(
         names = ["-p", "--profile"],

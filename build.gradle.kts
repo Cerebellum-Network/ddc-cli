@@ -9,6 +9,10 @@ repositories {
     mavenCentral()
 
     maven { url = uri("https://jitpack.io") }
+
+    flatDir {
+        dirs("libs")
+    }
 }
 
 val smallryeMutinyVertx = "2.9.0"
@@ -24,6 +28,8 @@ dependencies {
     // Crypto
     implementation("com.google.crypto.tink:tink:1.5.0")
     implementation("com.github.cerebellum-network:ddc-encryption-impl-kotlin:1.5.0")
+    implementation("org.bitcoinj:bitcoinj-core:0.15.10")
+    implementation("io.emeraldpay:polkaj-schnorrkel:0.5.0-SNAPSHOT")
 
     // Smallrye
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:$smallryeMutinyVertx")
