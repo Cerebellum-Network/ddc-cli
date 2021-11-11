@@ -2,7 +2,6 @@ package network.cere.ddc.cli.picocli.keys
 
 import io.emeraldpay.polkaj.schnorrkel.SchnorrkelNative
 import network.cere.ddc.cli.picocli.AbstractCommand
-import network.cere.ddc.cli.picocli.toHex
 import org.bitcoinj.crypto.MnemonicCode
 import org.bouncycastle.util.encoders.Hex
 import picocli.CommandLine
@@ -21,7 +20,7 @@ class GenerateKeysCommand() : AbstractCommand() {
         val secretSeed = MnemonicCode.toSeed(secretPhrase, "")
 
         val keyPair = SchnorrkelNative().generateKeyPairFromSeed(secretSeed)
-        println("Secret seed: " + secretSeed.toHex())
+        println("Secret seed: " + Hex.toHexString(secretSeed))
         println("Public key: " + Hex.toHexString(keyPair.publicKey))
         println("Private key: " + Hex.toHexString(keyPair.secretKey))
     }
