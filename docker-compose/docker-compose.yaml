@@ -2,7 +2,7 @@ version: '3'
 services:
   ddc-node-0:
     container_name: 'ddc-node-0'
-    image: 'cerebellumnetwork/ddc-node:v0.27.8'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:dev-latest'
     environment:
       - 'HTTP_PORT=8080'
       - 'HTTP_ADDRESS=http://localhost:8080'
@@ -27,7 +27,7 @@ services:
       - ./node-0-p2p-config.json:/config/p2p.json
   ddc-node-1:
     container_name: 'ddc-node-1'
-    image: 'cerebellumnetwork/ddc-node:v0.27.8'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:dev-latest'
     environment:
       - 'HTTP_PORT=8081'
       - 'HTTP_ADDRESS=http://localhost:8081'
@@ -54,7 +54,7 @@ services:
       - 'ddc-node-0'
   ddc-node-2:
     container_name: 'ddc-node-2'
-    image: 'cerebellumnetwork/ddc-node:v0.27.8'
+    image: '338287888375.dkr.ecr.us-west-2.amazonaws.com/ddc-node:dev-latest'
     environment:
       - 'HTTP_PORT=8082'
       - 'HTTP_ADDRESS=http://localhost:8082'
