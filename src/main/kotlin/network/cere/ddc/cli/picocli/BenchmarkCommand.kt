@@ -1,6 +1,7 @@
 package network.cere.ddc.cli.picocli
 
 import network.cere.ddc.cli.config.DdcCliConfigFile
+import network.cere.ddc.client.api.Metadata
 import network.cere.ddc.client.producer.Piece
 import picocli.CommandLine
 import java.time.Instant
@@ -77,7 +78,26 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
                             appPubKey = producerConfig.appPubKey,
                             userPubKey = userPubKey,
                             timestamp = Instant.now(),
-                            data = data
+                            data = data,
+                            metadata = Metadata(
+                                contentType = "image",
+                                mimeType = "image/png",
+                                customAttributes = mapOf(
+                                    "minter" to userPubKey,
+                                    "relId" to "123",
+                                    "relType" to "nft",
+                                    "title" to "title",
+                                    "description" to "someDescription",
+                                    "type" to "image",
+                                    "contentType" to "image/png",
+                                ),
+                                isEncrypted = true,
+                                encryptionAttributes = mapOf(
+                                    "nonceHex" to "0x23491243dd781123cf2aba3123",
+                                    "encryptionAlgorithm" to "ChaCha20",
+                                    "encryptionTransformation" to "ChaCha20-Poly1305/None/NoPadding"
+                                )
+                            )
                         )
                     )
                         .await().indefinitely()
