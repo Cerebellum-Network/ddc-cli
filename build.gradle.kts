@@ -26,6 +26,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-vertx")
+    implementation("io.quarkus:quarkus-vertx-http")
 
     // Crypto
     implementation("com.google.crypto.tink:tink:1.5.0")
