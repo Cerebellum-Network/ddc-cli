@@ -17,6 +17,8 @@ repositories {
 
 val smallryeMutinyVertx = "2.9.0"
 dependencies {
+    implementation(kotlin("stdlib"))
+
     implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.1.2.Final"))
     implementation("io.quarkus:quarkus-config-yaml")
     implementation("io.quarkus:quarkus-picocli")
@@ -30,6 +32,7 @@ dependencies {
     implementation("com.github.cerebellum-network:ddc-encryption-impl-kotlin:1.5.0")
     implementation("org.bitcoinj:bitcoinj-core:0.15.10")
     implementation("io.emeraldpay:polkaj-schnorrkel:0.5.0-SNAPSHOT")
+    implementation("commons-codec:commons-codec:1.15")
 
     // Smallrye
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:$smallryeMutinyVertx")

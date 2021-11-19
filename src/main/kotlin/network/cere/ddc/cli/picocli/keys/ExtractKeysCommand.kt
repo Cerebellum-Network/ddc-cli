@@ -2,8 +2,9 @@ package network.cere.ddc.cli.picocli.keys
 
 import io.emeraldpay.polkaj.schnorrkel.SchnorrkelNative
 import network.cere.ddc.cli.picocli.AbstractCommand
+import network.cere.ddc.crypto.v1.hexToBytes
+import network.cere.ddc.crypto.v1.toHex
 import org.bitcoinj.crypto.MnemonicCode
-import org.bouncycastle.util.encoders.Hex
 import picocli.CommandLine
 
 @CommandLine.Command(name = "extract-keys")
@@ -11,15 +12,17 @@ class ExtractKeysCommand() : AbstractCommand() {
 
     @CommandLine.Option(
         names = ["--secret-phrase"],
-        description = ["List of secret words to generate keys"]
+        description = ["Secret phrase (mnemonic)"]
     )
-    var secretPhrase: List<String> = listOf()
+    lateinit var secretPhrase: String
 
     override fun run() {
-        val secretSeed = MnemonicCode.toSeed(secretPhrase, "")
+        val entropy = MnemonicCode.INSTANCE.toEntropy(secretPhrase.split(" ")).toHex()
 
+        val secretSeed = pbkdf2Seed(entropy.hexToBytes(), "mnemonic".toByteArray())
         val keyPair = SchnorrkelNative().generateKeyPairFromSeed(secretSeed)
-        println("Public key: " + Hex.toHexString(keyPair.publicKey))
-        println("Private key: " + Hex.toHexString(keyPair.secretKey))
+
+        println("Public key: ${keyPair.publicKey.toHex()}")
+        println("Private key: ${secretSeed.toHex()}")
     }
 }
