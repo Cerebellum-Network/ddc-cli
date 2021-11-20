@@ -6,6 +6,9 @@ quarkus:
   package:
     type: 'native'
   native:
+    resources:
+      inlcudes:
+        - 'mnemonic/wordlist/english.txt'
     additional-build-args:
       - '-H:EnableURLProtocols=http,https'
       - '-H:-CheckToolchain'
