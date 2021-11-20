@@ -1,13 +1,16 @@
 package network.cere.ddc.cli.picocli
 
-import com.google.crypto.tink.subtle.Ed25519Sign
-import com.google.crypto.tink.subtle.Hex
+import com.debuggor.schnorrkel.sign.ExpansionMode
+import com.debuggor.schnorrkel.sign.KeyPair
+import com.debuggor.schnorrkel.sign.SigningContext
 import io.netty.handler.codec.http.HttpResponseStatus.OK
 import io.vertx.core.json.JsonObject
 import io.vertx.mutiny.core.Vertx
 import io.vertx.mutiny.ext.web.client.WebClient
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODES_CONFIG
+import network.cere.ddc.crypto.v1.hexToBytes
+import network.cere.ddc.crypto.v1.toHex
 import picocli.CommandLine
 
 @CommandLine.Command(name = "create-app")
@@ -16,32 +19,24 @@ class CreateAppCommand(
     vertx: Vertx
 ) : AbstractCommand(ddcCliConfigFile) {
 
-    @CommandLine.Option(
-        names = ["--appPubKey"],
-        defaultValue = "1",
-        description = ["Application public key"]
-    )
-    var appPubKey: String? = null
-
-    @CommandLine.Option(
-        names = ["--appPrivKey"],
-        description = ["Application private key"]
-    )
-    var appPrivKey: String? = null
-
     private val client = WebClient.create(vertx)
 
+    private val signingContext = SigningContext.createSigningContext("substrate".toByteArray())
+
     override fun run() {
+        val configOptions = ddcCliConfigFile.read(profile)
+        val appPubKey = configOptions[DdcCliConfigFile.APP_PUB_KEY_CONFIG]
+        val appPrivKey = configOptions[DdcCliConfigFile.APP_PRIV_KEY_CONFIG]
         if (appPubKey.isNullOrEmpty() || appPrivKey.isNullOrEmpty()) {
-            val appKeyPair = Ed25519Sign.KeyPair.newKeyPair()
-            appPubKey = Hex.encode(appKeyPair.publicKey)
-            appPrivKey = Hex.encode(appKeyPair.privateKey)
+            throw RuntimeException("Missing required parameter (appPubKey or appPrivKey). Please use 'configure' command.")
         }
-        val signer = Ed25519Sign(Hex.decode(appPrivKey!!.removePrefix("0x")).sliceArray(0 until 32))
+
+        val keyPair = KeyPair.fromSecretSeed(appPrivKey.hexToBytes(), ExpansionMode.Ed25519)
+        val signature = keyPair.sign(signingContext.bytes(appPubKey.toByteArray()))
 
         val createAppReq = mapOf(
             "appPubKey" to appPubKey,
-            "signature" to Hex.encode(signer.sign("$appPubKey".toByteArray()))
+            "signature" to signature.to_bytes().toHex()
         ).let(::JsonObject)
 
         client.postAbs("${readBootstrapNodes()[0]}/api/rest/apps")
