@@ -1,6 +1,7 @@
 package network.cere.ddc.cli.picocli.keys
 
-import io.emeraldpay.polkaj.schnorrkel.SchnorrkelNative
+import com.debuggor.schnorrkel.sign.ExpansionMode
+import com.debuggor.schnorrkel.sign.KeyPair
 import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.crypto.v1.hexToBytes
 import network.cere.ddc.crypto.v1.toHex
@@ -8,7 +9,7 @@ import org.bitcoinj.crypto.MnemonicCode
 import picocli.CommandLine
 
 @CommandLine.Command(name = "extract-keys")
-class ExtractKeysCommand() : AbstractCommand() {
+class ExtractKeysCommand : AbstractCommand() {
 
     @CommandLine.Option(
         names = ["--secret-phrase"],
@@ -20,9 +21,9 @@ class ExtractKeysCommand() : AbstractCommand() {
         val entropy = MnemonicCode.INSTANCE.toEntropy(secretPhrase.split(" ")).toHex()
 
         val secretSeed = pbkdf2Seed(entropy.hexToBytes(), "mnemonic".toByteArray())
-        val keyPair = SchnorrkelNative().generateKeyPairFromSeed(secretSeed)
+        val keyPair = KeyPair.fromSecretSeed(secretSeed, ExpansionMode.Ed25519)
 
-        println("Public key: ${keyPair.publicKey.toHex()}")
+        println("Public key: ${keyPair.publicKey.toPublicKey().toHex()}")
         println("Private key: ${secretSeed.toHex()}")
     }
 }

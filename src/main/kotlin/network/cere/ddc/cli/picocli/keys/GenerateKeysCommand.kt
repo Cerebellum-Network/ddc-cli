@@ -1,6 +1,7 @@
 package network.cere.ddc.cli.picocli.keys
 
-import io.emeraldpay.polkaj.schnorrkel.SchnorrkelNative
+import com.debuggor.schnorrkel.sign.ExpansionMode
+import com.debuggor.schnorrkel.sign.KeyPair
 import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.crypto.v1.toHex
 import org.bitcoinj.crypto.MnemonicCode
@@ -8,7 +9,7 @@ import picocli.CommandLine
 import java.security.SecureRandom
 
 @CommandLine.Command(name = "generate-keys")
-class GenerateKeysCommand() : AbstractCommand() {
+class GenerateKeysCommand : AbstractCommand() {
 
     companion object {
         private const val ENTROPY_LENGTH = 16
@@ -22,10 +23,10 @@ class GenerateKeysCommand() : AbstractCommand() {
         val secretPhrase = code.toMnemonic(entropy)
 
         val secretSeed = pbkdf2Seed(entropy, "mnemonic".toByteArray())
-        val keyPair = SchnorrkelNative().generateKeyPairFromSeed(secretSeed)
+        val keyPair = KeyPair.fromSecretSeed(secretSeed, ExpansionMode.Ed25519)
 
         println("Secret phrase: " + secretPhrase.joinToString(" "))
-        println("Public key: ${keyPair.publicKey.toHex()}")
+        println("Public key: ${keyPair.publicKey.toPublicKey().toHex()}")
         println("Private key: ${secretSeed.toHex()}")
     }
 }

@@ -1,12 +1,15 @@
 package network.cere.ddc.cli.picocli
 
-import io.emeraldpay.polkaj.schnorrkel.Schnorrkel
-import io.emeraldpay.polkaj.schnorrkel.SchnorrkelNative
-import org.bouncycastle.util.encoders.Hex
+import com.debuggor.schnorrkel.sign.ExpansionMode
+import com.debuggor.schnorrkel.sign.KeyPair
 import picocli.CommandLine
 
+import com.debuggor.schnorrkel.sign.SigningContext
+import network.cere.ddc.crypto.v1.toHex
+
+
 @CommandLine.Command(name = "sign")
-class SignCommand() : AbstractCommand() {
+class SignCommand : AbstractCommand() {
 
     @CommandLine.Option(
         names = ["-k", "--key", "--privateKey"],
@@ -18,10 +21,12 @@ class SignCommand() : AbstractCommand() {
     lateinit var data: String
 
     override fun run() {
-        val keyPair = Schnorrkel.getInstance().generateKeyPairFromSeed(privateKey.toByteArray())
-        SchnorrkelNative.getInstance().sign(data.toByteArray(), keyPair)
+        val keyPair = KeyPair.fromSecretSeed(privateKey.toByteArray(), ExpansionMode.Ed25519)
 
-        println("Public key: " + Hex.toHexString(keyPair.publicKey))
-        println("Private key: " + Hex.toHexString(keyPair.secretKey))
+        val signature = keyPair.sign(SigningContext.createSigningContext(ByteArray(0)).bytes(data.toByteArray()))
+
+        println("Public key: ${keyPair.publicKey.toPublicKey().toHex()}")
+        println("Private key: $privateKey")
+        println("Signed data: ${signature.to_bytes().toHex()}")
     }
 }
