@@ -32,6 +32,7 @@ dependencies {
     implementation("com.google.crypto.tink:tink:1.5.0")
     implementation("com.github.cerebellum-network:ddc-encryption-impl-kotlin:1.5.0")
     implementation("org.bitcoinj:bitcoinj-core:0.15.10")
+    implementation("cafe.cryptography:curve25519-elisabeth:0.1.0")
     implementation("com.debuggor:schnorrkel-java:1.0.0-SNAPSHOT")
     implementation("commons-codec:commons-codec:1.15")
 
