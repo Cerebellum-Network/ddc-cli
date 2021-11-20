@@ -16,7 +16,7 @@ class GenerateKeysCommand : AbstractCommand() {
     }
 
     override fun run() {
-        val code = MnemonicCode()
+        val code = MnemonicCode(javaClass.getResourceAsStream("mnemonic/wordlist/english.txt"), null)
         val entropy = ByteArray(ENTROPY_LENGTH)
         SecureRandom().nextBytes(entropy)
 

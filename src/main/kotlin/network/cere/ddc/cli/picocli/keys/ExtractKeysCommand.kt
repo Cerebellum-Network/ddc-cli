@@ -4,6 +4,7 @@ import com.debuggor.schnorrkel.sign.ExpansionMode
 import com.debuggor.schnorrkel.sign.KeyPair
 import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.crypto.v1.hexToBytes
+import network.cere.ddc.crypto.v1.key.sign.signingKeyPairFromMnemonic
 import network.cere.ddc.crypto.v1.toHex
 import org.bitcoinj.crypto.MnemonicCode
 import picocli.CommandLine
