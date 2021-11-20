@@ -9,3 +9,4 @@ quarkus:
     additional-build-args:
       - '-H:EnableURLProtocols=http,https'
       - '-H:-CheckToolchain'
+      - '--initialize-at-run-time=cash.z.ecc.android.bip39.Mnemonics'
