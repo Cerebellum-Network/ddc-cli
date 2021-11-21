@@ -48,9 +48,6 @@ class CreateAppCommand(
                 }
             }
             .await().indefinitely()
-
-        println("appPubKey: $appPubKey")
-        println("appPrivKey: $appPrivKey")
     }
 
     private fun readBootstrapNodes(): List<String> {
