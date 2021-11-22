@@ -18,7 +18,7 @@ Download a binary file from [releases](https://github.com/Cerebellum-Network/ddc
 
 ### generate-keys
 
-Generates a secret phrase (mnemonic code) and keypair (public and private keys):
+To generate a secret phrase (mnemonic code) and keypair (public and private keys):
 
 ```shell script
 ddc-cli generate-keys
@@ -26,21 +26,11 @@ ddc-cli generate-keys
 
 ### extract-keys
 
-Extracts keypair (public and private keys) from a secret phrase (mnemonic code):
+To extracts keypair (public and private keys) from a secret phrase (mnemonic code):
 
 ```shell script
 ddc-cli extract-keys --secret-phrase 'ivory immense card before water diesel illness soccer icon garbage exit claw '
 ```
-
-### create-app
-
-You can create application in DDC using next command (bootstrapNodes and appPubKey from configuration are used) :
-
-```shell script
-ddc-cli create-app --appPubKey APP_PUB_KEY --appPrivKey APP_PRIV_KEY
-```
-
-> **_NOTE:_**  Subscription in SC required (except dev environment where SC is mocked). If appPubkey and appPrivKey are not present - new app will be generated (dev only).
 
 ### configure
 
@@ -50,6 +40,16 @@ command:
 ```shell script
 ddc-cli configure --bootstrapNodes http://localhost:8080 --appPubKey APP_PUB_KEY --appPrivKey APP_PRIV_KEY
 ```
+
+### create-app
+
+You can create application in DDC using next command (bootstrapNodes, appPubKey and appPrivKey from configuration are used) :
+
+```shell script
+ddc-cli create-app
+```
+
+> **_NOTE:_**  Subscription in SC required (except dev environment where SC is mocked). If appPubkey and appPrivKey are not present - new app will be generated (dev only).
 
 ### produce
 
