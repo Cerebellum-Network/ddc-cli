@@ -4,12 +4,17 @@ import picocli.CommandLine
 import io.quarkus.runtime.QuarkusApplication
 
 import io.quarkus.runtime.annotations.QuarkusMain
+import network.cere.ddc.cli.picocli.keys.ExtractKeysCommand
+import network.cere.ddc.cli.picocli.keys.GenerateKeysCommand
 import picocli.CommandLine.IFactory
 
 @QuarkusMain
 @CommandLine.Command(
     mixinStandardHelpOptions = true,
     subcommands = [
+        GenerateKeysCommand::class,
+        ExtractKeysCommand::class,
+        SignCommand::class,
         BenchmarkCommand::class,
         ConfigureCommand::class,
         ConsumeCommand::class,

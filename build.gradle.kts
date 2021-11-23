@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "1.5.10"
     kotlin("plugin.allopen") version "1.5.10"
-    id("io.quarkus") version "2.1.2.Final"
+    id("io.quarkus") version "2.4.2.Final"
 }
 
 repositories {
@@ -9,21 +9,31 @@ repositories {
     mavenCentral()
 
     maven { url = uri("https://jitpack.io") }
+
+    flatDir {
+        dirs("libs")
+    }
 }
 
 val smallryeMutinyVertx = "2.9.0"
 dependencies {
-    implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.1.2.Final"))
+    implementation(kotlin("stdlib"))
+
+    implementation(enforcedPlatform("io.quarkus:quarkus-bom:2.4.2.Final"))
     implementation("io.quarkus:quarkus-config-yaml")
     implementation("io.quarkus:quarkus-picocli")
     implementation("io.quarkus:quarkus-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-vertx")
+    implementation("io.quarkus:quarkus-vertx-http")
 
     // Crypto
     implementation("com.google.crypto.tink:tink:1.5.0")
     implementation("com.github.cerebellum-network:ddc-encryption-impl-kotlin:1.5.0")
+    implementation("cash.z.ecc.android:kotlin-bip39:1.0.2")
+    implementation("commons-codec:commons-codec:1.15")
+    implementation("com.github.yeeco:schnorrkel-java:v1.0.4")
 
     // Smallrye
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:$smallryeMutinyVertx")
