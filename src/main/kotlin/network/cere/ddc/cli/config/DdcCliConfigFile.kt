@@ -70,7 +70,11 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
             throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
         }
 
-        return ProducerConfig(appPubKey, appPrivKey, bootstrapNodesAsString.split(","))
+        return ProducerConfig(
+            appPubKey = appPubKey,
+            appPrivKey = appPrivKey,
+            bootstrapNodes = bootstrapNodesAsString.split(",")
+        )
     }
 
     fun readConsumerConfig(configOptions: Map<String, String>): ConsumerConfig {
