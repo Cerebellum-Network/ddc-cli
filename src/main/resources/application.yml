@@ -1,4 +1,6 @@
 quarkus:
+  http:
+    host-enabled: false
   log:
     level: ERROR
   banner:
@@ -8,5 +10,7 @@ quarkus:
   native:
     additional-build-args:
       - '-H:EnableURLProtocols=http,https'
+      - '-H:ResourceConfigurationFiles=resources-config.json'
+      - '-H:ReflectionConfigurationFiles=reflection-config.json'
       - '-H:-CheckToolchain'
       - '--initialize-at-run-time=cash.z.ecc.android.bip39.Mnemonics'

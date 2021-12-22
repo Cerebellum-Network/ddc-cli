@@ -28,6 +28,6 @@ class ReadAssetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         val nftStorage = buildNftStorage(ddcCliConfigFile.read(profile))
         val data = runBlocking { nftStorage.readAsset(nftId, NftPath(url)) }
 
-        println("Data: ${Base64.getEncoder().encode(data)}")
+        println("Data: ${String(Base64.getEncoder().encode(data))}")
     }
 }

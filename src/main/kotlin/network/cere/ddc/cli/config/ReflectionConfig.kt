@@ -7,6 +7,9 @@ import network.cere.ddc.client.api.NodeMetadata
 import network.cere.ddc.client.api.Partition
 import network.cere.ddc.client.api.PartitionTopology
 import network.cere.ddc.client.producer.SendPieceResponse
+import network.cere.ddc.nft.model.NftPath
+import network.cere.ddc.nft.model.metadata.Erc1155Metadata
+import network.cere.ddc.nft.model.metadata.Erc721Metadata
 
 @RegisterForReflection(
     targets = [
@@ -17,7 +20,10 @@ import network.cere.ddc.client.producer.SendPieceResponse
         NodeMetadata::class,
         network.cere.ddc.client.producer.Piece::class,
         network.cere.ddc.client.consumer.Piece::class,
-        SendPieceResponse::class
+        SendPieceResponse::class,
+        NftPath::class,
+        Erc1155Metadata::class,
+        Erc721Metadata::class
     ]
 )
 class ReflectionConfig

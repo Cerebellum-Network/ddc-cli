@@ -1,5 +1,8 @@
 package network.cere.ddc.cli.picocli
 
+import io.ktor.client.*
+import io.ktor.client.engine.java.*
+import io.ktor.client.features.json.*
 import io.vertx.core.VertxOptions
 import io.vertx.core.file.FileSystemOptions
 import io.vertx.mutiny.core.Vertx
@@ -11,10 +14,12 @@ import network.cere.ddc.client.consumer.DdcConsumer
 import network.cere.ddc.client.producer.DdcProducer
 import network.cere.ddc.client.producer.Producer
 import network.cere.ddc.client.producer.ProducerConfig
+import network.cere.ddc.core.http.defaultHttpClient
 import network.cere.ddc.core.signature.Scheme
 import network.cere.ddc.nft.NftStorage
 import network.cere.ddc.nft.client.HttpTransportClient
 import picocli.CommandLine
+import java.net.http.HttpClient
 
 abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = DdcCliConfigFile()) : Runnable {
 

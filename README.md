@@ -43,52 +43,52 @@ ddc-cli configure --bootstrapNodes http://localhost:8080 --appPubKey APP_PUB_KEY
 
 ### create-app
 
-You can create application in DDC using next command (bootstrapNodes, appPubKey and appPrivKey from configuration are used) :
+You can create application in Behaviour DDC using next command (bootstrapNodes, appPubKey and appPrivKey from configuration are used) :
 
 ```shell script
-ddc-cli create-app
+ddc-cli behaviour-storage create-app
 ```
 
 > **_NOTE:_**  Subscription in SC required (except dev environment where SC is mocked). If appPubkey and appPrivKey are not present - new app will be generated (dev only).
 
 ### produce
 
-To produce data to DDC (bootstrapNodes, appPubKey and appPrivKey from configuration are used):
+To produce data to Behaviour DDC (bootstrapNodes, appPubKey and appPrivKey from configuration are used):
 
 ```shell script
-ddc-cli produce -d test_data -u test_user
+ddc-cli behaviour-storage produce -d test_data -u test_user
 ```
 
 ### consume
 
-To consume data from DDC (bootstrapNodes and appPubKey from configuration are used). Offset reset values are earliest and latest. Where 'earliest' means consume from beginning and 'latest' is a real-time (old data isn't consumed):
+To consume data from Behaviour DDC (bootstrapNodes and appPubKey from configuration are used). Offset reset values are earliest and latest. Where 'earliest' means consume from beginning and 'latest' is a real-time (old data isn't consumed):
 
 ```shell script
-ddc-cli consume --stream-id test_stream --fields=field1,field2 --offset-reset latest
+ddc-cli behaviour-storage consume --stream-id test_stream --fields=field1,field2 --offset-reset latest
 ```
 
 ### get-app-pieces
 
-To get application pieces from DDC (bootstrapNodes and appPubKey from configuration are used):
+To get application pieces from Behaviour DDC (bootstrapNodes and appPubKey from configuration are used):
 
 ```shell script
-ddc-cli get-app-pieces --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --fields=field1,field2
+ddc-cli behaviour-storage get-app-pieces --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --fields=field1,field2
 ```
 
 ### get-user-pieces
 
-To get user pieces from DDC (bootstrapNodes and appPubKey from configuration are used):
+To get user pieces from Behaviour DDC (bootstrapNodes and appPubKey from configuration are used):
 
 ```shell script
-ddc-cli get-user-pieces -u aceba9c5-617e-4422-9520-c98fe66eb6e2 --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --fields=field1,field2
+ddc-cli behaviour-storage get-user-pieces -u aceba9c5-617e-4422-9520-c98fe66eb6e2 --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --fields=field1,field2
 ```
 
 ### get-piece
 
-To get piece from DDC (bootstrapNodes and appPubKey from configuration are used):
+To get piece from Behaviour DDC (bootstrapNodes and appPubKey from configuration are used):
 
 ```shell script
-ddc-cli get-by-cid -u aceba9c5-617e-4422-9520-c98fe66eb6e2 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
+ddc-cli behaviour-storage get-by-cid -u aceba9c5-617e-4422-9520-c98fe66eb6e2 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
 ```
 
 ### generate-load

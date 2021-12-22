@@ -1,13 +1,12 @@
 package network.cere.ddc.cli.picocli
 
-import picocli.CommandLine
 import io.quarkus.runtime.QuarkusApplication
-
 import io.quarkus.runtime.annotations.QuarkusMain
-import network.cere.ddc.cli.picocli.behaviour.*
+import network.cere.ddc.cli.picocli.behaviour.BehaviourCommand
 import network.cere.ddc.cli.picocli.keys.ExtractKeysCommand
 import network.cere.ddc.cli.picocli.keys.GenerateKeysCommand
 import network.cere.ddc.cli.picocli.nft.NftCommand
+import picocli.CommandLine
 import picocli.CommandLine.IFactory
 
 @QuarkusMain
@@ -17,16 +16,11 @@ import picocli.CommandLine.IFactory
         GenerateKeysCommand::class,
         ExtractKeysCommand::class,
         SignCommand::class,
-        BenchmarkCommand::class,
         ConfigureCommand::class,
-        ConsumeCommand::class,
-        CreateAppCommand::class,
+        BenchmarkCommand::class,
         GenerateLoadCommand::class,
-        GetAppPiecesCommand::class,
-        GetPieceCommand::class,
-        GetUserPiecesCommand::class,
-        ProduceCommand::class,
         NftCommand::class,
+        BehaviourCommand::class
     ]
 )
 class DdcCommand(private val factory: IFactory) : QuarkusApplication {
