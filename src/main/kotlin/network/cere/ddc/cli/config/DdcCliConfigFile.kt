@@ -2,6 +2,8 @@ package network.cere.ddc.cli.config
 
 import network.cere.ddc.client.consumer.ConsumerConfig
 import network.cere.ddc.client.producer.ProducerConfig
+import network.cere.ddc.core.model.Node
+import network.cere.ddc.nft.NftStorageConfig
 import java.io.File
 import javax.enterprise.context.ApplicationScoped
 import kotlin.streams.asSequence
@@ -12,6 +14,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         const val APP_PUB_KEY_CONFIG = "appPubKey"
         const val APP_PRIV_KEY_CONFIG = "appPrivKey"
         const val BOOTSTRAP_NODES_CONFIG = "bootstrapNodes"
+        const val BOOTSTRAP_NODE_IDS_CONFIG = "bootstrapNodeIds"
         const val PARTITION_POLL_INTERVAL_MS_CONFIG = "partitionPollIntervalMs"
         const val MASTER_ENCRYPTION_KEY_CONFIG = "masterEncryptionKey"
         const val ENCRYPTION_JSON_PATHS_CONFIG = "encryptionJsonPaths"
@@ -75,6 +78,37 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
             appPrivKey = appPrivKey,
             bootstrapNodes = bootstrapNodesAsString.split(",")
         )
+    }
+
+    fun readNftStorageConfig(configOptions: Map<String, String>): NftStorageConfig {
+        val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
+        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
+            throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
+        }
+
+        val bootstrapNodeIdsAsString = configOptions[BOOTSTRAP_NODE_IDS_CONFIG]
+        if (bootstrapNodeIdsAsString == null || bootstrapNodeIdsAsString.isEmpty()) {
+            throw RuntimeException("Missing required parameter bootstrapNodeIds. Please use 'configure' command.")
+        }
+
+        val bootstrapNodeAddresses = bootstrapNodesAsString.split(",")
+        val bootstrapNodeIds = bootstrapNodeIdsAsString.split(",")
+        if (bootstrapNodeAddresses.size != bootstrapNodeIds.size) {
+            throw RuntimeException("Number bootstrap nodes and ids should be same. Please use 'configure' command.")
+        }
+
+        val trustedNodes = bootstrapNodeAddresses.zip(bootstrapNodeIds).map { Node(address = it.first, id = it.second) }
+
+        return NftStorageConfig(trustedNodes)
+    }
+
+    fun readPrivateKey(configOptions: Map<String, String>): String {
+        val appPrivKey = configOptions[APP_PRIV_KEY_CONFIG]
+        if (appPrivKey == null || appPrivKey.isEmpty()) {
+            throw RuntimeException("Missing required parameter appPrivKey. Please use 'configure' command.")
+        }
+
+        return appPrivKey
     }
 
     fun readConsumerConfig(configOptions: Map<String, String>): ConsumerConfig {

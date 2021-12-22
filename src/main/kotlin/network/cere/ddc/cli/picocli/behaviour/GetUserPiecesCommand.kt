@@ -1,17 +1,25 @@
-package network.cere.ddc.cli.picocli
+package network.cere.ddc.cli.picocli.behaviour
 
 import network.cere.ddc.cli.config.DdcCliConfigFile
+import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.client.consumer.Consumer
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey
 import picocli.CommandLine
 import java.time.Instant
 
-@CommandLine.Command(name = "get-app-pieces")
-class GetAppPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
+@CommandLine.Command(name = "get-user-pieces")
+class GetUserPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     companion object {
         private const val CONSUMING_SESSION_IN_MS = 3_600_000L
     }
+
+    @CommandLine.Option(
+        names = ["-u", "--user", "--userPubKey"],
+        required = true,
+        description = ["User public key to specify in data piece"],
+    )
+    lateinit var userPubKey: String
 
     @CommandLine.Option(
         names = ["--from"],
@@ -42,17 +50,18 @@ class GetAppPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abst
         val ddcConsumer = buildConsumer(configOptions)
 
         if (decrypt) {
-            getAppPiecesDecrypted(configOptions, ddcConsumer, from, to, fields)
+            getUserPiecesDecrypted(configOptions, ddcConsumer, userPubKey, from, to, fields)
         } else {
-            getAppPiecesEncrypted(ddcConsumer, from, to, fields)
+            getUserPiecesEncrypted(ddcConsumer, userPubKey, from, to, fields)
         }
 
         Thread.sleep(CONSUMING_SESSION_IN_MS)
     }
 
-    private fun getAppPiecesDecrypted(
+    private fun getUserPiecesDecrypted(
         configOptions: Map<String, String>,
         ddcConsumer: Consumer,
+        userPubKey: String,
         from: Instant?,
         to: Instant?,
         fields: List<String> = listOf()
@@ -60,7 +69,7 @@ class GetAppPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abst
         val encryptionConfig = ddcCliConfigFile.readEncryptionConfig(configOptions)
         val secretKey = CryptoSecretKey(encryptionConfig.masterEncryptionKey)
 
-        ddcConsumer.getAppPieces(from?.toString() ?: "", to?.toString() ?: "", fields).subscribe().with(
+        ddcConsumer.getUserPieces(userPubKey, from?.toString() ?: "", to?.toString() ?: "", fields).subscribe().with(
             { piece ->
                 runCatching {
                     piece.data = secretKey.decryptWithScopes(piece.data!!, encryptionConfig.encryptionJsonPaths)
@@ -70,13 +79,14 @@ class GetAppPiecesCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abst
         )
     }
 
-    private fun getAppPiecesEncrypted(
+    private fun getUserPiecesEncrypted(
         ddcConsumer: Consumer,
+        userPubKey: String,
         from: Instant?,
         to: Instant?,
         fields: List<String> = listOf()
     ) {
-        ddcConsumer.getAppPieces(from?.toString() ?: "", to?.toString() ?: "", fields)
+        ddcConsumer.getUserPieces(userPubKey, from?.toString() ?: "", to?.toString() ?: "", fields)
             .subscribe().with({ piece -> println(piece) }, { e -> println(e) })
     }
 }
