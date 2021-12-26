@@ -1,4 +1,4 @@
-package network.cere.ddc.cli.picocli.behaviour
+package network.cere.ddc.cli.picocli
 
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.picocli.AbstractCommand

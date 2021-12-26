@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.5.10"
-    kotlin("plugin.allopen") version "1.5.10"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.allopen") version "1.6.10"
     id("io.quarkus") version "2.5.0.Final"
 }
 
@@ -45,7 +45,7 @@ dependencies {
     implementation("com.github.cerebellum-network.cere-ddc-sdk-kotlin:nft-storage:unspecified")
 
     //Ktor
-    val ktorVersion = "1.6.3"
+    val ktorVersion = "1.6.7"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-java:$ktorVersion")
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")

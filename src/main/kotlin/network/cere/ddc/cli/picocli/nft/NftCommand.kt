@@ -7,7 +7,9 @@ import picocli.CommandLine
         StoreAssetCommand::class,
         ReadAssetCommand::class,
         ReadMetadataCommand::class,
-        StoreMetadataCommand::class
+        StoreMetadataCommand::class,
+        BenchmarkCommand::class,
+        GenerateLoadCommand::class
     ]
 )
 class NftCommand {

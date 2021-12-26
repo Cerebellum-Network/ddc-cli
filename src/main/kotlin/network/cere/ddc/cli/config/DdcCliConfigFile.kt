@@ -3,7 +3,6 @@ package network.cere.ddc.cli.config
 import network.cere.ddc.client.consumer.ConsumerConfig
 import network.cere.ddc.client.producer.ProducerConfig
 import network.cere.ddc.core.model.Node
-import network.cere.ddc.nft.NftStorageConfig
 import java.io.File
 import javax.enterprise.context.ApplicationScoped
 import kotlin.streams.asSequence
@@ -80,7 +79,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         )
     }
 
-    fun readNftStorageConfig(configOptions: Map<String, String>): NftStorageConfig {
+    fun readNftStorageTrustedNodes(configOptions: Map<String, String>): List<Node> {
         val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
         if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
             throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
@@ -99,7 +98,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
 
         val trustedNodes = bootstrapNodeAddresses.zip(bootstrapNodeIds).map { Node(address = it.first, id = it.second) }
 
-        return NftStorageConfig(trustedNodes)
+        return trustedNodes
     }
 
     fun readPrivateKey(configOptions: Map<String, String>): String {

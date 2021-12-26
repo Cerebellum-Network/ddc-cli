@@ -36,13 +36,7 @@ class ReadMetadataCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abst
 
     override fun run() {
         val nftStorage = buildNftStorage(ddcCliConfigFile.read(profile))
-        val metadata = runBlocking {
-            when (schema) {
-                ERC_721 -> nftStorage.readMetadata(nftId, NftPath(url), Erc721Metadata::class.java)
-                ERC_1155 -> nftStorage.readMetadata(nftId, NftPath(url), Erc1155Metadata::class.java)
-                else -> throw IllegalArgumentException("Invalid schema name $schema")
-            }
-        }
+        val metadata = runBlocking { nftStorage.readMetadata(nftId, NftPath(url)) }
 
         println("Metadata: ${jacksonObjectMapper().writeValueAsString(metadata)}")
     }
