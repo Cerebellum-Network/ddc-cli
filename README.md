@@ -119,7 +119,7 @@ To store asset in Base64 format
 ddc-cli nft-storage store-asset -i nft_id -d Base64_data -n file.extension
 ```
 
-### read asset
+### read-asset
 
 To read asset  in Base64 format
 
@@ -127,7 +127,7 @@ To read asset  in Base64 format
 ddc-cli nft-storage read-asset -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/image.jpeg
 ```
 
-### store metadata
+### store-metadata
 
 To store metadata ERC-721 format
 
@@ -135,7 +135,7 @@ To store metadata ERC-721 format
 ddc-cli nft-storage store-metadata -i nft_id -s ERC-721 -d '{"name":"metadata","description":"some metadata","image":"cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/someImage.jpeg"}'
 ```
 
-### read metadata
+### read-metadata
 
 To read metadata
 
@@ -143,7 +143,7 @@ To read metadata
 ddc-cli nft-storage read-metadata -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json
 ```
 
-### store EDEK
+### store-edek
 
 To store EDEK
 
@@ -151,12 +151,12 @@ To store EDEK
 ddc-cli nft-storage store-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a -v some_string_value
 ```
 
-### read EDEK
+### read-edek
 
 To read EDEK
 
 ```shell script
-ddc-cli nft-storage store-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a
+ddc-cli nft-storage read-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a
 ```
 
 ### generate-load
