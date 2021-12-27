@@ -41,11 +41,11 @@ dependencies {
 
     // DDC
     implementation("com.github.cerebellum-network:ddc-client-kotlin:1.2.0.Final")
-    implementation("com.github.cerebellum-network.cere-ddc-sdk-kotlin:core:unspecified")
-    implementation("com.github.cerebellum-network.cere-ddc-sdk-kotlin:nft-storage:unspecified")
+    implementation("com.github.cerebellum-network.cere-ddc-sdk-kotlin:core:0.1.0")
+    implementation("com.github.cerebellum-network.cere-ddc-sdk-kotlin:nft-storage:0.1.0")
 
     //Ktor
-    val ktorVersion = "1.6.7"
+    val ktorVersion = "1.6.5"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-java:$ktorVersion")
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
