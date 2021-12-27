@@ -116,7 +116,7 @@ ddc-cli benchmark
 To store asset in Base64 format
 
 ```shell script
-ddc-cli nft-storage store-asset -i someNftId -d Base64_data -n image.jpeg
+ddc-cli nft-storage store-asset -i nft_id -d Base64_data -n image.jpeg
 ```
 
 ### read asset
@@ -124,7 +124,7 @@ ddc-cli nft-storage store-asset -i someNftId -d Base64_data -n image.jpeg
 To read asset  in Base64 format
 
 ```shell script
-ddc-cli nft-storage read-asset -i someNftId -u cns:///someCid/image.jpeg
+ddc-cli nft-storage read-asset -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/image.jpeg
 ```
 
 ### store metadata
@@ -132,7 +132,7 @@ ddc-cli nft-storage read-asset -i someNftId -u cns:///someCid/image.jpeg
 To store metadata ERC-721 format
 
 ```shell script
-ddc-cli nft-storage store-metadata -i someNftId -s ERC-721 -d '{"name":"metadata","description":"some metadata","image":"cns:///someIMage.jpeg"}'
+ddc-cli nft-storage store-metadata -i nft_id -s ERC-721 -d '{"name":"metadata","description":"some metadata","image":"cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/someImage.jpeg"}'
 ```
 
 ### read metadata
@@ -140,7 +140,7 @@ ddc-cli nft-storage store-metadata -i someNftId -s ERC-721 -d '{"name":"metadata
 To read metadata
 
 ```shell script
-ddc-cli nft-storage read-metadata -i someNftId -u cns:///someCid/metadata.json
+ddc-cli nft-storage read-metadata -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json
 ```
 
 ### store EDEK
@@ -148,7 +148,7 @@ ddc-cli nft-storage read-metadata -i someNftId -u cns:///someCid/metadata.json
 To store EDEK
 
 ```shell script
-ddc-cli nft-storage store-edek -i someNftId -u cns:///metadataCid/metadata.json -k 0x37520s8dgy892h890 -v asd23dfh456urytkj567
+ddc-cli nft-storage store-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a -v some_string_value
 ```
 
 ### read EDEK
@@ -156,7 +156,7 @@ ddc-cli nft-storage store-edek -i someNftId -u cns:///metadataCid/metadata.json 
 To read EDEK
 
 ```shell script
-ddc-cli nft-storage store-edek -i someNftId -u cns:///metadataCid/metadata.json -k 0x37520s8dgy892h890
+ddc-cli nft-storage store-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a
 ```
 
 ### generate-load
@@ -164,7 +164,7 @@ ddc-cli nft-storage store-edek -i someNftId -u cns:///metadataCid/metadata.json 
 To generate random load to storage:
 
 ```shell script
-ddc-cli nft-storage generate-load -u 100 -n 30 -int pt5s -s 1000 -i someNftId
+ddc-cli nft-storage generate-load -u 100 -n 30 -int pt5s -s 1000 -i nft_id
 ```
 
 ### benchmark
@@ -172,5 +172,5 @@ ddc-cli nft-storage generate-load -u 100 -n 30 -int pt5s -s 1000 -i someNftId
 To benchmark storage:
 
 ```shell script
-ddc-cli nft-storage benchmark -i someNftId
+ddc-cli nft-storage benchmark -i nft_id
 ```
