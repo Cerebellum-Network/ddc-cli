@@ -8,6 +8,8 @@ import picocli.CommandLine
         ReadAssetCommand::class,
         ReadMetadataCommand::class,
         StoreMetadataCommand::class,
+        ReadEdekCommand::class,
+        StoreEdekCommand::class,
         BenchmarkCommand::class,
         GenerateLoadCommand::class
     ]

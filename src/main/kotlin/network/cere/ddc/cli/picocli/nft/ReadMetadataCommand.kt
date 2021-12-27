@@ -15,21 +15,15 @@ import picocli.CommandLine
 class ReadMetadataCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
-        names = ["--nft-id"],
+        names = ["-i", "--nft-id"],
         description = ["Nft Id where stored required asset"],
         required = true
     )
     var nftId: String = ""
 
     @CommandLine.Option(
-        names = ["-s", "--schema"],
-        description = ["ERC-1155 or ERC-721 metadata JSON schema"],
-    )
-    var schema: String = ERC_721
-
-    @CommandLine.Option(
-        names = ["--url"],
-        description = ["Url where stored required asset"],
+        names = ["-u", "--url"],
+        description = ["Url where stored required metadata"],
         required = true
     )
     var url: String = ""

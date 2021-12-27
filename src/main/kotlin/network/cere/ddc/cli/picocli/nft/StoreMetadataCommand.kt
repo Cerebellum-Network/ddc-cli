@@ -16,7 +16,7 @@ class StoreMetadataCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abs
 
 
     @CommandLine.Option(
-        names = ["--nft-id"],
+        names = ["-i", "--nft-id"],
         description = ["Nft Id where store asset"],
         required = true
     )

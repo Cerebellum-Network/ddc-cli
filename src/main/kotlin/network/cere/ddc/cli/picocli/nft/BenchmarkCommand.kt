@@ -19,7 +19,7 @@ import kotlin.random.Random
 class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
-        names = ["--nft-id"],
+        names = ["-i", "--nft-id"],
         description = ["Nft Id where stored required asset"],
         required = true
     )
@@ -27,9 +27,9 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     @CommandLine.Option(
         names = ["-u", "--users"],
-        description = ["Number of concurrent users (default - 100)"]
+        description = ["Number of concurrent users (default - 10)"]
     )
-    var users: Int = 100
+    var users: Int = 10
 
     @CommandLine.Option(
         names = ["-d", "--duration"],
@@ -39,13 +39,13 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     @CommandLine.Option(
         names = ["-sMin", "--sizeMin"],
-        description = ["Min piece size to be generated in bytes (default - 4 KB)"]
+        description = ["Min asset size to be generated in bytes (default - 4 KB)"]
     )
     var sizeMin: Int = 4 * 1 shl 10 // 4 KB
 
     @CommandLine.Option(
         names = ["-sMax", "--sizeMax"],
-        description = ["Max piece size to be generated in bytes (default - 400 KB)"]
+        description = ["Max asset size to be generated in bytes (default - 400 KB)"]
     )
     var sizeMax: Int = 400 * 1 shl 10 // 400 KB
 
@@ -81,15 +81,18 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
                         val nft = runBlocking {
                             val assetNftPath = storage.storeAsset(nftId, asset, fileName)
                             val metadataNftPath = storage.storeMetadata(nftId, metadata)
-                            val edek = storage.storeEdek(nftId, metadataNftPath, edek)
-                            Nft(assetNftPath, metadataNftPath, edek)
+                            val storedEdek = storage.storeEdek(nftId, metadataNftPath, edek)
+                            Nft(assetNftPath, metadataNftPath, storedEdek)
                         }
 
                         nft to asset.size
                     }.onSuccess {
-                        totalNfts.getAndIncrement()
+                        totalNfts.incrementAndGet()
+                        totalBytes.addAndGet(it.second)
                         storedNft.add(it.first)
-                    }.onFailure { totalFailedNfts.incrementAndGet() }
+                    }.onFailure {
+                        totalFailedNfts.incrementAndGet()
+                    }
                 }
                 allNft[it] = storedNft
             }
@@ -109,6 +112,8 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     private fun read(storage: NftStorage, allNft: Map<Int, List<Nft>>) {
         val totalAssetBytes = AtomicInteger()
+        val totalNfts = AtomicInteger()
+        val totalFailedNfts = AtomicInteger()
 
         val start = System.currentTimeMillis()
 
@@ -122,8 +127,11 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
                             storage.readAsset(nftId, it.assetNftPath)
                         }
                     }.onSuccess {
+                        totalNfts.incrementAndGet()
                         totalAssetBytes.addAndGet(it.size)
-                    }.onFailure {  }
+                    }.onFailure {
+                        totalFailedNfts.incrementAndGet()
+                    }
                 }
             }
         }.forEach { runBlocking { it.join() } }
@@ -133,8 +141,10 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         // print result
         println("=".repeat(60))
         println("Reading")
-        println("Total asset bytes: ${totalAssetBytes.get()}")
-        println("Read NFT/sec: ${totalAssetBytes.get() / durationInSec}")
+        println("Total success NFTs: ${totalNfts.get()}")
+        println("Total failed NFTs: ${totalFailedNfts.get()}")
+        println("Total success asset bytes: ${totalAssetBytes.get()}")
+        println("Read NFT/sec: ${totalNfts.get() / durationInSec}")
         println("Asset Bytes/sec: ${totalAssetBytes.get() / durationInSec}")
     }
 

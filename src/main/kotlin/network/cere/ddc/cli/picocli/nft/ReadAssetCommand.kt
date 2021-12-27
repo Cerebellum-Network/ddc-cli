@@ -11,14 +11,14 @@ import java.util.*
 class ReadAssetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
-        names = ["--nft-id"],
+        names = ["-i", "--nft-id"],
         description = ["Nft Id where stored required asset"],
         required = true
     )
     var nftId: String = ""
 
     @CommandLine.Option(
-        names = ["--url"],
+        names = ["-u", "--url"],
         description = ["Url where stored required asset"],
         required = true
     )

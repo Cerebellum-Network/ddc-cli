@@ -12,7 +12,7 @@ import java.util.*
 class StoreAssetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
-        names = ["--nft-id"],
+        names = ["-i", "--nft-id"],
         description = ["Nft Id where store asset"],
         required = true
     )

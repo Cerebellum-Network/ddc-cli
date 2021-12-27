@@ -12,7 +12,6 @@ import network.cere.ddc.client.producer.ProducerConfig
 import network.cere.ddc.core.signature.Scheme
 import network.cere.ddc.nft.NftStorage
 import network.cere.ddc.nft.NftStorageBuilder
-import network.cere.ddc.nft.client.HttpTransportClient
 import picocli.CommandLine
 
 abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = DdcCliConfigFile()) : Runnable {

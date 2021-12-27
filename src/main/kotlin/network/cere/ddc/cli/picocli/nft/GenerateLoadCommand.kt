@@ -14,7 +14,7 @@ import kotlin.concurrent.thread
 class GenerateLoadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
-        names = ["--nft-id"],
+        names = ["-i", "--nft-id"],
         description = ["Nft Id where stored required asset"],
         required = true
     )
@@ -28,19 +28,19 @@ class GenerateLoadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abst
 
     @CommandLine.Option(
         names = ["-n", "--number"],
-        description = ["Number of pieces per user (default - int max value)"]
+        description = ["Number of NFT per user (default - int max value)"]
     )
     var number: Int = Int.MAX_VALUE
 
     @CommandLine.Option(
-        names = ["-i", "--interval"],
+        names = ["-int", "--interval"],
         description = ["Interval between user requests (default - 1s)"]
     )
     var interval: Duration = Duration.ofSeconds(1)
 
     @CommandLine.Option(
         names = ["-s", "--size"],
-        description = ["Piece size to be generated in bytes (default - 1000)"]
+        description = ["Asset size to be generated in bytes (default - 1000)"]
     )
     var size: Int = 1000
 
