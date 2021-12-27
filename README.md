@@ -116,7 +116,7 @@ ddc-cli benchmark
 To store asset in Base64 format
 
 ```shell script
-ddc-cli nft-storage store-asset -i nft_id -d Base64_data -n image.jpeg
+ddc-cli nft-storage store-asset -i nft_id -d Base64_data -n file.extension
 ```
 
 ### read asset
