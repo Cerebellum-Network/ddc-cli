@@ -4,10 +4,10 @@ import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.client.api.Metadata
 import network.cere.ddc.client.producer.Piece
 import picocli.CommandLine
-import java.time.Instant
-import java.util.*
 import java.lang.Thread.sleep
 import java.time.Duration
+import java.time.Instant
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.concurrent.thread
@@ -85,7 +85,7 @@ class BenchmarkCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
                                 customAttributes = mapOf(
                                     "minter" to userPubKey,
                                     "relId" to "123",
-                                    "relType" to "nft",
+                                    "relType" to "token",
                                     "title" to "title",
                                     "description" to "someDescription",
                                     "type" to "image",

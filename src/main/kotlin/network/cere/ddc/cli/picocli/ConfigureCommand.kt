@@ -33,7 +33,7 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     @CommandLine.Option(
         names = ["--bootstrapNodeIds"],
-        description = ["List of bootstrap node ids in same order as bootstrapNodes (required for Nft storage)"]
+        description = ["List of bootstrap node ids in same order as bootstrapNodes (required for Object storage)"]
     )
     var bootstrapNodeIds: List<String>? = null
 

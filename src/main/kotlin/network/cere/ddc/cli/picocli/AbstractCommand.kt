@@ -33,7 +33,7 @@ abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = 
     }
 
     fun buildObjectStorage(configOptions: Map<String, String>): ObjectStorage {
-        val trustedNodes = ddcCliConfigFile.readNftStorageTrustedNodes(configOptions)
+        val trustedNodes = ddcCliConfigFile.readObjectStorageTrustedNodes(configOptions)
         val privateKey = ddcCliConfigFile.readPrivateKey(configOptions)
 
         return ObjectStorageBuilder().privateKey(privateKey).scheme(Scheme.SR_25519).trustedNodes(trustedNodes).build()

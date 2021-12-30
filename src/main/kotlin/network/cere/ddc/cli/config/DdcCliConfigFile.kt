@@ -79,7 +79,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         )
     }
 
-    fun readNftStorageTrustedNodes(configOptions: Map<String, String>): List<Node> {
+    fun readObjectStorageTrustedNodes(configOptions: Map<String, String>): List<Node> {
         val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
         if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
             throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
