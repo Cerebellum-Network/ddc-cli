@@ -109,38 +109,22 @@ To benchmark behaviour DDC node (define WCU and RCU parameters):
 ddc-cli benchmark
 ```
 
-## NFT Storage
+## Object Storage
 
-### store-asset
+### store-storage
 
-To store asset in Base64 format
+To store object in Base64 format
 
 ```shell script
-ddc-cli nft-storage store-asset -i nft_id -d Base64_data -n file.extension
+ddc-cli object-storage store-object -i 1 -d Base64_data
 ```
 
-### read-asset
+### read-storage
 
-To read asset  in Base64 format
-
-```shell script
-ddc-cli nft-storage read-asset -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/image.jpeg
-```
-
-### store-metadata
-
-To store metadata ERC-721 format
+To read object in Base64 format
 
 ```shell script
-ddc-cli nft-storage store-metadata -i nft_id -s ERC-721 -d '{"name":"metadata","description":"some metadata","image":"cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/someImage.jpeg"}'
-```
-
-### read-metadata
-
-To read metadata
-
-```shell script
-ddc-cli nft-storage read-metadata -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json
+ddc-cli object-storage read-object -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
 ```
 
 ### store-edek
@@ -148,7 +132,7 @@ ddc-cli nft-storage read-metadata -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82
 To store EDEK
 
 ```shell script
-ddc-cli nft-storage store-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a -v some_string_value
+ddc-cli object-storage store-edek -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a -v some_string_value
 ```
 
 ### read-edek
@@ -156,7 +140,7 @@ ddc-cli nft-storage store-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJ
 To read EDEK
 
 ```shell script
-ddc-cli nft-storage read-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o/metadata.json -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a
+ddc-cli object-storage read-edek -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a
 ```
 
 ### generate-load
@@ -164,7 +148,7 @@ ddc-cli nft-storage read-edek -i nft_id -u cns://routing-key/Qmf6mNYKEjYwA82PTJL
 To generate random load to storage:
 
 ```shell script
-ddc-cli nft-storage generate-load -u 100 -n 30 -int pt5s -s 1000 -i nft_id
+ddc-cli object-storage generate-load -u 100 -n 30 -int pt5s -s 1000 -i 1
 ```
 
 ### benchmark
@@ -172,5 +156,5 @@ ddc-cli nft-storage generate-load -u 100 -n 30 -int pt5s -s 1000 -i nft_id
 To benchmark storage:
 
 ```shell script
-ddc-cli nft-storage benchmark -i nft_id
+ddc-cli object-storage benchmark -i 1
 ```

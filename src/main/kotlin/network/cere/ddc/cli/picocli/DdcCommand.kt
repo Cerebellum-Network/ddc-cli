@@ -4,7 +4,7 @@ import io.quarkus.runtime.QuarkusApplication
 import io.quarkus.runtime.annotations.QuarkusMain
 import network.cere.ddc.cli.picocli.keys.ExtractKeysCommand
 import network.cere.ddc.cli.picocli.keys.GenerateKeysCommand
-import network.cere.ddc.cli.picocli.nft.NftCommand
+import network.cere.ddc.cli.picocli.`object`.ObjectCommand
 import picocli.CommandLine
 import picocli.CommandLine.IFactory
 
@@ -18,7 +18,7 @@ import picocli.CommandLine.IFactory
         ConfigureCommand::class,
         BenchmarkCommand::class,
         GenerateLoadCommand::class,
-        NftCommand::class,
+        ObjectCommand::class,
         ConsumeCommand::class,
         GetAppPiecesCommand::class,
         GetPieceCommand::class,
