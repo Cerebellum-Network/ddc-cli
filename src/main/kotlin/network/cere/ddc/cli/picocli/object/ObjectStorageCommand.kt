@@ -12,4 +12,4 @@ import picocli.CommandLine
         GenerateLoadCommand::class
     ]
 )
-class ObjectCommand
+class ObjectStorageCommand

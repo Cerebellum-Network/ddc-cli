@@ -1,7 +1,8 @@
-package network.cere.ddc.cli.picocli
+package network.cere.ddc.cli.picocli.event
 
 import io.vertx.core.json.JsonObject
 import network.cere.ddc.cli.config.DdcCliConfigFile
+import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.client.api.Metadata
 import network.cere.ddc.client.producer.Piece
 import network.cere.ddc.crypto.v1.key.secret.CryptoSecretKey

@@ -41,17 +41,17 @@ command:
 ddc-cli configure --bootstrapNodes http://localhost:8080 --bootstrapNodeIds 12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT --appPubKey APP_PUB_KEY --appPrivKey APP_PRIV_KEY
 ```
 
+## Event storage
+
 ### create-app
 
 You can create application in Event DDC using next command (bootstrapNodes, appPubKey and appPrivKey from configuration are used) :
 
 ```shell script
-ddc-cli create-app
+ddc-cli event-storage create-app
 ```
 
 > **_NOTE:_**  Subscription in SC required (except dev environment where SC is mocked). If appPubkey and appPrivKey are not present - new app will be generated (dev only).
-
-## Event storage
 
 ### produce
 

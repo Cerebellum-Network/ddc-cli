@@ -2,9 +2,10 @@ package network.cere.ddc.cli.picocli
 
 import io.quarkus.runtime.QuarkusApplication
 import io.quarkus.runtime.annotations.QuarkusMain
+import network.cere.ddc.cli.picocli.`object`.ObjectStorageCommand
+import network.cere.ddc.cli.picocli.event.*
 import network.cere.ddc.cli.picocli.keys.ExtractKeysCommand
 import network.cere.ddc.cli.picocli.keys.GenerateKeysCommand
-import network.cere.ddc.cli.picocli.`object`.ObjectCommand
 import picocli.CommandLine
 import picocli.CommandLine.IFactory
 
@@ -18,13 +19,13 @@ import picocli.CommandLine.IFactory
         ConfigureCommand::class,
         BenchmarkCommand::class,
         GenerateLoadCommand::class,
-        ObjectCommand::class,
+        ObjectStorageCommand::class,
         ConsumeCommand::class,
         GetAppPiecesCommand::class,
         GetPieceCommand::class,
         GetUserPiecesCommand::class,
         ProduceCommand::class,
-        CreateAppCommand::class,
+        EventStorageCommand::class,
     ]
 )
 class DdcCommand(private val factory: IFactory) : QuarkusApplication {
