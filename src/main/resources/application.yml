@@ -12,5 +12,6 @@ quarkus:
       - '-H:EnableURLProtocols=http,https'
       - '-H:ResourceConfigurationFiles=resources-config.json'
       - '-H:ReflectionConfigurationFiles=reflection-config.json'
+      - '-H:MaxDuplicationFactor=10.0'
       - '-H:-CheckToolchain'
       - '--initialize-at-run-time=cash.z.ecc.android.bip39.Mnemonics'

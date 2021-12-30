@@ -21,6 +21,6 @@ class ReadObjectCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstra
         val objectStorage = buildObjectStorage(ddcCliConfigFile.read(profile))
         val data = runBlocking { objectStorage.readObject(ObjectPath(url)) }
 
-        println("Data: ${String(Base64.getEncoder().encode(data))}")
+        println("Data: ${String(data)}")
     }
 }
