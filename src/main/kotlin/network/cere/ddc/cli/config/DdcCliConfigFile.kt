@@ -15,6 +15,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         const val PARTITION_POLL_INTERVAL_MS_CONFIG = "partitionPollIntervalMs"
         const val MASTER_ENCRYPTION_KEY_CONFIG = "masterEncryptionKey"
         const val ENCRYPTION_JSON_PATHS_CONFIG = "encryptionJsonPaths"
+        const val SIGNATURE_SCHEME_CONFIG = "scheme"
 
         const val DEFAULT_PROFILE = "default"
     }

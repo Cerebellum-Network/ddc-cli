@@ -2,24 +2,26 @@ package network.cere.ddc.cli.picocli.keys
 
 import cash.z.ecc.android.bip39.Mnemonics.MnemonicCode
 import cash.z.ecc.android.bip39.Mnemonics.WordCount
-import com.debuggor.schnorrkel.sign.ExpansionMode
-import com.debuggor.schnorrkel.sign.KeyPair
 import network.cere.ddc.cli.picocli.AbstractCommand
-import network.cere.ddc.crypto.v1.toHex
 import picocli.CommandLine
 
 @CommandLine.Command(name = "generate-keys")
 class GenerateKeysCommand : AbstractCommand() {
 
+    @CommandLine.Option(
+        names = ["--scheme"],
+        required = true,
+        description = ["Signature scheme: $SR_25519, $ED_25519, or $SECP_256_K_1"]
+    )
+    lateinit var scheme: String
+
     override fun run() {
         val mnemonicCode = MnemonicCode(WordCount.COUNT_12)
         val entropy = mnemonicCode.toEntropy()
-
-        val secretSeed = pbkdf2Seed(entropy, "mnemonic".toByteArray())
-        val keyPair = KeyPair.fromSecretSeed(secretSeed, ExpansionMode.Ed25519)
+        val keyPair = generateKeyPair(entropy, "mnemonic".toByteArray(), scheme)
 
         println("Secret phrase: " + mnemonicCode.joinToString(" "))
-        println("Public key: ${keyPair.publicKey.toPublicKey().toHex()}")
-        println("Private key: ${secretSeed.toHex()}")
+        println("Public key: ${keyPair.publicKey}")
+        println("Private key: ${keyPair.privateKey}")
     }
 }

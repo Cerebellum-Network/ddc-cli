@@ -1,10 +1,7 @@
 package network.cere.ddc.cli.picocli.keys
 
 import cash.z.ecc.android.bip39.Mnemonics
-import com.debuggor.schnorrkel.sign.ExpansionMode
-import com.debuggor.schnorrkel.sign.KeyPair
 import network.cere.ddc.cli.picocli.AbstractCommand
-import network.cere.ddc.crypto.v1.toHex
 import picocli.CommandLine
 
 @CommandLine.Command(name = "extract-keys")
@@ -12,17 +9,22 @@ class ExtractKeysCommand : AbstractCommand() {
 
     @CommandLine.Option(
         names = ["--secret-phrase"],
+        required = true,
         description = ["Secret phrase (mnemonic)"]
     )
     lateinit var secretPhrase: String
 
+    @CommandLine.Option(
+        names = ["--scheme"],
+        description = ["Signature scheme used to generate the keys: $SR_25519, $ED_25519, or $SECP_256_K_1"]
+    )
+    lateinit var scheme: String
+
     override fun run() {
         val entropy = Mnemonics.MnemonicCode(secretPhrase).toEntropy()
+        val keyPair = generateKeyPair(entropy, "mnemonic".toByteArray(), scheme)
 
-        val secretSeed = pbkdf2Seed(entropy, "mnemonic".toByteArray())
-        val keyPair = KeyPair.fromSecretSeed(secretSeed, ExpansionMode.Ed25519)
-
-        println("Public key: ${keyPair.publicKey.toPublicKey().toHex()}")
-        println("Private key: ${secretSeed.toHex()}")
+        println("Public key: ${keyPair.publicKey}")
+        println("Private key: ${keyPair.privateKey}")
     }
 }

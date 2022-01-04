@@ -34,6 +34,8 @@ dependencies {
     implementation("cash.z.ecc.android:kotlin-bip39:1.0.2")
     implementation("commons-codec:commons-codec:1.15")
     implementation("com.github.yeeco:schnorrkel-java:v1.0.4")
+    implementation("org.web3j:crypto:5.0.0")
+    implementation("net.i2p.crypto:eddsa:0.3.0")
 
     // Smallrye
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:$smallryeMutinyVertx")
