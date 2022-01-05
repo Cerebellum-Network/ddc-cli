@@ -5,6 +5,7 @@ import com.debuggor.schnorrkel.sign.KeyPair
 import net.i2p.crypto.eddsa.EdDSAPrivateKey
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec
+import network.cere.ddc.core.signature.Scheme
 import network.cere.ddc.crypto.v1.toHex
 import org.apache.commons.codec.digest.HmacAlgorithms
 import org.apache.commons.codec.digest.HmacUtils
@@ -14,9 +15,6 @@ import kotlin.experimental.xor
 
 private const val PBKDF2_ROUNDS = 2048
 private const val SUBSTRATE_KEY_LENGTH = 32
-const val SR_25519 = "sr25519"
-const val ED_25519 = "ed25519"
-const val SECP_256_K_1 = "secp256k1"
 
 private fun pbkdf2Seed(password: ByteArray, salt: ByteArray): ByteArray {
     val block = salt + byteArrayOf(0, 0, 0, 1)
@@ -37,33 +35,37 @@ private fun hmac(password: ByteArray, data: ByteArray): ByteArray {
         .doFinal()
 }
 
-fun generateKeyPair(entropy: ByteArray, salt: ByteArray, scheme: String): network.cere.ddc.cli.picocli.keys.KeyPair {
+fun generateKeyPair(entropy: ByteArray, salt: ByteArray, scheme: String): KeyPairSeed {
     val secretSeed = pbkdf2Seed(entropy, salt)
+    val secretSeedHex = secretSeed.toHex()
 
     when (scheme) {
-        SR_25519 -> {
+        Scheme.SR_25519 -> {
             val keyPair = KeyPair.fromSecretSeed(secretSeed, ExpansionMode.Ed25519)
-            return KeyPair(
+            return KeyPairSeed(
                 keyPair.privateKey.toPrivateKey().toHex(),
-                keyPair.publicKey.toPublicKey().toHex()
+                keyPair.publicKey.toPublicKey().toHex(),
+                secretSeedHex
             )
         }
-        ED_25519 -> {
+        Scheme.ED_25519 -> {
             val edDSANamedCurveSpec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)
             val privKeySpec = EdDSAPrivateKeySpec(secretSeed, edDSANamedCurveSpec)
             val privKey = EdDSAPrivateKey(privKeySpec)
 
-            return KeyPair(
+            return KeyPairSeed(
                 privKey.geta().toHex(),
-                privKey.abyte.toHex()
+                privKey.abyte.toHex(),
+                secretSeedHex
             )
         }
-        SECP_256_K_1 -> {
+        Scheme.SECP_256_K_1 -> {
             val keyPair = ECKeyPair.create(sha256(secretSeed))
 
-            return KeyPair(
+            return KeyPairSeed(
                 keyPair.privateKey.toByteArray().toHex(),
-                keyPair.publicKey.toByteArray().toHex()
+                keyPair.publicKey.toByteArray().toHex(),
+                secretSeedHex
             )
         }
         else -> {

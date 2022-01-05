@@ -153,4 +153,13 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
             mutableMapOf()
         }
     }
+
+    fun readSignatureScheme(configOptions: Map<String, String>): String {
+        val scheme = configOptions[SIGNATURE_SCHEME_CONFIG]
+        if (scheme == null || scheme.isEmpty()) {
+            throw RuntimeException("Missing required parameter 'scheme'. Please use 'configure' command.")
+        }
+
+        return scheme
+    }
 }

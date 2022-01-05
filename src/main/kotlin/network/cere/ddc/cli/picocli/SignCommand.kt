@@ -5,6 +5,7 @@ import com.debuggor.schnorrkel.sign.KeyPair
 import picocli.CommandLine
 
 import com.debuggor.schnorrkel.sign.SigningContext
+import network.cere.ddc.core.signature.Scheme
 import network.cere.ddc.crypto.v1.hexToBytes
 import network.cere.ddc.crypto.v1.toHex
 
@@ -19,16 +20,23 @@ class SignCommand : AbstractCommand() {
     )
     lateinit var privateKey: String
 
+    @CommandLine.Option(
+        names = ["--scheme"],
+        required = true,
+        description = ["Signature scheme: ${Scheme.SR_25519}, ${Scheme.ED_25519}, or ${Scheme.SECP_256_K_1}"]
+    )
+    lateinit var scheme: String
+
     @CommandLine.Option(names = ["-d", "--data"], required = true, description = ["Data to be signed"])
     lateinit var data: String
 
     override fun run() {
-        val keyPair = KeyPair.fromSecretSeed(privateKey.hexToBytes(), ExpansionMode.Ed25519)
+        val signatureScheme = Scheme.create(scheme, privateKey)
+        val signature = signatureScheme.sign(data.toByteArray())
 
-        val signature = keyPair.sign(signingContext.bytes(data.toByteArray()))
 
-        println("Public key: ${keyPair.publicKey.toPublicKey().toHex()}")
+        println("Public key: ${signatureScheme.publicKeyHex}")
         println("Private key: $privateKey")
-        println("Signed data: ${signature.to_bytes().toHex()}")
+        println("Signed data: $signature")
     }
 }
