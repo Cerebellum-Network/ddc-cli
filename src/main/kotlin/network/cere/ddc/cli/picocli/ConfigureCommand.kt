@@ -65,8 +65,18 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     override fun run() {
         val configOptions = mutableMapOf<String, String>()
-        appPubKey?.let { configOptions.put(APP_PUB_KEY_CONFIG, it) }
-        appPrivKey?.let { configOptions.put(APP_PRIV_KEY_CONFIG, it) }
+        appPubKey?.let {
+            if (scheme.isNullOrEmpty()) {
+                throw RuntimeException("scheme is required when updating appPubKey")
+            }
+            configOptions.put(APP_PUB_KEY_CONFIG, it)
+        }
+        appPrivKey?.let {
+            if (scheme.isNullOrEmpty()) {
+                throw RuntimeException("scheme is required when updating appPrivKey")
+            }
+            configOptions.put(APP_PRIV_KEY_CONFIG, it)
+        }
         bootstrapNodes?.let { nodes -> configOptions.put(BOOTSTRAP_NODES_CONFIG, nodes.joinToString()) }
         bootstrapNodeIds?.let { ids -> configOptions.put(BOOTSTRAP_NODE_IDS_CONFIG, ids.joinToString()) }
         partitionPollIntervalMs?.let { configOptions.put(PARTITION_POLL_INTERVAL_MS_CONFIG, it) }
