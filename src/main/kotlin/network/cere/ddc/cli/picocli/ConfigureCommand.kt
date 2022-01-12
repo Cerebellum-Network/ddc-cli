@@ -9,6 +9,7 @@ import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.ENCRYPTION_JSON_PA
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.MASTER_ENCRYPTION_KEY_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.PARTITION_POLL_INTERVAL_MS_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.SIGNATURE_SCHEME_CONFIG
+import network.cere.ddc.core.signature.Scheme
 import picocli.CommandLine
 
 @CommandLine.Command(name = "configure")
@@ -57,14 +58,13 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
     var encryptionJsonPaths: List<String>? = null
 
     @CommandLine.Option(
-        names = ["--scheme"],
+        names = ["-s", "--scheme"],
         description = ["Signature scheme (required for requests that require a signature)"]
     )
     var scheme: String? = null
 
     override fun run() {
         val configOptions = mutableMapOf<String, String>()
-
         appPubKey?.let { configOptions.put(APP_PUB_KEY_CONFIG, it) }
         appPrivKey?.let { configOptions.put(APP_PRIV_KEY_CONFIG, it) }
         bootstrapNodes?.let { nodes -> configOptions.put(BOOTSTRAP_NODES_CONFIG, nodes.joinToString()) }
@@ -72,7 +72,12 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         partitionPollIntervalMs?.let { configOptions.put(PARTITION_POLL_INTERVAL_MS_CONFIG, it) }
         masterEncryptionKey?.let { configOptions.put(MASTER_ENCRYPTION_KEY_CONFIG, it) }
         encryptionJsonPaths?.let { it -> configOptions.put(ENCRYPTION_JSON_PATHS_CONFIG, it.joinToString()) }
-        scheme?.let { it -> configOptions.put(SIGNATURE_SCHEME_CONFIG, it)}
+        scheme?.let { it ->
+            if (!listOf(Scheme.ED_25519, Scheme.SR_25519, Scheme.SECP_256_K_1).contains(scheme)) {
+                throw RuntimeException("Please provide a valid signature scheme: ${Scheme.SR_25519}, ${Scheme.ED_25519}, or ${Scheme.SECP_256_K_1}")
+            }
+            configOptions.put(SIGNATURE_SCHEME_CONFIG, it)
+        }
 
         if (configOptions.isNotEmpty()) {
             ddcCliConfigFile.write(configOptions, profile)

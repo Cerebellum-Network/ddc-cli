@@ -1,17 +1,16 @@
 package network.cere.ddc.cli.picocli.keys
 
+import cash.z.ecc.android.bip39.Mnemonics
 import com.debuggor.schnorrkel.sign.ExpansionMode
 import com.debuggor.schnorrkel.sign.KeyPair
-import net.i2p.crypto.eddsa.EdDSAPrivateKey
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable
-import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec
+import network.cere.ddc.core.signature.Ed25519
 import network.cere.ddc.core.signature.Scheme
 import network.cere.ddc.crypto.v1.toHex
 import org.apache.commons.codec.digest.HmacAlgorithms
 import org.apache.commons.codec.digest.HmacUtils
-import org.web3j.crypto.ECKeyPair
-import org.web3j.crypto.Hash.sha256
 import kotlin.experimental.xor
+import org.kethereum.bip39.model.MnemonicWords
+import org.kethereum.bip39.toKey
 
 private const val PBKDF2_ROUNDS = 2048
 private const val SUBSTRATE_KEY_LENGTH = 32
@@ -35,41 +34,28 @@ private fun hmac(password: ByteArray, data: ByteArray): ByteArray {
         .doFinal()
 }
 
-fun generateKeyPair(entropy: ByteArray, salt: ByteArray, scheme: String): KeyPairSeed {
-    val secretSeed = pbkdf2Seed(entropy, salt)
-    val secretSeedHex = secretSeed.toHex()
-
+fun generateKeyPair(mnemonicWords: Mnemonics.MnemonicCode, saltPhrase: String, scheme: String): network.cere.ddc.cli.picocli.keys.KeyPair {
     when (scheme) {
         Scheme.SR_25519 -> {
+            val secretSeed = pbkdf2Seed(mnemonicWords.toEntropy(), saltPhrase.toByteArray())
             val keyPair = KeyPair.fromSecretSeed(secretSeed, ExpansionMode.Ed25519)
-            return KeyPairSeed(
+
+            return KeyPair(
                 keyPair.privateKey.toPrivateKey().toHex(),
-                keyPair.publicKey.toPublicKey().toHex(),
-                secretSeedHex
+                keyPair.publicKey.toPublicKey().toHex()
             )
         }
         Scheme.ED_25519 -> {
-            val edDSANamedCurveSpec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)
-            val privKeySpec = EdDSAPrivateKeySpec(secretSeed, edDSANamedCurveSpec)
-            val privKey = EdDSAPrivateKey(privKeySpec)
+            val extendedKey = MnemonicWords(mnemonicWords.toList()).toKey("m", saltPhrase)
+            val ed25519 = Ed25519(extendedKey.keyPair.privateKey.key.toByteArray().toHex())
 
-            return KeyPairSeed(
-                privKey.geta().toHex(),
-                privKey.abyte.toHex(),
-                secretSeedHex
-            )
-        }
-        Scheme.SECP_256_K_1 -> {
-            val keyPair = ECKeyPair.create(sha256(secretSeed))
-
-            return KeyPairSeed(
-                keyPair.privateKey.toByteArray().toHex(),
-                keyPair.publicKey.toByteArray().toHex(),
-                secretSeedHex
+            return KeyPair(
+                extendedKey.keyPair.privateKey.key.toByteArray().toHex(),
+                ed25519.publicKeyHex
             )
         }
         else -> {
-            throw RuntimeException("Please provide a valid signature scheme: sr25519, ed25519, or secp256k1")
+            throw RuntimeException("Please provide a valid signature scheme: ${Scheme.SR_25519} or ${Scheme.ED_25519}")
         }
     }
 }

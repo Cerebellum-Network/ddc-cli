@@ -1,8 +1,5 @@
 package network.cere.ddc.cli.picocli.event
 
-import com.debuggor.schnorrkel.sign.ExpansionMode
-import com.debuggor.schnorrkel.sign.KeyPair
-import com.debuggor.schnorrkel.sign.SigningContext
 import io.netty.handler.codec.http.HttpResponseStatus.OK
 import io.vertx.core.json.JsonObject
 import io.vertx.mutiny.core.Vertx
@@ -11,8 +8,6 @@ import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODES_CONFIG
 import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.core.signature.Scheme
-import network.cere.ddc.crypto.v1.hexToBytes
-import network.cere.ddc.crypto.v1.toHex
 import picocli.CommandLine
 
 @CommandLine.Command(name = "create-app")

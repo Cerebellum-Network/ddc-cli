@@ -16,16 +16,16 @@ class ExtractKeysCommand : AbstractCommand() {
     lateinit var secretPhrase: String
 
     @CommandLine.Option(
-        names = ["--scheme"],
-        description = ["Signature scheme: ${Scheme.SR_25519}, ${Scheme.ED_25519}, or ${Scheme.SECP_256_K_1}"]
+        names = ["-s", "--scheme"],
+        required = true,
+        description = ["Signature scheme: ${Scheme.SR_25519} or ${Scheme.ED_25519}"]
     )
     lateinit var scheme: String
 
     override fun run() {
-        val entropy = Mnemonics.MnemonicCode(secretPhrase).toEntropy()
-        val keyPairSeed = generateKeyPair(entropy, "mnemonic".toByteArray(), scheme)
+        val keyPairSeed = generateKeyPair(Mnemonics.MnemonicCode(secretPhrase), "mnemonic", scheme)
 
         println("Public key: ${keyPairSeed.publicKey}")
-        println("Private key: ${keyPairSeed.secretSeed}")
+        println("Private key: ${keyPairSeed.privateKey}")
     }
 }

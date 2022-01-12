@@ -21,7 +21,7 @@ class SignCommand : AbstractCommand() {
     lateinit var privateKey: String
 
     @CommandLine.Option(
-        names = ["--scheme"],
+        names = ["-s", "--scheme"],
         required = true,
         description = ["Signature scheme: ${Scheme.SR_25519}, ${Scheme.ED_25519}, or ${Scheme.SECP_256_K_1}"]
     )
