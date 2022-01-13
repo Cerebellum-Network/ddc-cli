@@ -3,6 +3,7 @@ package network.cere.ddc.cli.config
 import network.cere.ddc.client.consumer.ConsumerConfig
 import network.cere.ddc.client.producer.ProducerConfig
 import network.cere.ddc.core.model.Node
+import network.cere.ddc.core.signature.Scheme
 import java.io.File
 import javax.enterprise.context.ApplicationScoped
 import kotlin.streams.asSequence
@@ -45,12 +46,12 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
 
     fun readEncryptionConfig(configOptions: Map<String, String>): EncryptionConfig {
         val masterEncryptionKey = configOptions[MASTER_ENCRYPTION_KEY_CONFIG]
-        if (masterEncryptionKey == null || masterEncryptionKey.isEmpty()) {
+        if (masterEncryptionKey.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter masterEncryptionKey. Please use 'configure' command.")
         }
 
         val encryptionJsonPathsAsString = configOptions[ENCRYPTION_JSON_PATHS_CONFIG]
-        if (encryptionJsonPathsAsString == null || encryptionJsonPathsAsString.isEmpty()) {
+        if (encryptionJsonPathsAsString.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter encryptionJsonPaths. Please use 'configure' command.")
         }
 
@@ -59,35 +60,42 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
 
     fun readProducerConfig(configOptions: Map<String, String>): ProducerConfig {
         val appPubKey = configOptions[APP_PUB_KEY_CONFIG]
-        if (appPubKey == null || appPubKey.isEmpty()) {
+        if (appPubKey.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter appPubKey. Please use 'configure' command.")
         }
 
         val appPrivKey = configOptions[APP_PRIV_KEY_CONFIG]
-        if (appPrivKey == null || appPrivKey.isEmpty()) {
+        if (appPrivKey.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter appPrivKey. Please use 'configure' command.")
         }
 
         val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
-        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
+        if (bootstrapNodesAsString.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
+        }
+
+        val signerScheme = when (readSignatureScheme(configOptions)) {
+            Scheme.SR_25519 -> network.cere.ddc.client.common.signer.Scheme.Sr25519
+            Scheme.ED_25519 -> network.cere.ddc.client.common.signer.Scheme.Ed25519
+            else -> throw RuntimeException("The produce command only supports ${Scheme.SR_25519} and ${Scheme.ED_25519} schemes.")
         }
 
         return ProducerConfig(
             appPubKey = appPubKey,
             appPrivKey = appPrivKey,
-            bootstrapNodes = bootstrapNodesAsString.split(",")
+            bootstrapNodes = bootstrapNodesAsString.split(","),
+            signatureScheme = signerScheme
         )
     }
 
     fun readObjectStorageTrustedNodes(configOptions: Map<String, String>): List<Node> {
         val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
-        if (bootstrapNodesAsString == null || bootstrapNodesAsString.isEmpty()) {
+        if (bootstrapNodesAsString.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
         }
 
         val bootstrapNodeIdsAsString = configOptions[BOOTSTRAP_NODE_IDS_CONFIG]
-        if (bootstrapNodeIdsAsString == null || bootstrapNodeIdsAsString.isEmpty()) {
+        if (bootstrapNodeIdsAsString.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter bootstrapNodeIds. Please use 'configure' command.")
         }
 
@@ -104,7 +112,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
 
     fun readPrivateKey(configOptions: Map<String, String>): String {
         val appPrivKey = configOptions[APP_PRIV_KEY_CONFIG]
-        if (appPrivKey == null || appPrivKey.isEmpty()) {
+        if (appPrivKey.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter appPrivKey. Please use 'configure' command.")
         }
 
@@ -156,7 +164,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
 
     fun readSignatureScheme(configOptions: Map<String, String>): String {
         val scheme = configOptions[SIGNATURE_SCHEME_CONFIG]
-        if (scheme == null || scheme.isEmpty()) {
+        if (scheme.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter 'scheme'. Please use 'configure' command.")
         }
 

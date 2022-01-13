@@ -43,9 +43,9 @@ dependencies {
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-web-client:$smallryeMutinyVertx")
 
     // DDC
-    implementation("com.github.cerebellum-network:ddc-client-kotlin:1.2.0.Final")
-    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:core:0.2.0.Final")
-    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:object-storage:0.2.0.Final")
+    implementation("com.github.cerebellum-network:ddc-client-kotlin:1.3.0.Final")
+    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:core:0.3.0.Final")
+    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:object-storage:0.3.0.Final")
 
     //Ktor
     implementation("io.ktor:ktor-client-java:1.6.5")
