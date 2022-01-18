@@ -1,8 +1,5 @@
 package network.cere.ddc.cli.picocli.event
 
-import com.debuggor.schnorrkel.sign.ExpansionMode
-import com.debuggor.schnorrkel.sign.KeyPair
-import com.debuggor.schnorrkel.sign.SigningContext
 import io.netty.handler.codec.http.HttpResponseStatus.OK
 import io.vertx.core.json.JsonObject
 import io.vertx.mutiny.core.Vertx
@@ -10,8 +7,7 @@ import io.vertx.mutiny.ext.web.client.WebClient
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODES_CONFIG
 import network.cere.ddc.cli.picocli.AbstractCommand
-import network.cere.ddc.crypto.v1.hexToBytes
-import network.cere.ddc.crypto.v1.toHex
+import network.cere.ddc.core.signature.Scheme
 import picocli.CommandLine
 
 @CommandLine.Command(name = "create-app")
@@ -22,8 +18,6 @@ class CreateAppCommand(
 
     private val client = WebClient.create(vertx)
 
-    private val signingContext = SigningContext.createSigningContext("substrate".toByteArray())
-
     override fun run() {
         val configOptions = ddcCliConfigFile.read(profile)
         val appPubKey = configOptions[DdcCliConfigFile.APP_PUB_KEY_CONFIG]
@@ -32,12 +26,15 @@ class CreateAppCommand(
             throw RuntimeException("Missing required parameter (appPubKey or appPrivKey). Please use 'configure' command.")
         }
 
-        val keyPair = KeyPair.fromSecretSeed(appPrivKey.hexToBytes(), ExpansionMode.Ed25519)
-        val signature = keyPair.sign(signingContext.bytes(appPubKey.toByteArray()))
+        val scheme = ddcCliConfigFile.readSignatureScheme(configOptions)
+        if (scheme != Scheme.ED_25519 && scheme != Scheme.SR_25519) {
+            throw RuntimeException("The create-app command only supports ${Scheme.ED_25519} or ${Scheme.SR_25519} scheme.")
+        }
+        val signature = Scheme.create(scheme, appPrivKey).sign(appPubKey.toByteArray())
 
         val createAppReq = mapOf(
             "appPubKey" to appPubKey,
-            "signature" to signature.to_bytes().toHex()
+            "signature" to signature
         ).let(::JsonObject)
 
         client.postAbs("${readBootstrapNodes()[0]}/api/rest/apps")

@@ -35,8 +35,9 @@ abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = 
     fun buildObjectStorage(configOptions: Map<String, String>): ObjectStorage {
         val trustedNodes = ddcCliConfigFile.readObjectStorageTrustedNodes(configOptions)
         val privateKey = ddcCliConfigFile.readPrivateKey(configOptions)
+        val scheme = ddcCliConfigFile.readSignatureScheme(configOptions)
 
-        return ObjectStorageBuilder().privateKey(privateKey).scheme(Scheme.SR_25519).trustedNodes(trustedNodes).build()
+        return ObjectStorageBuilder().privateKey(privateKey).scheme(scheme).trustedNodes(trustedNodes).build()
     }
 
     private fun buildVertx() = Vertx.vertx(
