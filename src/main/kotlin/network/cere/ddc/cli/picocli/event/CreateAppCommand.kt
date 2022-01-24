@@ -38,6 +38,7 @@ class CreateAppCommand(
         ).let(::JsonObject)
 
         client.postAbs("${readBootstrapNodes()[0]}/api/rest/apps")
+            .putHeader("Signing-Algorithm", scheme)
             .sendJsonObject(createAppReq)
             .onFailure().invoke { e -> println(e) }
             .onItem().invoke { res ->
