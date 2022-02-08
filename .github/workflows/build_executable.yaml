@@ -9,7 +9,7 @@ on:
       - master
 jobs:
   buildOnLinux:
-    runs-on: [self-hosted, cere-network-large-workers]
+    runs-on: [self-hosted, cere-network-xlarge-workers]
     steps:
       - name: Checkout the code
         uses: actions/checkout@master
@@ -40,7 +40,7 @@ jobs:
           retention-days: 7
 
   buildOnMac:
-    runs-on: [self-hosted, cere-network-large-workers]
+    runs-on: [self-hosted, cere-network-xlarge-workers]
     steps:
       - name: Checkout the code
         uses: actions/checkout@master
