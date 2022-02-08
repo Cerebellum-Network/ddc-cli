@@ -29,6 +29,8 @@ jobs:
             ~/.gradle
             .gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
+      - name: 'Install build dependencies'
+        run: sudo apt-get install build-essential libz-dev zlib1g-dev
       - name: Gradle Build
         run: ./gradlew build
       - name: Upload artifacts
@@ -60,6 +62,8 @@ jobs:
             ~/.gradle
             .gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
+      - name: 'Install build dependencies'
+        run: xcode-select --install
       - name: Gradle Build
         run: ./gradlew build
       - name: Upload artifacts
