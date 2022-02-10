@@ -18,5 +18,17 @@
   },
   {
     "name": "kotlin.KotlinVersion$Companion[]"
+  },
+  {
+    "name": "org.kethereum.crypto.impl.kdf.PBKDF2Impl",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.kethereum.crypto.impl.mac.HmacImpl",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.kethereum.crypto.impl.ec.EllipticCurveSigner",
+    "allDeclaredConstructors": true
   }
 ]
