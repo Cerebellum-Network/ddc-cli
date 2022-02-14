@@ -3,6 +3,7 @@ package network.cere.ddc.cli.config
 import io.quarkus.runtime.annotations.RegisterForReflection
 import network.cere.ddc.`object`.model.Edek
 import network.cere.ddc.`object`.model.ObjectPath
+import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.client.api.*
 import network.cere.ddc.client.producer.SendPieceResponse
 
@@ -19,6 +20,10 @@ import network.cere.ddc.client.producer.SendPieceResponse
         String::class,
         ObjectPath::class,
         Edek::class,
+
+        AbstractCommand.Tag::class,
+        AbstractCommand.Piece::class,
+        AbstractCommand.PieceUri::class
     ]
 )
 class ReflectionConfig

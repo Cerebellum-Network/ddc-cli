@@ -23,6 +23,13 @@ class StoreCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCom
     var key: String = ""
 
     @CommandLine.Option(
+        names = ["-t", "--tag"],
+        description = ["Tag for storing piece"],
+        required = false
+    )
+    var tags: Map<String, String> = mapOf()
+
+    @CommandLine.Option(
         names = ["-d", "--data"],
         description = ["Data for storing"],
         required = true
@@ -31,7 +38,10 @@ class StoreCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCom
 
     override fun run() {
         val storage = buildKeyValueStorage(ddcCliConfigFile.read(profile))
-        runCatching { storage.store(bucketId, key, Piece(Base64.getDecoder().decode(data), listOf())) }
+
+        runCatching {
+            storage.store(bucketId, key, Piece(Base64.getDecoder().decode(data), tags.map { Tag(it.key, it.value) }))
+        }
             .onSuccess { println("Piece with key $key stored") }
             .onFailure { throw RuntimeException("Couldn't store piece with key $key in bucket $bucketId", it) }
     }

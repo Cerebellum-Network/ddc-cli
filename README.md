@@ -14,7 +14,7 @@ To build native executable:
 
 Download a binary file from [releases](https://github.com/Cerebellum-Network/ddc-cli/releases).
 
-##  General Commands
+## General Commands
 
 ### generate-keys
 
@@ -45,7 +45,8 @@ ddc-cli configure --bootstrapNodes http://localhost:8080 --bootstrapNodeIds 12D3
 
 ### create-app
 
-You can create application in Event DDC using next command (bootstrapNodes, appPubKey and appPrivKey from configuration are used) :
+You can create application in Event DDC using next command (bootstrapNodes, appPubKey and appPrivKey from configuration
+are used) :
 
 ```shell script
 ddc-cli event-storage create-app
@@ -63,7 +64,9 @@ ddc-cli produce -d test_data -u test_user
 
 ### consume
 
-To consume data from Event DDC (bootstrapNodes and appPubKey from configuration are used). Offset reset values are earliest and latest. Where 'earliest' means consume from beginning and 'latest' is a real-time (old data isn't consumed):
+To consume data from Event DDC (bootstrapNodes and appPubKey from configuration are used). Offset reset values are
+earliest and latest. Where 'earliest' means consume from beginning and 'latest' is a real-time (old data isn't
+consumed):
 
 ```shell script
 ddc-cli consume --stream-id test_stream --fields=field1,field2 --offset-reset latest
@@ -157,4 +160,46 @@ To benchmark storage:
 
 ```shell script
 ddc-cli object-storage benchmark -i 1
+```
+
+## Content addressable storage
+
+### Content addressable Commands
+
+#### Read
+
+```shell script
+ddc-cli ca read -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
+```
+
+#### Store
+
+```shell script
+ddc-cli ca store -d YXNkYXNk -b 123 -t key=value -t key2=value
+```
+
+#### Delete
+
+```shell script
+ddc-cli ca delete -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
+```
+
+### Key-Value Commands
+
+#### Read
+
+```shell script
+ddc-cli kv read -b 123 -k key
+```
+
+#### Store
+
+```shell script
+ddc-cli kv store -d YXNkYXNk -k key -b 123 -t key=value -t key2=value
+```
+
+#### Delete
+
+```shell script
+ddc-cli kv delete -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
 ```

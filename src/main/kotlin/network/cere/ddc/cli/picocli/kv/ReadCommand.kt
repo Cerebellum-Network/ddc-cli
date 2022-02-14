@@ -1,9 +1,9 @@
 package network.cere.ddc.cli.picocli.kv
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.picocli.AbstractCommand
 import picocli.CommandLine
-import java.util.*
 
 @CommandLine.Command(name = "read")
 class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
@@ -24,11 +24,12 @@ class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComm
 
     override fun run() {
         val storage = buildKeyValueStorage(ddcCliConfigFile.read(profile))
-        val encoder = Base64.getEncoder()
+        val objectMapper = jacksonObjectMapper()
+
         runCatching { storage.read(bucketId, key) }
             .onSuccess { pieces ->
                 println("Pieces with key $key:")
-                pieces.forEach { println(encoder.encode(it.data)) }
+                pieces.forEach { println(objectMapper.writeValueAsString(it)) }
                 println("=".repeat(10))
             }
             .onFailure { throw RuntimeException("Couldn't read pieces with key $key in bucket $bucketId", it) }
