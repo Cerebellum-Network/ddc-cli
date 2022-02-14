@@ -19,6 +19,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         const val MASTER_ENCRYPTION_KEY_CONFIG = "masterEncryptionKey"
         const val ENCRYPTION_JSON_PATHS_CONFIG = "encryptionJsonPaths"
         const val SIGNATURE_SCHEME_CONFIG = "scheme"
+        const val GATEWAY_URL_CONFIG = "gatewayUrl"
 
         const val DEFAULT_PROFILE = "default"
     }
@@ -169,5 +170,14 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         }
 
         return scheme
+    }
+
+    fun readGatewayUrl(configOptions: Map<String, String>): String {
+        val gatewayUrl = configOptions[GATEWAY_URL_CONFIG]
+        if (gatewayUrl.isNullOrEmpty()) {
+            throw RuntimeException("Missing required parameter 'gatewayUrl'. Please use 'configure' command.")
+        }
+
+        return gatewayUrl
     }
 }

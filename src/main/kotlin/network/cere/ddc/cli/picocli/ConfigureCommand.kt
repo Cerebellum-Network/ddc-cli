@@ -6,11 +6,13 @@ import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.APP_PUB_KEY_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODES_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.BOOTSTRAP_NODE_IDS_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.ENCRYPTION_JSON_PATHS_CONFIG
+import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.GATEWAY_URL_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.MASTER_ENCRYPTION_KEY_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.PARTITION_POLL_INTERVAL_MS_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.SIGNATURE_SCHEME_CONFIG
 import network.cere.ddc.core.signature.Scheme
 import picocli.CommandLine
+import java.net.URL
 
 @CommandLine.Command(name = "configure")
 class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
@@ -63,6 +65,12 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
     )
     var scheme: String? = null
 
+    @CommandLine.Option(
+        names = ["--gatewayUrl"],
+        description = ["Gateway url"]
+    )
+    var gatewayUrl: String? = null
+
     override fun run() {
         val configOptions = mutableMapOf<String, String>()
         appPubKey?.let {
@@ -87,6 +95,11 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
                 throw RuntimeException("Please provide a valid signature scheme: ${Scheme.SR_25519}, ${Scheme.ED_25519}, or ${Scheme.SECP_256_K_1}")
             }
             configOptions.put(SIGNATURE_SCHEME_CONFIG, it)
+        }
+        gatewayUrl?.let { url ->
+            runCatching { URL(url) }
+                .onFailure { throw RuntimeException("Please provide a valid gateway url") }
+                .onSuccess { configOptions.put(GATEWAY_URL_CONFIG, url) }
         }
 
         if (configOptions.isNotEmpty()) {
