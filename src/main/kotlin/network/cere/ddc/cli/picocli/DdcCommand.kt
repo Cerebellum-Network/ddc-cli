@@ -2,7 +2,6 @@ package network.cere.ddc.cli.picocli
 
 import io.quarkus.runtime.QuarkusApplication
 import io.quarkus.runtime.annotations.QuarkusMain
-import network.cere.ddc.cli.picocli.`object`.ObjectStorageCommand
 import network.cere.ddc.cli.picocli.ca.ContentAddressableCommand
 import network.cere.ddc.cli.picocli.event.*
 import network.cere.ddc.cli.picocli.keys.ExtractKeysCommand
@@ -21,7 +20,6 @@ import picocli.CommandLine.IFactory
         ConfigureCommand::class,
         BenchmarkCommand::class,
         GenerateLoadCommand::class,
-        ObjectStorageCommand::class,
         ConsumeCommand::class,
         GetAppPiecesCommand::class,
         GetPieceCommand::class,

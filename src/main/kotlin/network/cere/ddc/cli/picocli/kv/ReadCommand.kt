@@ -1,6 +1,7 @@
 package network.cere.ddc.cli.picocli.kv
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import kotlinx.coroutines.runBlocking
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.picocli.AbstractCommand
 import picocli.CommandLine
@@ -26,7 +27,7 @@ class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComm
         val storage = buildKeyValueStorage(ddcCliConfigFile.read(profile))
         val objectMapper = jacksonObjectMapper()
 
-        runCatching { storage.read(bucketId, key) }
+        runCatching { runBlocking { storage.read(bucketId, key) } }
             .onSuccess { pieces ->
                 println("Pieces with key $key:")
                 pieces.forEach { println(objectMapper.writeValueAsString(it)) }

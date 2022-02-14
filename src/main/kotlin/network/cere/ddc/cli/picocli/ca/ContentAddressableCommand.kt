@@ -6,7 +6,7 @@ import picocli.CommandLine
     name = "ca", subcommands = [
         StoreCommand::class,
         ReadCommand::class,
-        DeleteCommand::class
+        SearchCommand::class
     ]
 )
 class ContentAddressableCommand

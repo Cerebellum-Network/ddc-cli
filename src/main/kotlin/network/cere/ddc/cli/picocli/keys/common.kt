@@ -8,9 +8,9 @@ import network.cere.ddc.core.signature.Scheme
 import network.cere.ddc.crypto.v1.toHex
 import org.apache.commons.codec.digest.HmacAlgorithms
 import org.apache.commons.codec.digest.HmacUtils
-import kotlin.experimental.xor
 import org.kethereum.bip39.model.MnemonicWords
 import org.kethereum.bip39.toKey
+import kotlin.experimental.xor
 
 private const val PBKDF2_ROUNDS = 2048
 private const val SUBSTRATE_KEY_LENGTH = 32

@@ -7,8 +7,7 @@ plugins {
 repositories {
     mavenLocal()
     mavenCentral()
-
-    maven { url = uri("https://jitpack.io") }
+    maven("https://jitpack.io")
 
     flatDir {
         dirs("libs")
@@ -44,8 +43,10 @@ dependencies {
 
     // DDC
     implementation("com.github.cerebellum-network:ddc-client-kotlin:1.3.1.Final")
-    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:core:0.3.0.Final")
-    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:object-storage:0.3.0.Final")
+    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:core:unspecified")
+    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:proto:unspecified")
+    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:content-addressable-storage:unspecified")
+    api("com.github.cerebellum-network.cere-ddc-sdk-kotlin:key-value-storage:unspecified")
 
     //Ktor
     implementation("io.ktor:ktor-client-java:1.6.5")

@@ -2,7 +2,6 @@ package network.cere.ddc.cli.config
 
 import network.cere.ddc.client.consumer.ConsumerConfig
 import network.cere.ddc.client.producer.ProducerConfig
-import network.cere.ddc.core.model.Node
 import network.cere.ddc.core.signature.Scheme
 import java.io.File
 import javax.enterprise.context.ApplicationScoped
@@ -87,28 +86,6 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
             bootstrapNodes = bootstrapNodesAsString.split(","),
             signatureScheme = signerScheme
         )
-    }
-
-    fun readObjectStorageTrustedNodes(configOptions: Map<String, String>): List<Node> {
-        val bootstrapNodesAsString = configOptions[BOOTSTRAP_NODES_CONFIG]
-        if (bootstrapNodesAsString.isNullOrEmpty()) {
-            throw RuntimeException("Missing required parameter bootstrapNodes. Please use 'configure' command.")
-        }
-
-        val bootstrapNodeIdsAsString = configOptions[BOOTSTRAP_NODE_IDS_CONFIG]
-        if (bootstrapNodeIdsAsString.isNullOrEmpty()) {
-            throw RuntimeException("Missing required parameter bootstrapNodeIds. Please use 'configure' command.")
-        }
-
-        val bootstrapNodeAddresses = bootstrapNodesAsString.split(",")
-        val bootstrapNodeIds = bootstrapNodeIdsAsString.split(",")
-        if (bootstrapNodeAddresses.size != bootstrapNodeIds.size) {
-            throw RuntimeException("Number bootstrap nodes and ids should be same. Please use 'configure' command.")
-        }
-
-        val trustedNodes = bootstrapNodeAddresses.zip(bootstrapNodeIds).map { Node(address = it.first, id = it.second) }
-
-        return trustedNodes
     }
 
     fun readPrivateKey(configOptions: Map<String, String>): String {

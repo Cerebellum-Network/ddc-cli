@@ -1,7 +1,10 @@
 package network.cere.ddc.cli.picocli.ca
 
+import kotlinx.coroutines.runBlocking
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.picocli.AbstractCommand
+import network.cere.ddc.storage.domain.Piece
+import network.cere.ddc.storage.domain.Tag
 import picocli.CommandLine
 import java.util.*
 
@@ -33,7 +36,9 @@ class StoreCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCom
         val storage = buildContentAddressableStorage(ddcCliConfigFile.read(profile))
 
         runCatching {
-            storage.store(bucketId, Piece(Base64.getDecoder().decode(data), tags.map { Tag(it.key, it.value) }))
+            runBlocking {
+                storage.store(bucketId, Piece(Base64.getDecoder().decode(data), tags.map { Tag(it.key, it.value) }))
+            }
         }
             .onSuccess { println("Piece stored in bucket $bucketId") }
             .onFailure { throw RuntimeException("Couldn't store piece in bucket $bucketId", it) }

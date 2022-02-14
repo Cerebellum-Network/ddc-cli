@@ -1,6 +1,7 @@
 package network.cere.ddc.cli.picocli.ca
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import kotlinx.coroutines.runBlocking
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.picocli.AbstractCommand
 import picocli.CommandLine
@@ -25,7 +26,7 @@ class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComm
     override fun run() {
         val storage = buildContentAddressableStorage(ddcCliConfigFile.read(profile))
 
-        runCatching { storage.read(bucketId, cid) }
+        runCatching { runBlocking { storage.read(bucketId, cid) } }
             .onSuccess { println(jacksonObjectMapper().writeValueAsString(it)) }
             .onFailure { throw RuntimeException("Couldn't read piece with cid $cid in bucket $bucketId", it) }
     }

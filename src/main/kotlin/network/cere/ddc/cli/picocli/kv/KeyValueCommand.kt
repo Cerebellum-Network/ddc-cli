@@ -4,7 +4,6 @@ import picocli.CommandLine
 
 @CommandLine.Command(
     name = "kv", subcommands = [
-        DeleteCommand::class,
         ReadCommand::class,
         StoreCommand::class
     ]

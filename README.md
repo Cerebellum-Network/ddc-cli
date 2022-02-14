@@ -112,94 +112,36 @@ To benchmark event DDC node (define WCU and RCU parameters):
 ddc-cli benchmark
 ```
 
-## Object Storage
+## Content addressable Storage
 
-### store-object
-
-To store object
-
-```shell script
-ddc-cli object-storage store-object -i 1 -d data
-```
-
-### read-object
-
-To read object
-
-```shell script
-ddc-cli object-storage read-object -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
-```
-
-### store-edek
-
-To store EDEK
-
-```shell script
-ddc-cli object-storage store-edek -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a -v some_string_value
-```
-
-### read-edek
-
-To read EDEK
-
-```shell script
-ddc-cli object-storage read-edek -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a
-```
-
-### generate-load
-
-To generate random load to storage:
-
-```shell script
-ddc-cli object-storage generate-load -u 100 -n 30 -int pt5s -s 1000 -i 1
-```
-
-### benchmark
-
-To benchmark storage:
-
-```shell script
-ddc-cli object-storage benchmark -i 1
-```
-
-## Content addressable storage
-
-### Content addressable Commands
-
-#### Read
+### Read
 
 ```shell script
 ddc-cli ca read -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
 ```
 
-#### Store
+### Store
 
 ```shell script
 ddc-cli ca store -d YXNkYXNk -b 123 -t key=value -t key2=value
 ```
 
-#### Delete
+### Search
 
 ```shell script
-ddc-cli ca delete -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
+ddc-cli ca search -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
 ```
 
-### Key-Value Commands
+### Key-Value Storage
 
-#### Read
+### Read
 
 ```shell script
 ddc-cli kv read -b 123 -k key
 ```
 
-#### Store
+### Store
 
 ```shell script
 ddc-cli kv store -d YXNkYXNk -k key -b 123 -t key=value -t key2=value
-```
-
-#### Delete
-
-```shell script
-ddc-cli kv delete -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
 ```
