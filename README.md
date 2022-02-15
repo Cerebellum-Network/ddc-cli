@@ -41,7 +41,7 @@ command:
 ddc-cli configure --appPrivKey APP_PRIV_KEY --gatewayUrl http://localhost:8080 --scheme sr25519
 ```
 
-## Content addressable Storage
+## Content Addressable Storage
 
 ### Read
 
@@ -61,7 +61,7 @@ ddc-cli ca store -d YXNkYXNk -b 123 -t key=value -t key2=value
 ddc-cli ca search -b 123 -t key=value
 ```
 
-### Key-Value Storage
+## Key-Value Storage
 
 ### Read
 
