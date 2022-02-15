@@ -1,13 +1,8 @@
 package network.cere.ddc.cli.picocli
 
-import com.debuggor.schnorrkel.sign.ExpansionMode
-import com.debuggor.schnorrkel.sign.KeyPair
-import picocli.CommandLine
-
 import com.debuggor.schnorrkel.sign.SigningContext
 import network.cere.ddc.core.signature.Scheme
-import network.cere.ddc.crypto.v1.hexToBytes
-import network.cere.ddc.crypto.v1.toHex
+import picocli.CommandLine
 
 @CommandLine.Command(name = "sign")
 class SignCommand : AbstractCommand() {
