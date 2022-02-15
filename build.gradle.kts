@@ -24,8 +24,6 @@ dependencies {
     implementation("io.quarkus:quarkus-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
-    implementation("io.quarkus:quarkus-vertx")
-    implementation("io.quarkus:quarkus-vertx-http")
 
     // Crypto
     implementation("com.google.crypto.tink:tink:1.5.0")
@@ -37,12 +35,7 @@ dependencies {
     implementation("com.github.komputing.kethereum:bip32:0.85.3")
     implementation("com.github.komputing.kethereum:model:0.85.3")
 
-    // Smallrye
-    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-core:$smallryeMutinyVertx")
-    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-web-client:$smallryeMutinyVertx")
-
     // DDC
-    implementation("com.github.cerebellum-network:ddc-client-kotlin:1.3.1.Final")
     api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:core:1.0.0.Prototype")
     api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:proto:1.0.0.Prototype")
     api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:content-addressable-storage:1.0.0.Prototype")
