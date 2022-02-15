@@ -129,7 +129,7 @@ ddc-cli ca store -d YXNkYXNk -b 123 -t key=value -t key2=value
 ### Search
 
 ```shell script
-ddc-cli ca search -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
+ddc-cli ca search -b 123 -t key=value
 ```
 
 ### Key-Value Storage

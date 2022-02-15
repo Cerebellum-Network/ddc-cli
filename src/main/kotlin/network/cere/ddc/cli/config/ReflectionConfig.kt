@@ -4,6 +4,8 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 import network.cere.ddc.client.api.*
 import network.cere.ddc.client.producer.SendPieceResponse
 import network.cere.ddc.storage.domain.Piece
+import network.cere.ddc.storage.domain.PieceUri
+import network.cere.ddc.storage.domain.Tag
 
 @RegisterForReflection(
     targets = [
@@ -16,7 +18,9 @@ import network.cere.ddc.storage.domain.Piece
         network.cere.ddc.client.consumer.Piece::class,
         SendPieceResponse::class,
         String::class,
-        Piece::class
+        Piece::class,
+        PieceUri::class,
+        Tag::class
     ]
 )
 class ReflectionConfig

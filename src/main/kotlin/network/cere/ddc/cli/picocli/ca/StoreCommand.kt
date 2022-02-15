@@ -1,5 +1,6 @@
 package network.cere.ddc.cli.picocli.ca
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.runBlocking
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.picocli.AbstractCommand
@@ -40,7 +41,7 @@ class StoreCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCom
                 storage.store(bucketId, Piece(Base64.getDecoder().decode(data), tags.map { Tag(it.key, it.value) }))
             }
         }
-            .onSuccess { println("Piece stored in bucket $bucketId") }
+            .onSuccess { println("Piece stored in bucket $bucketId. PieceUri: ${jacksonObjectMapper().writeValueAsString(it)}") }
             .onFailure { throw RuntimeException("Couldn't store piece in bucket $bucketId", it) }
     }
 }
