@@ -34,8 +34,7 @@ ddc-cli extract-keys --secret-phrase 'ivory immense card before water diesel ill
 
 ### configure
 
-You can configure ddc-cli (e.g. appPrivKey, gatewayUrl, scheme) using next
-command:
+You can configure ddc-cli (e.g. appPrivKey, gatewayUrl, scheme) using next command:
 
 ```shell script
 ddc-cli configure --appPrivKey APP_PRIV_KEY --gatewayUrl http://localhost:8080 --scheme sr25519
@@ -45,17 +44,23 @@ ddc-cli configure --appPrivKey APP_PRIV_KEY --gatewayUrl http://localhost:8080 -
 
 ### Read
 
+Read pieces by cid. Returns piece in JSON format or save to file (```-f``` - path to file).
+
 ```shell script
 ddc-cli ca read -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
 ```
 
 ### Store
 
+Store piece with required tags and data (```-f``` - path to file, ```-d``` - string data Base64 format)
+
 ```shell script
 ddc-cli ca store -d YXNkYXNk -b 123 -t key=value -t key2=value
 ```
 
 ### Search
+
+Search pieces by tags. Return pieces in JSON format.
 
 ```shell script
 ddc-cli ca search -b 123 -t key=value
@@ -65,11 +70,15 @@ ddc-cli ca search -b 123 -t key=value
 
 ### Read
 
+Read piece from Key-Value Storage with requred key value. Return pieces in JSON format.
+
 ```shell script
 ddc-cli kv read -b 123 -k key
 ```
 
 ### Store
+
+Store piece to Key-Value Storage with key and data (```-f``` - path to file, ```-d``` - string data Base64).
 
 ```shell script
 ddc-cli kv store -d YXNkYXNk -k key -b 123 -t key=value -t key2=value
