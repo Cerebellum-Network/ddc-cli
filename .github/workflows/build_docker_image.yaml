@@ -11,7 +11,7 @@ env:
 
 jobs:
   buildDockerImage:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, cere-network-large-workers]
     steps:
       - name: Checkout the code
         uses: actions/checkout@master
@@ -23,6 +23,10 @@ jobs:
           java-version: 11
           graalvm-version: 21.2.0
           native-image: true
+      - uses: KengoTODA/actions-setup-docker-compose@main
+        name: 'Install docker-compose'
+        with:
+          version: '1.29.2'
       - name: Cache build .gradle dir
         uses: actions/cache@v2
         with:

@@ -14,7 +14,7 @@ To build native executable:
 
 Download a binary file from [releases](https://github.com/Cerebellum-Network/ddc-cli/releases).
 
-##  General Commands
+## General Commands
 
 ### generate-keys
 
@@ -34,127 +34,52 @@ ddc-cli extract-keys --secret-phrase 'ivory immense card before water diesel ill
 
 ### configure
 
-You can configure ddc-cli (e.g. bootstrapNodes, appPubKey and appPrivKey for data producing/consuming) using next
-command:
+You can configure ddc-cli (e.g. appPrivKey, gatewayUrl, scheme) using next command:
 
 ```shell script
-ddc-cli configure --bootstrapNodes http://localhost:8080 --bootstrapNodeIds 12D3KooWFRkkd4ycCPYEmeBzgfkrMrVSHWe6sYdgPo1JyAdLM4mT --appPubKey APP_PUB_KEY --appPrivKey APP_PRIV_KEY
+ddc-cli configure --appPrivKey APP_PRIV_KEY --gatewayUrl http://localhost:8080 --scheme sr25519
 ```
 
-## Event storage
+## Content Addressable Storage
 
-### create-app
+### Read
 
-You can create application in Event DDC using next command (bootstrapNodes, appPubKey and appPrivKey from configuration are used) :
+Read pieces by cid. Returns piece in JSON format or save to file (```-f``` - path to file).
 
 ```shell script
-ddc-cli event-storage create-app
+ddc-cli ca read -b 123 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
 ```
 
-> **_NOTE:_**  Subscription in SC required (except dev environment where SC is mocked). If appPubkey and appPrivKey are not present - new app will be generated (dev only).
+### Store
 
-### produce
-
-To produce data to Event DDC (bootstrapNodes, appPubKey and appPrivKey from configuration are used):
+Store piece with required tags and data (```-f``` - path to file, ```-d``` - string data Base64 format)
 
 ```shell script
-ddc-cli produce -d test_data -u test_user
+ddc-cli ca store -d YXNkYXNk -b 123 -t key=value -t key2=value
 ```
 
-### consume
+### Search
 
-To consume data from Event DDC (bootstrapNodes and appPubKey from configuration are used). Offset reset values are earliest and latest. Where 'earliest' means consume from beginning and 'latest' is a real-time (old data isn't consumed):
+Search pieces by tags. Return pieces in JSON format.
 
 ```shell script
-ddc-cli consume --stream-id test_stream --fields=field1,field2 --offset-reset latest
+ddc-cli ca search -b 123 -t key=value
 ```
 
-### get-app-pieces
+## Key-Value Storage
 
-To get application pieces from Event DDC (bootstrapNodes and appPubKey from configuration are used):
+### Read
+
+Read piece from Key-Value Storage with requred key value. Return pieces in JSON format.
 
 ```shell script
-ddc-cli get-app-pieces --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --fields=field1,field2
+ddc-cli kv read -b 123 -k key
 ```
 
-### get-user-pieces
+### Store
 
-To get user pieces from Event DDC (bootstrapNodes and appPubKey from configuration are used):
-
-```shell script
-ddc-cli get-user-pieces -u aceba9c5-617e-4422-9520-c98fe66eb6e2 --from 2021-07-22T09:56:06.849030Z --to 2021-07-22T09:56:49.849030Z --fields=field1,field2
-```
-
-### get-piece
-
-To get piece from Event DDC (bootstrapNodes and appPubKey from configuration are used):
+Store piece to Key-Value Storage with key and data (```-f``` - path to file, ```-d``` - string data Base64).
 
 ```shell script
-ddc-cli get-by-cid -u aceba9c5-617e-4422-9520-c98fe66eb6e2 -c Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
-```
-
-### generate-load
-
-To generate random load to event DDC:
-
-```shell script
-ddc-cli generate-load -u 100 -n 30 -i pt5s -s 1000
-```
-
-### benchmark
-
-To benchmark event DDC node (define WCU and RCU parameters):
-
-```shell script
-ddc-cli benchmark
-```
-
-## Object Storage
-
-### store-object
-
-To store object
-
-```shell script
-ddc-cli object-storage store-object -i 1 -d data
-```
-
-### read-object
-
-To read object
-
-```shell script
-ddc-cli object-storage read-object -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o
-```
-
-### store-edek
-
-To store EDEK
-
-```shell script
-ddc-cli object-storage store-edek -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a -v some_string_value
-```
-
-### read-edek
-
-To read EDEK
-
-```shell script
-ddc-cli object-storage read-edek -u cns://1/Qmf6mNYKEjYwA82PTJLfA4PjHAEq9QvRf4pTBURjkZYG2o -k 0xd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a
-```
-
-### generate-load
-
-To generate random load to storage:
-
-```shell script
-ddc-cli object-storage generate-load -u 100 -n 30 -int pt5s -s 1000 -i 1
-```
-
-### benchmark
-
-To benchmark storage:
-
-```shell script
-ddc-cli object-storage benchmark -i 1
+ddc-cli kv store -d YXNkYXNk -k key -b 123 -t key=value -t key2=value
 ```

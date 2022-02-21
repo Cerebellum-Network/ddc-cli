@@ -1,88 +1,26 @@
-version: '3'
+version: "3"
+
 services:
-  ddc-node-0:
-    container_name: 'ddc-node-0'
-    image: 'cerebellumnetwork/ddc-node:dev-latest'
+  ddc-storage-node:
+    container_name: 'ddc-storage-node'
+    image: 'cerebellumnetwork/ddc-storage-node:v1.0.0-prototype'
+    environment:
+      - 'HTTP_PORT=8090'
+      - 'HTTP_ADDRESS=http://localhost:8090'
+      - 'LOG_LEVEL=debug'
+      - 'LOG_JSON_FORMAT=false'
+    ports:
+      - '8090:8090'
+  ddc-gateway-node:
+    container_name: 'ddc-gateway-node'
+    image: 'cerebellumnetwork/ddc-gateway-node:v1.0.0-prototype'
     environment:
       - 'HTTP_PORT=8080'
       - 'HTTP_ADDRESS=http://localhost:8080'
-      - 'P2P_ADDRESS=/dns4/ddc-node-0/tcp/5000'
       - 'LOG_LEVEL=debug'
-      - 'FAULT_DETECTION_HEARTBEAT_INTERVAL=1s'
-      - 'FAULT_DETECTION_UPDATE_NEIGHBORS_INTERVAL=1s'
-      - 'FAULT_DETECTION_SHORT_TRANSIENT_FAULT_TIMEOUT=4s'
-      - 'FAULT_DETECTION_LONG_TRANSIENT_FAULT_TIMEOUT=20s'
-      - 'FAULT_DETECTION_COMPLETE_FAULT_TIMEOUT=40s'
-      - 'STORAGE=5000000000'
-      - 'EVENT_STORAGE_PARTITION_SIZE_LIMIT_BYTES=100000000'
-      - 'EVENT_STORAGE_PARTITION_WCU_LIMIT=180000000'
-      - 'EVENT_STORAGE_PARTITION_RCU_LIMIT=450000000'
-      - 'OBJECT_STORAGE_ROUTING_TABLE_REBROADCAST_INTERVAL=3s'
-      - 'TEST_ENABLED=true'
-      - 'BUCKET_AUTH_ENABLED=false'
-      - 'TEST_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
-      - 'TEST_DDC_NODES=${TEST_DDC_NODES}'
+      - 'LOG_JSON_FORMAT=false'
+      - 'STORAGE_NODE_URL=http://ddc-storage-node:8090'
     ports:
-      - '5000:5000'
       - '8080:8080'
-    volumes:
-      - ./node-0-p2p-config.json:/config/p2p.json
-  ddc-node-1:
-    container_name: 'ddc-node-1'
-    image: 'cerebellumnetwork/ddc-node:dev-latest'
-    environment:
-      - 'HTTP_PORT=8081'
-      - 'HTTP_ADDRESS=http://localhost:8081'
-      - 'P2P_ADDRESS=/dns4/ddc-node-1/tcp/5001'
-      - 'LOG_LEVEL=debug'
-      - 'FAULT_DETECTION_HEARTBEAT_INTERVAL=1s'
-      - 'FAULT_DETECTION_UPDATE_NEIGHBORS_INTERVAL=1s'
-      - 'FAULT_DETECTION_SHORT_TRANSIENT_FAULT_TIMEOUT=4s'
-      - 'FAULT_DETECTION_LONG_TRANSIENT_FAULT_TIMEOUT=20s'
-      - 'FAULT_DETECTION_COMPLETE_FAULT_TIMEOUT=40s'
-      - 'STORAGE=5000000000'
-      - 'EVENT_STORAGE_PARTITION_SIZE_LIMIT_BYTES=100000000'
-      - 'EVENT_STORAGE_PARTITION_WCU_LIMIT=180000000'
-      - 'EVENT_STORAGE_PARTITION_RCU_LIMIT=450000000'
-      - 'OBJECT_STORAGE_ROUTING_TABLE_REBROADCAST_INTERVAL=3s'
-      - 'TEST_ENABLED=true'
-      - 'BUCKET_AUTH_ENABLED=false'
-      - 'TEST_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
-      - 'TEST_DDC_NODES=${TEST_DDC_NODES}'
-    ports:
-      - '5001:5001'
-      - '8081:8081'
-    volumes:
-      - ./node-1-p2p-config.json:/config/p2p.json
     depends_on:
-      - 'ddc-node-0'
-  ddc-node-2:
-    container_name: 'ddc-node-2'
-    image: 'cerebellumnetwork/ddc-node:dev-latest'
-    environment:
-      - 'HTTP_PORT=8082'
-      - 'HTTP_ADDRESS=http://localhost:8082'
-      - 'P2P_ADDRESS=/dns4/ddc-node-2/tcp/5002'
-      - 'LOG_LEVEL=debug'
-      - 'FAULT_DETECTION_HEARTBEAT_INTERVAL=1s'
-      - 'FAULT_DETECTION_UPDATE_NEIGHBORS_INTERVAL=1s'
-      - 'FAULT_DETECTION_SHORT_TRANSIENT_FAULT_TIMEOUT=4s'
-      - 'FAULT_DETECTION_LONG_TRANSIENT_FAULT_TIMEOUT=20s'
-      - 'FAULT_DETECTION_COMPLETE_FAULT_TIMEOUT=40s'
-      - 'STORAGE=5000000000'
-      - 'EVENT_STORAGE_PARTITION_SIZE_LIMIT_BYTES=100000000'
-      - 'EVENT_STORAGE_PARTITION_WCU_LIMIT=180000000'
-      - 'EVENT_STORAGE_PARTITION_RCU_LIMIT=450000000'
-      - 'OBJECT_STORAGE_ROUTING_TABLE_REBROADCAST_INTERVAL=3s'
-      - 'TEST_ENABLED=true'
-      - 'BUCKET_AUTH_ENABLED=false'
-      - 'TEST_APP_LIMIT={"storageBytes":100000000,"wcu":90000000,"rcu":225000000}'
-      - 'TEST_DDC_NODES=${TEST_DDC_NODES}'
-    ports:
-      - '5002:5002'
-      - '8082:8082'
-    volumes:
-      - ./node-2-p2p-config.json:/config/p2p.json
-    depends_on:
-      - 'ddc-node-0'
-      - 'ddc-node-1'
+      - ddc-storage-node
