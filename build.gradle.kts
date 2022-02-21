@@ -78,6 +78,7 @@ tasks.register("generateVersionProperties") {
         if (project.hasProperty("cliVersion")) {
             cliVersion = project.properties["cliVersion"].toString()
         }
+        println("CLI version: $cliVersion")
 
         val propertiesFile = file("src/main/resources/version.properties")
         val properties = Properties()
@@ -87,7 +88,6 @@ tasks.register("generateVersionProperties") {
     }
 }
 
-tasks.quarkusBuild {
+tasks.processResources {
     dependsOn("generateVersionProperties")
 }
-
