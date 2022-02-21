@@ -1,3 +1,6 @@
+import java.io.FileOutputStream
+import java.util.Properties
+
 plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.allopen") version "1.6.10"
@@ -67,4 +70,24 @@ allOpen {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
     kotlinOptions.javaParameters = true
+}
+
+tasks.register("generateVersionProperties") {
+    doLast {
+        var cliVersion = "dev"
+        if (project.hasProperty("cliVersion")) {
+            cliVersion = project.properties["cliVersion"].toString()
+        }
+        println("CLI version: $cliVersion")
+
+        val propertiesFile = file("src/main/resources/version.properties")
+        val properties = Properties()
+        properties.setProperty("version", "$cliVersion")
+        val out = FileOutputStream(propertiesFile)
+        properties.store(out, null)
+    }
+}
+
+tasks.processResources {
+    dependsOn("generateVersionProperties")
 }
