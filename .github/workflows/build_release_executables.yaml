@@ -1,18 +1,19 @@
-name: build-linux-and-macos-executable
+name: build-linux-and-macos-release-executables
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    tags:
+      - '*'
+
 jobs:
   buildOnLinux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
         uses: actions/checkout@master
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - uses: ayltai/setup-graalvm@v1
         with:
           java-version: 11
@@ -26,7 +27,9 @@ jobs:
             .gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
       - name: Gradle Build
-        run: ./gradlew build
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: ./gradlew build -PcliVersion=$VERSION
       - name: Upload artifacts
         run: mkdir linux-amd64 && cp build/ddc-cli-*-runner linux-amd64/ddc-cli
       - uses: actions/upload-artifact@v2
@@ -40,6 +43,9 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@master
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - uses: ayltai/setup-graalvm@v1
         with:
           java-version: 11
@@ -53,7 +59,9 @@ jobs:
             .gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
       - name: Gradle Build
-        run: ./gradlew build
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: ./gradlew build -PcliVersion=$VERSION
       - name: Upload artifacts
         run: mkdir mac-amd64 && cp build/ddc-cli-*-runner mac-amd64/ddc-cli
       - uses: actions/upload-artifact@v2

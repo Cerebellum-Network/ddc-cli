@@ -11,7 +11,7 @@ import picocli.CommandLine.IFactory
 
 @QuarkusMain
 @CommandLine.Command(
-    version = ["1.6.2"],
+    versionProvider = Version::class,
     mixinStandardHelpOptions = true,
     subcommands = [
         GenerateKeysCommand::class,
