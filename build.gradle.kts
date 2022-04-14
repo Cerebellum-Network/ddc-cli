@@ -46,6 +46,19 @@ dependencies {
     api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:key-value-storage:1.0.0.Final")
     api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:smart-contract:1.0.0.Final")
 
+
+    // Polkadot
+    implementation("emeraldpay.polkaj:polkaj-api-http:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-api-ws:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-api-base:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-schnorrkel:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-scale:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-json-types:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-scale-types:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-common-types:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-ss58:0.3.0")
+    implementation("emeraldpay.polkaj:polkaj-tx:0.3.0")
+
     //Ktor
     implementation("io.ktor:ktor-client-java:1.6.5")
 
