@@ -26,7 +26,7 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
     var limit: Long = 10
 
     @CommandLine.Option(
-        names = ["-p", "--providerId"],
+        names = ["--providerId"],
     )
     var providerId: String? = null
 
