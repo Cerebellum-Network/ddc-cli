@@ -43,7 +43,7 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
         val smartContract = buildSmartContract(ddcCliConfigFile.read(profile))
 
         println("nodesGet")
-        val nodeList = if (nodeId == -1L) {
+        val nodeList = if (nodeId > -1L) {
             listOf(smartContract.nodeGet(nodeId))
         } else {
             smartContract.nodeList(offset, limit, providerId?.let { AccountId(it) })
@@ -56,16 +56,11 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
 
         nodeList.forEach {
             val url = runCatching { JSONObject(it.params).getString("url") }
-                .getOrDefault { "unknown" }
+                .getOrDefault("unknown")
 
             println(
-                """
-                        |{
-                        |nodeId: ${it.nodeId}, 
-                        |providerId: ${it.node.providerId},
-                        |freeResource: ${it.node.freeResource}, 
-                        |url: $url,
-                        |}""".trimMargin()
+                "{nodeId: ${it.nodeId}, providerId: ${it.node.providerId}, freeResource: ${it.node.freeResource}, " +
+                        "url: $url}"
             )
         }
 

@@ -39,15 +39,7 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
         }
 
         indexes.forEach {
-            println(
-                """
-                        |{
-                        |clusterId: $clusterId, 
-                        |index: $it, 
-                        |nodeId: $nodeId
-                        |}
-                        |""".trimMargin()
-            )
+            println("{clusterId: $clusterId, index: $it, nodeId: $nodeId}")
         }
     }
 }

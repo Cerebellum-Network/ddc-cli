@@ -4,6 +4,7 @@ import kotlinx.coroutines.runBlocking
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.contract.model.AccountId
+import network.cere.ddc.contract.model.response.ClusterStatus
 import network.cere.ddc.contract.model.response.ResultList
 import org.json.JSONObject
 import picocli.CommandLine
@@ -39,7 +40,7 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
     private suspend fun runAsync() {
         val smartContract = buildSmartContract(ddcCliConfigFile.read(profile))
 
-        val clusterList = if (clusterId == -1L) {
+        val clusterList = if (clusterId > -1L) {
             listOf(smartContract.clusterGet(clusterId))
         } else {
             smartContract.clusterList(offset, limit, managerId?.let { AccountId(it) })
@@ -51,15 +52,11 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
 
         clusterList.forEach {
             println(
-                """
-                        |{
-                        |clusterId: ${it.clusterId}, 
-                        |managerId: ${it.cluster.managerId},
-                        |vnodes: ${it.cluster.vnodes}, 
-                        |resourcePerVnode: ${it.cluster.resourcePerVnode}, 
-                        |resourceUsed: ${it.cluster.resourceUsed}, 
-                        |}""".trimMargin()
+                "{clusterId: ${it.clusterId}, managerId: ${it.cluster.managerId}, " +
+                        "vnodes: ${it.cluster.vnodes}, resourcePerVnode: ${it.cluster.resourcePerVnode}, " +
+                        "resourceUsed: ${it.cluster.resourceUsed}}"
             )
         }
     }
+
 }

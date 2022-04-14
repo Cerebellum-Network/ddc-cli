@@ -35,12 +35,15 @@ abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = 
     }
 
     suspend fun buildSmartContract(configOptions: Map<String, String>): BucketSmartContract {
+        println("CONFIGURE")
+
         val config = BlockchainConfig(
             wsUrl = ddcCliConfigFile.readWsUrl(configOptions),
             contractAddressHex = ddcCliConfigFile.readContractAddress(configOptions),
             privateKeyHex = ddcCliConfigFile.readPrivateKey(configOptions)
         )
         val contractConfig = BucketContractConfig()
+        println("BUILD AND CONNECT")
         return BucketSmartContract.buildAndConnect(config, contractConfig)
     }
 }
