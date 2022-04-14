@@ -64,15 +64,11 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
         }
 
         wsUrl?.let { url ->
-            runCatching { URL(url) }
-                .onFailure { throw RuntimeException("Please provide a valid ws url") }
-                .onSuccess { configOptions[WS_URL_CONFIG] = url }
+            configOptions[WS_URL_CONFIG] = url
         }
 
         contractAddress?.let { url ->
-            runCatching { URL(url) }
-                .onFailure { throw RuntimeException("Please provide a valid contract address") }
-                .onSuccess { configOptions[CONTACT_ADDRESS_CONFIG] = url }
+            configOptions[CONTACT_ADDRESS_CONFIG] = url
         }
 
         if (configOptions.isNotEmpty()) {
