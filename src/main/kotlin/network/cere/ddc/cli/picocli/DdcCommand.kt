@@ -8,7 +8,7 @@ import network.cere.ddc.cli.picocli.keys.GenerateKeysCommand
 import network.cere.ddc.cli.picocli.kv.KeyValueCommand
 import network.cere.ddc.cli.picocli.resources.clusters.ClustersCommand
 import network.cere.ddc.cli.picocli.resources.nodes.NodesCommand
-import network.cere.ddc.cli.picocli.resources.vnodes.VNodesCommand
+import network.cere.ddc.cli.picocli.resources.vnodes.VnodesCommand
 import picocli.CommandLine
 import picocli.CommandLine.IFactory
 
@@ -27,7 +27,7 @@ import picocli.CommandLine.IFactory
         // Smart contract resources management
         ClustersCommand::class,
         NodesCommand::class,
-        VNodesCommand::class,
+        VnodesCommand::class,
     ]
 )
 class DdcCommand(private val factory: IFactory) : QuarkusApplication {

@@ -48,6 +48,7 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
 
         if (clusterList.isEmpty()) {
             println("Not found")
+            return
         }
 
         clusterList.forEach {

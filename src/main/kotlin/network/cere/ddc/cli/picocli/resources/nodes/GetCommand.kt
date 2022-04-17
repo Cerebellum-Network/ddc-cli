@@ -31,27 +31,22 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
     var providerId: String? = null
 
     override fun run() {
-        println("runAsync")
         runCatching { runBlocking { runAsync() } }
             .onFailure { throw RuntimeException("Couldn't get nodes", it) }
-        println("runAsyncFinished")
     }
 
     private suspend fun runAsync() {
-        println("buildSmartContract")
-
         val smartContract = buildSmartContract(ddcCliConfigFile.read(profile))
 
-        println("nodesGet")
         val nodeList = if (nodeId > -1L) {
             listOf(smartContract.nodeGet(nodeId))
         } else {
             smartContract.nodeList(offset, limit, providerId?.let { AccountId(it) })
         }
 
-        println("nodesGot")
         if (nodeList.isEmpty()) {
             println("Not found")
+            return
         }
 
         nodeList.forEach {
@@ -63,7 +58,5 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
                         "url: $url}"
             )
         }
-
-        println("finalised")
     }
 }

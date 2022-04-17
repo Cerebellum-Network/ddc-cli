@@ -5,8 +5,7 @@ import picocli.CommandLine
 @CommandLine.Command(
     name = "vnodes", subcommands = [
         GetCommand::class,
-        K1Command::class,
-        K2Command::class,
+        RecoverCommand::class,
     ]
 )
-class VNodesCommand
+class VnodesCommand

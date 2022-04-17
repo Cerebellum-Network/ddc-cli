@@ -36,6 +36,7 @@ class GetCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComma
 
         if (indexes.isEmpty()) {
             println("Not found")
+            return
         }
 
         indexes.forEach {
