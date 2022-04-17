@@ -9,8 +9,12 @@ repositories {
     mavenCentral()
     maven("https://jitpack.io")
 
-    flatDir {
-        dirs("libs")
+    ivy("https://github.com") {
+        patternLayout {
+            artifact("[organisation]/releases/download/v[revision]/[module]-[revision].jar")
+            setM2compatible(true)
+        }
+        metadataSources { artifact() }
     }
 }
 
@@ -36,10 +40,11 @@ dependencies {
     implementation("com.github.komputing.kethereum:model:0.85.3")
 
     // DDC
-    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:core:1.0.0.Prototype")
-    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:proto:1.0.0.Prototype")
-    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:content-addressable-storage:1.0.0.Prototype")
-    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:key-value-storage:1.0.0.Prototype")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:core:1.0.0.Final")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:proto:1.0.0.Final")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:content-addressable-storage:1.0.0.Final")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:key-value-storage:1.0.0.Final")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:smart-contract:1.0.0.Final")
 
     //Ktor
     implementation("io.ktor:ktor-client-java:1.6.5")

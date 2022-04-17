@@ -7,9 +7,12 @@ import kotlin.streams.asSequence
 @ApplicationScoped
 class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
     companion object {
-        const val APP_PRIV_KEY_CONFIG = "appPrivKey"
+        const val PRIVATE_KEY_CONFIG = "privateKey"
         const val SIGNATURE_SCHEME_CONFIG = "scheme"
         const val GATEWAY_URL_CONFIG = "gatewayUrl"
+        
+        const val WS_URL_CONFIG = "wsUrl"
+        const val CONTACT_ADDRESS_CONFIG = "contractAddress"
 
         const val DEFAULT_PROFILE = "default"
     }
@@ -36,9 +39,9 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
     }
 
     fun readPrivateKey(configOptions: Map<String, String>): String {
-        val appPrivKey = configOptions[APP_PRIV_KEY_CONFIG]
+        val appPrivKey = configOptions[PRIVATE_KEY_CONFIG]
         if (appPrivKey.isNullOrEmpty()) {
-            throw RuntimeException("Missing required parameter appPrivKey. Please use 'configure' command.")
+            throw RuntimeException("Missing required parameter 'privateKey'. Please use 'configure' command.")
         }
 
         return appPrivKey
@@ -60,6 +63,24 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         }
 
         return gatewayUrl
+    }
+
+    fun readWsUrl(configOptions: Map<String, String>): String {
+        val wsUrl = configOptions[WS_URL_CONFIG]
+        if (wsUrl.isNullOrEmpty()) {
+            throw RuntimeException("Missing required parameter 'wsUrl'. Please use 'configure' command.")
+        }
+
+        return wsUrl
+    }
+
+    fun readContractAddress(configOptions: Map<String, String>): String {
+        val contractAddress = configOptions[CONTACT_ADDRESS_CONFIG]
+        if (contractAddress.isNullOrEmpty()) {
+            throw RuntimeException("Missing required parameter 'contractAddress'. Please use 'configure' command.")
+        }
+
+        return contractAddress
     }
 
     private fun readAllProfiles(): MutableMap<String, MutableMap<String, String>> {

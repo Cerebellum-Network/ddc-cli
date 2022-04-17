@@ -10,6 +10,11 @@ To build native executable:
 ./gradlew build -Dquarkus.package.type=native 
 ```
 
+To build jar executable:
+```
+ ./gradlew build -Dquarkus.package.type=uber-jar
+```
+
 ## Installing the CLI
 
 Download a binary file from [releases](https://github.com/Cerebellum-Network/ddc-cli/releases).
