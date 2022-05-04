@@ -34,7 +34,7 @@ class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComm
 
     @CommandLine.Option(
         names = ["-r", "--readable"],
-        description = ["Tag for search"]
+        description = ["Show piece data as string"]
     )
     var readable: Boolean = false
 

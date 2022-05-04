@@ -27,7 +27,7 @@ class SearchCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCo
 
     @CommandLine.Option(
         names = ["-r", "--readable"],
-        description = ["Tag for search"]
+        description = ["Show piece data as string"]
     )
     var readable: Boolean = false
 
