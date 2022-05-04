@@ -8,7 +8,6 @@ import network.cere.ddc.cli.picocli.AbstractCommand
 import network.cere.ddc.storage.domain.Piece
 import network.cere.ddc.storage.domain.Tag
 import picocli.CommandLine
-import java.util.*
 
 @CommandLine.Command(name = "store")
 class StoreCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
@@ -34,7 +33,7 @@ class StoreCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCom
         val storage = buildContentAddressableStorage(ddcCliConfigFile.read(profile))
 
         runCatching {
-            val bytes = dataOption.file?.readBytes() ?: Base64.getDecoder().decode(dataOption.data)
+            val bytes = dataOption.file?.readBytes() ?: dataOption.data.toByteArray()
             runBlocking {
                 storage.store(bucketId, Piece(bytes, tags.map { Tag(it.key, it.value) }))
             }

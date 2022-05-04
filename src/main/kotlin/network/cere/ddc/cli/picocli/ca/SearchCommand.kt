@@ -25,6 +25,12 @@ class SearchCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCo
     )
     var tags: Map<String, String> = mapOf()
 
+    @CommandLine.Option(
+        names = ["-r", "--readable"],
+        description = ["Tag for search"]
+    )
+    var readable: Boolean = false
+
     override fun run() {
         val storage = buildContentAddressableStorage(ddcCliConfigFile.read(profile))
         val objectMapper = jacksonObjectMapper()
@@ -32,7 +38,12 @@ class SearchCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCo
         runCatching { runBlocking { storage.search(Query(bucketId, tags.map { Tag(it.key, it.value) })) } }
             .onSuccess {
                 println("Found Pieces:")
-                it.pieces.forEach { println(objectMapper.writeValueAsString(it)) }
+                it.pieces.forEach {
+                    println(objectMapper.writeValueAsString(it))
+                    if (readable) {
+                        println("Readable data: '${String(it.data)}'")
+                    }
+                }
                 println("=".repeat(10))
             }
             .onFailure { throw RuntimeException("Couldn't found pieces in bucket $bucketId with tags $tags", it) }

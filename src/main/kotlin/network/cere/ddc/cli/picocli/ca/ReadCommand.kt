@@ -32,6 +32,12 @@ class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComm
     )
     var file: File? = null
 
+    @CommandLine.Option(
+        names = ["-r", "--readable"],
+        description = ["Tag for search"]
+    )
+    var readable: Boolean = false
+
     override fun run() {
         val storage = buildContentAddressableStorage(ddcCliConfigFile.read(profile))
 
@@ -40,7 +46,12 @@ class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComm
                 file?.also {
                     it.createNewFile()
                     it.appendBytes(piece.data)
-                } ?: println(jacksonObjectMapper().writeValueAsString(piece))
+                } ?:  run {
+                    println(jacksonObjectMapper().writeValueAsString(piece))
+                    if (readable) {
+                        println("Readable data: '${String(piece.data)}'")
+                    }
+                }
             }
             .onFailure { throw RuntimeException("Couldn't read piece with cid $cid in bucket $bucketId", it) }
     }
