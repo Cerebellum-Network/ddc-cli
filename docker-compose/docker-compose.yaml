@@ -1,26 +1,46 @@
 version: "3"
 
 services:
-  ddc-storage-node:
-    container_name: 'ddc-storage-node'
-    image: 'cerebellumnetwork/ddc-storage-node:v1.0.0-prototype'
-    environment:
-      - 'HTTP_PORT=8090'
-      - 'HTTP_ADDRESS=http://localhost:8090'
-      - 'LOG_LEVEL=debug'
-      - 'LOG_JSON_FORMAT=false'
-    ports:
-      - '8090:8090'
   ddc-gateway-node:
-    container_name: 'ddc-gateway-node'
-    image: 'cerebellumnetwork/ddc-gateway-node:v1.0.0-prototype'
+    image: 'cerebellumnetwork/ddc-gateway-node:dev-latest'
     environment:
       - 'HTTP_PORT=8080'
       - 'HTTP_ADDRESS=http://localhost:8080'
       - 'LOG_LEVEL=debug'
       - 'LOG_JSON_FORMAT=false'
-      - 'STORAGE_NODE_URL=http://ddc-storage-node:8090'
+      - 'TEST_ENABLED=true'
     ports:
       - '8080:8080'
-    depends_on:
-      - ddc-storage-node
+
+  ddc-storage-node-0:
+    image: 'cerebellumnetwork/ddc-storage-node:dev-latest'
+    environment:
+      - 'HTTP_PORT=8090'
+      - 'HTTP_ADDRESS=http://localhost:8090'
+      - 'LOG_LEVEL=info'
+      - 'LOG_JSON_FORMAT=false'
+      - 'TEST_ENABLED=true'
+    ports:
+      - '8090:8090'
+
+  ddc-storage-node-1:
+    image: 'cerebellumnetwork/ddc-storage-node:dev-latest'
+    environment:
+      - 'HTTP_PORT=8091'
+      - 'HTTP_ADDRESS=http://localhost:8091'
+      - 'LOG_LEVEL=info'
+      - 'LOG_JSON_FORMAT=false'
+      - 'TEST_ENABLED=true'
+    ports:
+      - '8091:8091'
+
+  ddc-storage-node-2:
+    image: 'cerebellumnetwork/ddc-storage-node:dev-latest'
+    environment:
+      - 'HTTP_PORT=8092'
+      - 'HTTP_ADDRESS=http://localhost:8092'
+      - 'LOG_LEVEL=info'
+      - 'LOG_JSON_FORMAT=false'
+      - 'TEST_ENABLED=true'
+    ports:
+      - '8092:8092'
