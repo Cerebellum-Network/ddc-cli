@@ -34,10 +34,10 @@ ddc-cli extract-keys --secret-phrase 'ivory immense card before water diesel ill
 
 ### configure
 
-You can configure ddc-cli (e.g. appPrivKey, gatewayUrl, scheme) using next command:
+You can configure ddc-cli (e.g. appPrivKey, cdnUrl, scheme) using next command:
 
 ```shell script
-ddc-cli configure --appPrivKey APP_PRIV_KEY --gatewayUrl http://localhost:8080 --scheme sr25519
+ddc-cli configure --appPrivKey APP_PRIV_KEY --cdnUrl http://localhost:8080 --scheme sr25519
 ```
 
 ## Content Addressable Storage

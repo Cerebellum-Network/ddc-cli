@@ -9,7 +9,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
     companion object {
         const val APP_PRIV_KEY_CONFIG = "appPrivKey"
         const val SIGNATURE_SCHEME_CONFIG = "scheme"
-        const val GATEWAY_URL_CONFIG = "gatewayUrl"
+        const val CDN_URL_CONFIG = "cdnUrl"
 
         const val DEFAULT_PROFILE = "default"
     }
@@ -53,13 +53,13 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
         return scheme
     }
 
-    fun readGatewayUrl(configOptions: Map<String, String>): String {
-        val gatewayUrl = configOptions[GATEWAY_URL_CONFIG]
-        if (gatewayUrl.isNullOrEmpty()) {
-            throw RuntimeException("Missing required parameter 'gatewayUrl'. Please use 'configure' command.")
+    fun readCdnUrl(configOptions: Map<String, String>): String {
+        val cdnUrl = configOptions[CDN_URL_CONFIG]
+        if (cdnUrl.isNullOrEmpty()) {
+            throw RuntimeException("Missing required parameter 'cdnUrl'. Please use 'configure' command.")
         }
 
-        return gatewayUrl
+        return cdnUrl
     }
 
     private fun readAllProfiles(): MutableMap<String, MutableMap<String, String>> {

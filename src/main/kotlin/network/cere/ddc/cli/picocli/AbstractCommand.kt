@@ -18,16 +18,16 @@ abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = 
     fun buildContentAddressableStorage(configOptions: Map<String, String>): ContentAddressableStorage {
         val privateKey = ddcCliConfigFile.readPrivateKey(configOptions)
         val scheme = ddcCliConfigFile.readSignatureScheme(configOptions)
-        val gatewayUrl = ddcCliConfigFile.readGatewayUrl(configOptions)
+        val cdnUrl = ddcCliConfigFile.readCdnUrl(configOptions)
 
-        return ContentAddressableStorage(Scheme.create(scheme, privateKey), gatewayUrl)
+        return ContentAddressableStorage(Scheme.create(scheme, privateKey), cdnUrl)
     }
 
     fun buildKeyValueStorage(configOptions: Map<String, String>): KeyValueStorage {
         val privateKey = ddcCliConfigFile.readPrivateKey(configOptions)
         val scheme = ddcCliConfigFile.readSignatureScheme(configOptions)
-        val gatewayUrl = ddcCliConfigFile.readGatewayUrl(configOptions)
+        val cdnUrl = ddcCliConfigFile.readCdnUrl(configOptions)
 
-        return KeyValueStorage(Scheme.create(scheme, privateKey), gatewayUrl)
+        return KeyValueStorage(Scheme.create(scheme, privateKey), cdnUrl)
     }
 }
