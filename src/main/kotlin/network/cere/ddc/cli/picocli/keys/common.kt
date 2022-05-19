@@ -1,9 +1,6 @@
 package network.cere.ddc.cli.picocli.keys
 
 import cash.z.ecc.android.bip39.Mnemonics
-import com.debuggor.schnorrkel.sign.ExpansionMode
-import com.debuggor.schnorrkel.sign.KeyPair
-import network.cere.ddc.core.signature.Ed25519
 import network.cere.ddc.core.signature.Scheme
 import network.cere.ddc.crypto.v1.toHex
 import org.apache.commons.codec.digest.HmacAlgorithms
@@ -34,28 +31,19 @@ private fun hmac(password: ByteArray, data: ByteArray): ByteArray {
         .doFinal()
 }
 
-fun generateKeyPair(mnemonicWords: Mnemonics.MnemonicCode, saltPhrase: String, scheme: String): network.cere.ddc.cli.picocli.keys.KeyPair {
-    when (scheme) {
+fun generateSeedHex(mnemonicWords: Mnemonics.MnemonicCode, saltPhrase: String, scheme: String): String {
+    val seed = when (scheme) {
         Scheme.SR_25519 -> {
-            val secretSeed = pbkdf2Seed(mnemonicWords.toEntropy(), saltPhrase.toByteArray())
-            val keyPair = KeyPair.fromSecretSeed(secretSeed, ExpansionMode.Ed25519)
-
-            return KeyPair(
-                keyPair.privateKey.toPrivateKey().toHex(),
-                keyPair.publicKey.toPublicKey().toHex()
-            )
+            pbkdf2Seed(mnemonicWords.toEntropy(), saltPhrase.toByteArray())
         }
         Scheme.ED_25519 -> {
             val extendedKey = MnemonicWords(mnemonicWords.toList()).toKey("m", saltPhrase)
-            val ed25519 = Ed25519(extendedKey.keyPair.privateKey.key.toByteArray().toHex())
-
-            return KeyPair(
-                extendedKey.keyPair.privateKey.key.toByteArray().toHex(),
-                ed25519.publicKeyHex
-            )
+            extendedKey.keyPair.privateKey.key.toByteArray()
         }
         else -> {
             throw RuntimeException("Please provide a valid signature scheme: ${Scheme.SR_25519} or ${Scheme.ED_25519}")
         }
     }
+
+    return seed.toHex()
 }

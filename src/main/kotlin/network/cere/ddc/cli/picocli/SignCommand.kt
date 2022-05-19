@@ -10,10 +10,10 @@ class SignCommand : AbstractCommand() {
     private val signingContext = SigningContext.createSigningContext("substrate".toByteArray())
 
     @CommandLine.Option(
-        names = ["-k", "--key", "--privateKey"],
-        description = ["Private key to sign data"]
+        names = ["-k", "--key", "--seed"],
+        description = ["Seed (private key) hex to sign data"]
     )
-    lateinit var privateKey: String
+    lateinit var seed: String
 
     @CommandLine.Option(
         names = ["-s", "--scheme"],
@@ -26,12 +26,12 @@ class SignCommand : AbstractCommand() {
     lateinit var data: String
 
     override fun run() {
-        val signatureScheme = Scheme.create(scheme, privateKey)
+        val signatureScheme = Scheme.create(scheme, seed)
         val signature = signatureScheme.sign(data.toByteArray())
 
 
         println("Public key: ${signatureScheme.publicKeyHex}")
-        println("Private key: $privateKey")
+        println("Seed: $seed")
         println("Signed data: $signature")
     }
 }
