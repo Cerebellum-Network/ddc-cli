@@ -16,18 +16,20 @@ abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = 
     var profile: String? = null
 
     fun buildContentAddressableStorage(configOptions: Map<String, String>): ContentAddressableStorage {
-        val privateKey = ddcCliConfigFile.readPrivateKey(configOptions)
-        val scheme = ddcCliConfigFile.readSignatureScheme(configOptions)
-        val gatewayUrl = ddcCliConfigFile.readGatewayUrl(configOptions)
-
-        return ContentAddressableStorage(Scheme.create(scheme, privateKey), gatewayUrl)
+        val cfg = readStorageConfiguration(configOptions)
+        return ContentAddressableStorage(Scheme.create(cfg.scheme, cfg.seed), cfg.gatewayUrl)
     }
 
     fun buildKeyValueStorage(configOptions: Map<String, String>): KeyValueStorage {
-        val privateKey = ddcCliConfigFile.readPrivateKey(configOptions)
-        val scheme = ddcCliConfigFile.readSignatureScheme(configOptions)
-        val gatewayUrl = ddcCliConfigFile.readGatewayUrl(configOptions)
-
-        return KeyValueStorage(Scheme.create(scheme, privateKey), gatewayUrl)
+        val cfg = readStorageConfiguration(configOptions)
+        return KeyValueStorage(Scheme.create(cfg.scheme, cfg.seed), cfg.gatewayUrl)
     }
+
+    private fun readStorageConfiguration(configOptions: Map<String, String>) = StorageConfiguration(
+        seed = ddcCliConfigFile.readSeed(configOptions),
+        scheme = ddcCliConfigFile.readSignatureScheme(configOptions),
+        gatewayUrl = ddcCliConfigFile.readGatewayUrl(configOptions)
+    )
+
+    private data class StorageConfiguration(val seed: String, val scheme: String, val gatewayUrl: String)
 }

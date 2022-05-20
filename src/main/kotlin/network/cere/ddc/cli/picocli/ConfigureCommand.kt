@@ -1,8 +1,8 @@
 package network.cere.ddc.cli.picocli
 
 import network.cere.ddc.cli.config.DdcCliConfigFile
-import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.APP_PRIV_KEY_CONFIG
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.GATEWAY_URL_CONFIG
+import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.SEED
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.SIGNATURE_SCHEME_CONFIG
 import network.cere.ddc.core.signature.Scheme
 import picocli.CommandLine
@@ -12,10 +12,10 @@ import java.net.URL
 class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
-        names = ["--appPrivKey"],
-        description = ["Application private key (required for producing)"]
+        names = ["--seed", "--key", "--appPrivKey"],
+        description = ["Application seed/private key (required for producing)"]
     )
-    var appPrivKey: String? = null
+    var seed: String? = null
 
     @CommandLine.Option(
         names = ["--scheme"],
@@ -31,11 +31,11 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     override fun run() {
         val configOptions = mutableMapOf<String, String>()
-        appPrivKey?.let {
+        seed?.let {
             if (scheme.isNullOrEmpty()) {
-                throw RuntimeException("scheme is required when updating appPrivKey")
+                throw RuntimeException("scheme is required when updating seed")
             }
-            configOptions.put(APP_PRIV_KEY_CONFIG, it)
+            configOptions.put(SEED, it)
         }
         scheme?.let { it ->
             if (!listOf(Scheme.ED_25519, Scheme.SR_25519, Scheme.SECP_256_K_1).contains(scheme)) {
