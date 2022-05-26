@@ -26,6 +26,6 @@ class ExtractSeedCommand : AbstractCommand() {
         val keyPairSeed = generateKeyPair(Mnemonics.MnemonicCode(secretPhrase), "mnemonic", scheme)
 
         println("Public key: ${keyPairSeed.publicKey}")
-        println("Seed: ${keyPairSeed.seed}")
+        println("Seed hex: ${keyPairSeed.seed}")
     }
 }

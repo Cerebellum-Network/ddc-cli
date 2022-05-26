@@ -46,13 +46,16 @@ class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComm
                 file?.also {
                     it.createNewFile()
                     it.appendBytes(piece.data)
-                } ?:  run {
+                } ?: run {
                     println(jacksonObjectMapper().writeValueAsString(piece))
                     if (readable) {
                         println("Readable data: '${String(piece.data)}'")
                     }
                 }
             }
-            .onFailure { throw RuntimeException("Couldn't read piece with cid $cid in bucket $bucketId", it) }
+            .onFailure {
+                val message = it.message?.let { "Message: '$it'" } ?: ""
+                throw RuntimeException("Couldn't read piece with cid $cid in bucket $bucketId. $message")
+            }
     }
 }
