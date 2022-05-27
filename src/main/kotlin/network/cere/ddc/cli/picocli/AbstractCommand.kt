@@ -17,19 +17,19 @@ abstract class AbstractCommand(private val ddcCliConfigFile: DdcCliConfigFile = 
 
     fun buildContentAddressableStorage(configOptions: Map<String, String>): ContentAddressableStorage {
         val cfg = readStorageConfiguration(configOptions)
-        return ContentAddressableStorage(Scheme.create(cfg.scheme, cfg.seed), cfg.gatewayUrl)
+        return ContentAddressableStorage(Scheme.create(cfg.scheme, cfg.seed), cfg.cdnUrl)
     }
 
     fun buildKeyValueStorage(configOptions: Map<String, String>): KeyValueStorage {
         val cfg = readStorageConfiguration(configOptions)
-        return KeyValueStorage(Scheme.create(cfg.scheme, cfg.seed), cfg.gatewayUrl)
+        return KeyValueStorage(Scheme.create(cfg.scheme, cfg.seed), cfg.cdnUrl)
     }
 
     private fun readStorageConfiguration(configOptions: Map<String, String>) = StorageConfiguration(
         seed = ddcCliConfigFile.readSeed(configOptions),
         scheme = ddcCliConfigFile.readSignatureScheme(configOptions),
-        gatewayUrl = ddcCliConfigFile.readGatewayUrl(configOptions)
+        cdnUrl = ddcCliConfigFile.readCdnUrl(configOptions)
     )
 
-    private data class StorageConfiguration(val seed: String, val scheme: String, val gatewayUrl: String)
+    private data class StorageConfiguration(val seed: String, val scheme: String, val cdnUrl: String)
 }
