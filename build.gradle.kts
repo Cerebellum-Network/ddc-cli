@@ -36,10 +36,10 @@ dependencies {
     implementation("com.github.komputing.kethereum:model:0.85.3")
 
     // DDC
-    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:core:1.0.0.Final")
-    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:proto:1.0.0.Final")
-    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:content-addressable-storage:1.0.0.Final")
-    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:key-value-storage:1.0.0.Final")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:core:1.0.4.Final")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:proto:1.0.4.Final")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:content-addressable-storage:1.0.4.Final")
+    api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:key-value-storage:1.0.4.Final")
 
     //Ktor
     implementation("io.ktor:ktor-client-java:1.6.5")

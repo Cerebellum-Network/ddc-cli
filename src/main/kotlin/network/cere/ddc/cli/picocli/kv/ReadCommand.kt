@@ -33,6 +33,9 @@ class ReadCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractComm
                 pieces.forEach { println(objectMapper.writeValueAsString(it)) }
                 println("=".repeat(10))
             }
-            .onFailure { throw RuntimeException("Couldn't read pieces with key $key in bucket $bucketId", it) }
+            .onFailure {
+                val message = it.message?.let { "Message: '$it'" } ?: ""
+                throw RuntimeException("Couldn't read pieces with key $key in bucket $bucketId. $message")
+            }
     }
 }

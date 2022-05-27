@@ -22,6 +22,6 @@ class GenerateKeysCommand : AbstractCommand() {
 
         println("Secret phrase: " + mnemonicCode.joinToString(" "))
         println("Public key: ${keyPairSeed.publicKey}")
-        println("Private key: ${keyPairSeed.privateKey}")
+        println("Seed hex: ${keyPairSeed.seed}")
     }
 }

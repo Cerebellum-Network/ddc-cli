@@ -7,7 +7,7 @@ import kotlin.streams.asSequence
 @ApplicationScoped
 class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
     companion object {
-        const val APP_PRIV_KEY_CONFIG = "appPrivKey"
+        const val SEED = "seed"
         const val SIGNATURE_SCHEME_CONFIG = "scheme"
         const val CDN_URL_CONFIG = "cdnUrl"
 
@@ -35,13 +35,13 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
             .let { ddcCliConfigFile.writeText(it) }
     }
 
-    fun readPrivateKey(configOptions: Map<String, String>): String {
-        val appPrivKey = configOptions[APP_PRIV_KEY_CONFIG]
-        if (appPrivKey.isNullOrEmpty()) {
-            throw RuntimeException("Missing required parameter appPrivKey. Please use 'configure' command.")
+    fun readSeed(configOptions: Map<String, String>): String {
+        val seed = configOptions[SEED]
+        if (seed.isNullOrEmpty()) {
+            throw RuntimeException("Missing required parameter seed. Please use 'configure' command.")
         }
 
-        return appPrivKey
+        return seed
     }
 
     fun readSignatureScheme(configOptions: Map<String, String>): String {

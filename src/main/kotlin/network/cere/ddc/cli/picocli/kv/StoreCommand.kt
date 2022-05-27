@@ -47,6 +47,9 @@ class StoreCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCom
             }
         }
             .onSuccess { println("Piece with key $key stored. PieceUri: ${jacksonObjectMapper().writeValueAsString(it)}") }
-            .onFailure { throw RuntimeException("Couldn't store piece with key $key in bucket $bucketId", it) }
+            .onFailure {
+                val message = it.message?.let { "Message: '$it'" } ?: ""
+                throw RuntimeException("Couldn't store piece with key $key in bucket $bucketId. $message")
+            }
     }
 }

@@ -1,19 +1,11 @@
 package network.cere.ddc.cli.picocli
 
-import com.debuggor.schnorrkel.sign.SigningContext
+import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.core.signature.Scheme
 import picocli.CommandLine
 
 @CommandLine.Command(name = "sign")
-class SignCommand : AbstractCommand() {
-
-    private val signingContext = SigningContext.createSigningContext("substrate".toByteArray())
-
-    @CommandLine.Option(
-        names = ["-k", "--key", "--privateKey"],
-        description = ["Private key to sign data"]
-    )
-    lateinit var privateKey: String
+class SignCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand() {
 
     @CommandLine.Option(
         names = ["-s", "--scheme"],
@@ -26,12 +18,11 @@ class SignCommand : AbstractCommand() {
     lateinit var data: String
 
     override fun run() {
-        val signatureScheme = Scheme.create(scheme, privateKey)
+        val seed = ddcCliConfigFile.read(profile).let { ddcCliConfigFile.readSeed(it) }
+        val signatureScheme = Scheme.create(scheme, seed)
         val signature = signatureScheme.sign(data.toByteArray())
 
-
         println("Public key: ${signatureScheme.publicKeyHex}")
-        println("Private key: $privateKey")
         println("Signed data: $signature")
     }
 }
