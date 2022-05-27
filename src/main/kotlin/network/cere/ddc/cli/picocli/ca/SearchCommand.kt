@@ -46,6 +46,9 @@ class SearchCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCo
                 }
                 println("=".repeat(10))
             }
-            .onFailure { throw RuntimeException("Couldn't found pieces in bucket $bucketId with tags $tags", it) }
+            .onFailure {
+                val message = it.message?.let { "Message: '$it'" } ?: ""
+                throw RuntimeException("Couldn't found pieces in bucket $bucketId with tags $tags. $message")
+            }
     }
 }

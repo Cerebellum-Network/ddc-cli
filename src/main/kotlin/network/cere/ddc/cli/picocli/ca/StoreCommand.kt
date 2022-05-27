@@ -41,6 +41,9 @@ class StoreCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCom
             .onSuccess {
                 println("Piece stored in bucket $bucketId. PieceUri: ${jacksonObjectMapper().writeValueAsString(it)}")
             }
-            .onFailure { throw RuntimeException("Couldn't store piece in bucket $bucketId", it) }
+            .onFailure {
+                val message = it.message?.let { "Message: '$it'" } ?: ""
+                throw RuntimeException("Couldn't store piece in bucket $bucketId. $message")
+            }
     }
 }

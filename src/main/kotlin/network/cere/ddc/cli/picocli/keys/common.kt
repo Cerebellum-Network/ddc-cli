@@ -30,7 +30,8 @@ private fun hmac(password: ByteArray, data: ByteArray): ByteArray {
 }
 
 fun generateKeyPair(mnemonicWords: Mnemonics.MnemonicCode, saltPhrase: String, scheme: String): KeyPair {
-    val seed = pbkdf2Seed(mnemonicWords.toEntropy(), saltPhrase.toByteArray()).toHex()
+    val seed = runCatching { pbkdf2Seed(mnemonicWords.toEntropy(), saltPhrase.toByteArray()).toHex() }
+        .getOrElse { throw RuntimeException(it.message?.removePrefix("Error: ")) }
     val publicKey = Scheme.create(scheme, seed).publicKeyHex
 
     return KeyPair(seed = seed, publicKey = publicKey)
