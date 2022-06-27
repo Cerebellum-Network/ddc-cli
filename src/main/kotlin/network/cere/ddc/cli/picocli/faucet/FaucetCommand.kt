@@ -1,10 +1,11 @@
 package network.cere.ddc.cli.picocli.faucet
 
 import network.cere.ddc.cli.picocli.AbstractCommand
+import org.eclipse.microprofile.rest.client.inject.RestClient
 import picocli.CommandLine
 
 @CommandLine.Command(name = "faucet")
-class FaucetCommand(private val faucetApi: FaucetApi) : AbstractCommand() {
+class FaucetCommand(@RestClient private val faucetApi: FaucetApi) : AbstractCommand() {
 
     companion object {
         private const val NETWORKS_DESCRIPTION = "Test networks: testnet, qanet or devnet"
