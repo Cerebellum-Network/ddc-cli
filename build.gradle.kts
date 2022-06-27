@@ -24,9 +24,11 @@ dependencies {
     implementation("io.quarkus:quarkus-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
+    implementation("io.quarkus:quarkus-rest-client")
+    implementation("io.quarkus:quarkus-rest-client-jackson")
 
     // Crypto
-    implementation("com.google.crypto.tink:tink:1.5.0")
+    implementation("com.google.crypto.tink:tink:1.6.1")
     implementation("com.github.cerebellum-network:ddc-encryption-impl-kotlin:1.5.0")
     implementation("cash.z.ecc.android:kotlin-bip39:1.0.2")
     implementation("commons-codec:commons-codec:1.15")

@@ -15,3 +15,6 @@ quarkus:
       - '-H:MaxDuplicationFactor=10.0'
       - '-H:-CheckToolchain'
       - '--initialize-at-run-time=cash.z.ecc.android.bip39.Mnemonics'
+rest-client:
+  faucet-api:
+    url: 'https://api.stats.cere.network/api/v1/faucet'
