@@ -18,3 +18,4 @@ quarkus:
 rest-client:
   faucet-api:
     url: 'https://api.stats.cere.network/api/v1/faucet'
+    scope: 'javax.inject.Singleton'
