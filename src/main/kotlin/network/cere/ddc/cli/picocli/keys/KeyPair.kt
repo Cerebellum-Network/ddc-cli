@@ -1,3 +1,3 @@
 package network.cere.ddc.cli.picocli.keys
 
-data class KeyPair(val seed: String, val publicKey: String)
+data class KeyPair(val secretSeed: String, val publicKey: String)
