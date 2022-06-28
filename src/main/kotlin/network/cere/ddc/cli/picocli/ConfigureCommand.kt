@@ -2,7 +2,7 @@ package network.cere.ddc.cli.picocli
 
 import network.cere.ddc.cli.config.DdcCliConfigFile
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.CDN_URL_CONFIG
-import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.SEED
+import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.SECRET_SEED
 import network.cere.ddc.cli.config.DdcCliConfigFile.Companion.SIGNATURE_SCHEME_CONFIG
 import network.cere.ddc.core.signature.Scheme
 import picocli.CommandLine
@@ -12,14 +12,14 @@ import java.net.URL
 class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : AbstractCommand(ddcCliConfigFile) {
 
     @CommandLine.Option(
-        names = ["--seed", "--key", "--appPrivKey"],
-        description = ["Application seed/private key (required for producing)"]
+        names = ["--secretSeed"],
+        description = ["Account secret seed (required for operations that require a signature)"]
     )
-    var seed: String? = null
+    var secretSeed: String? = null
 
     @CommandLine.Option(
         names = ["--scheme"],
-        description = ["Signature scheme (required for requests that require a signature)"]
+        description = ["Signature scheme (required for operations that require a signature)"]
     )
     var scheme: String? = null
 
@@ -31,11 +31,11 @@ class ConfigureCommand(private val ddcCliConfigFile: DdcCliConfigFile) : Abstrac
 
     override fun run() {
         val configOptions = mutableMapOf<String, String>()
-        seed?.let {
+        secretSeed?.let {
             if (scheme.isNullOrEmpty()) {
-                throw RuntimeException("scheme is required when updating seed")
+                throw RuntimeException("scheme is required when updating secret seed")
             }
-            configOptions.put(SEED, it)
+            configOptions.put(SECRET_SEED, it)
         }
         scheme?.let { it ->
             if (!listOf(Scheme.ED_25519, Scheme.SR_25519, Scheme.SECP_256_K_1).contains(scheme)) {

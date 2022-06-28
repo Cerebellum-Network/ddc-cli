@@ -7,7 +7,7 @@ import kotlin.streams.asSequence
 @ApplicationScoped
 class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
     companion object {
-        const val SEED = "seed"
+        const val SECRET_SEED = "secretSeed"
         const val SIGNATURE_SCHEME_CONFIG = "scheme"
         const val CDN_URL_CONFIG = "cdnUrl"
 
@@ -36,7 +36,7 @@ class DdcCliConfigFile(private var ddcCliConfigFilePath: String? = null) {
     }
 
     fun readSeed(configOptions: Map<String, String>): String {
-        val seed = configOptions[SEED]
+        val seed = configOptions[SECRET_SEED]
         if (seed.isNullOrEmpty()) {
             throw RuntimeException("Missing required parameter seed. Please use 'configure' command.")
         }
