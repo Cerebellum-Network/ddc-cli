@@ -23,10 +23,11 @@ class ExtractKeysCommand : AbstractCommand() {
     lateinit var scheme: String
 
     override fun run() {
-        val keyPairSeed = generateKeyPair(Mnemonics.MnemonicCode(secretPhrase), "mnemonic", scheme)
+        val keyPair = generateKeyPair(Mnemonics.MnemonicCode(secretPhrase), "mnemonic", scheme)
 
         println("Secret phrase: $secretPhrase")
-        println("Public key: ${keyPairSeed.publicKey}")
-        println("Seed hex: ${keyPairSeed.seed}")
+        println("Secret seed: ${keyPair.secretSeed}")
+        println("Public key: ${keyPair.publicKey}")
+        println("SS58 Address: ${publicKeyToSS58Address(keyPair.publicKey)}")
     }
 }

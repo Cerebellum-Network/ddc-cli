@@ -18,10 +18,11 @@ class GenerateKeysCommand : AbstractCommand() {
 
     override fun run() {
         val mnemonicCode = MnemonicCode(WordCount.COUNT_12)
-        val keyPairSeed = generateKeyPair(mnemonicCode, "mnemonic", scheme)
+        val keyPair = generateKeyPair(mnemonicCode, "mnemonic", scheme)
 
         println("Secret phrase: " + mnemonicCode.joinToString(" "))
-        println("Public key: ${keyPairSeed.publicKey}")
-        println("Seed hex: ${keyPairSeed.seed}")
+        println("Secret seed: ${keyPair.secretSeed}")
+        println("Public key: ${keyPair.publicKey}")
+        println("SS58 Address: ${publicKeyToSS58Address(keyPair.publicKey)}")
     }
 }

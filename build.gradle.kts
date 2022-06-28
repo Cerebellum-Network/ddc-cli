@@ -33,9 +33,15 @@ dependencies {
     implementation("cash.z.ecc.android:kotlin-bip39:1.0.2")
     implementation("commons-codec:commons-codec:1.15")
     implementation("com.github.yeeco:schnorrkel-java:v1.0.4")
+    implementation("org.bouncycastle:bcprov-jdk15on:1.70")
+
     implementation("com.github.komputing.kethereum:bip39:0.85.3")
     implementation("com.github.komputing.kethereum:bip32:0.85.3")
     implementation("com.github.komputing.kethereum:model:0.85.3")
+    implementation("com.github.komputing.kethereum:crypto_impl_bouncycastle:0.85.3")
+
+    // Multibase
+    implementation("com.github.multiformats:java-multibase:v1.1.0")
 
     // DDC
     api("com.github.Cerebellum-Network.cere-ddc-sdk-kotlin:core:1.0.4.Final")
