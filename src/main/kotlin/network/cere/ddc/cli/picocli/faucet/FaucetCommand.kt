@@ -3,6 +3,8 @@ package network.cere.ddc.cli.picocli.faucet
 import network.cere.ddc.cli.picocli.AbstractCommand
 import org.eclipse.microprofile.rest.client.inject.RestClient
 import picocli.CommandLine
+import javax.ws.rs.WebApplicationException
+import javax.ws.rs.core.Response.Status.Family.CLIENT_ERROR
 
 @CommandLine.Command(name = "faucet")
 class FaucetCommand(@RestClient private val faucetApi: FaucetApi) : AbstractCommand() {
@@ -32,8 +34,15 @@ class FaucetCommand(@RestClient private val faucetApi: FaucetApi) : AbstractComm
             throw RuntimeException("Unsupported test network. $NETWORKS_DESCRIPTION")
         }
 
-        val sendTokensResponse = faucetApi.sendTokens(SendTokensRequest(network, address))
-
-        println(sendTokensResponse.msg)
+        runCatching {
+            val sendTokensResponse = faucetApi.sendTokens(SendTokensRequest(network, address))
+            println(sendTokensResponse.msg)
+        }.onFailure {
+            if (it is WebApplicationException && it.response?.statusInfo?.family == CLIENT_ERROR) {
+                println(it.response.readEntity(SendTokensResponse::class.java).msg)
+            } else {
+                throw it
+            }
+        }
     }
 }
