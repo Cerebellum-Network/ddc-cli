@@ -30,21 +30,17 @@ class FaucetCommand(@RestClient private val faucetApi: FaucetApi) : AbstractComm
     lateinit var address: String
 
     override fun run() {
-        println("Faucet command initialised")
-
         if (!supportedNetworks.contains(network.lowercase())) {
             throw RuntimeException("Unsupported test network. $NETWORKS_DESCRIPTION")
         }
-        println("Sending request to faucet API")
+
         runCatching {
             val sendTokensResponse = faucetApi.sendTokens(SendTokensRequest(network, address))
             println(sendTokensResponse.msg)
         }.onFailure {
             if (it is WebApplicationException && it.response?.statusInfo?.family == CLIENT_ERROR) {
-                println("Received client error")
                 println(it.response.readEntity(SendTokensResponse::class.java).msg)
             } else {
-                println("Trowing exception")
                 throw it
             }
         }
